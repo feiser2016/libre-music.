@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Libre Music</string>
+    <string name="settings">Ajustes</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="pref_advanced">⚙ Ajustes Avanzados</string>
+    <string name="pref_simple">⚙ Ajustes Simples</string>
+    <string name="pref_night">Modo nocturno</string>
+    <string name="albums">⁠⁠⁠Albumes</string>
+    <string name="artists">Artistas</string>
+    <string name="libre_player_activity">Mi libreria</string>
+    <string name="loading">Cargando</string>
+    <string name="pref_cue">Codificacion de hoja de CUE</string>
+    <string name="reset_library">Resetiar libreria</string>
+    <string name="songs">Canciones</string>
+    <string name="reset_library_message">Libreria se va a actualizar en el proximo lanzamiento</string>
+    <string name="reset_library_question">Estas seguro que quisieras resetiar tu libraria de musica en el proximo lanzamiento?</string>
+    <string name="now_playing">Sonando Ahora</string>
+</resources>

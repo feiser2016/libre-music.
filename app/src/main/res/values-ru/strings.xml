@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Libre Music</string>
+    <string name="albums">Альбомы</string>
+    <string name="artists">Артисты</string>
+    <string name="no">Нет</string>
+    <string name="reset_library">Обнулить Библиотеку</string>
+    <string name="reset_library_message">Библиотека обнулится на следующем запуске.</string>
+    <string name="reset_library_question">Вы уверены что хотите обнулить библиотеку на следующем запуске?</string>
+    <string name="songs">Песни</string>
+    <string name="yes">Да</string>
+    <string name="now_playing">Сейчас играет</string>
+    <string name="libre_player_activity">Моя библиотека</string>
+    <string name="loading">Загрузка</string>
+    <string name="pref_advanced">⚙ Продвинутые настройки</string>
+    <string name="pref_night">Ночной режим</string>
+    <string name="pref_simple">⚙ Простые настройки</string>
+    <string name="settings">Настройки</string>
+    <string name="pref_cue">Кодировка CUE слоя</string>
+</resources>

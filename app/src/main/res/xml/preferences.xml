@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_simple">
+        <SwitchPreference
+            android:title="@string/pref_night"
+            android:defaultValue="false"
+            android:checked="false"
+            android:key="enable_dark_theme"
+            android:icon="@drawable/night" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_advanced">
+        <ListPreference android:title="@string/pref_cue"
+            android:entries="@array/encoding_list"
+            android:entryValues="@array/encoding_values"
+            android:key="file_encoding"
+            android:icon="@drawable/encodings"
+            android:defaultValue="Cp1251"/>
+    </PreferenceCategory>
+</PreferenceScreen>

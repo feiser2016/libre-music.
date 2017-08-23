@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Libre Music</string>
+    <string name="albums">אלבומים</string>
+    <string name="artists">אומנים</string>
+    <string name="no">לא</string>
+    <string name="reset_library">איפוס ספריה</string>
+    <string name="songs">שירים</string>
+    <string name="yes">כן</string>
+    <string name="reset_library_message">הספריה תאופס באיתחול הבא.</string>
+    <string name="reset_library_question">האם ברצונכם לאפס את הספריה באתחול הבא?</string>
+    <string name="now_playing">עכשיו מנגן</string>
+    <string name="libre_player_activity">הספרייה שלי</string>
+    <string name="loading">טוען</string>
+    <string name="pref_advanced">⚙ הגדרות מתקדמות</string>
+    <string name="pref_night">מצב לילה</string>
+    <string name="pref_simple">⚙ הגדרות פשוטות</string>
+    <string name="settings">הגדרות</string>
+    <string name="pref_cue">קידוד גיליון CUE</string>
+</resources>
