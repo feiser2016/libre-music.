@@ -42,6 +42,7 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     navigation = BottomNavigationView
      */
     private var destroy = false
+    private val REQUEST_CODE_PREFERENCES = 321
 
     companion object {
         lateinit var songList : ArrayList<Song>
@@ -50,13 +51,14 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         lateinit var listLevel : ListLevel
         var listPos = 0
         var listPos_two = 0
+
+        var pitch_black : Int? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        evaluateTheme()
         setContentView(R.layout.activity_libre_player)
-        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("enable_dark_theme", false))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         val bool : Boolean = try {
             songList.isNotEmpty()
         } catch (e: Exception) {
@@ -163,6 +165,16 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_PREFERENCES) {
+            if (pitch_black != null)
+                setTheme(pitch_black!!)
+            else
+                setTheme(R.style.AppTheme)
+        }
+    }
+
     fun resetButton(item: MenuItem) {
         val builder = AlertDialog.Builder(this)
         builder.setIcon(R.mipmap.ic_launcher_round)
@@ -179,6 +191,25 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     }
 
     fun launchSettingsMenu(item: MenuItem) {
-        startActivity(Intent(this, PreferenceSetter::class.java))
+        startActivityForResult(Intent(this, PreferenceSetter::class.java), REQUEST_CODE_PREFERENCES)
+    }
+
+    private fun evaluateTheme() {
+        val value_array = resources.getStringArray(R.array.app_themes_values)
+        when (PreferenceManager.getDefaultSharedPreferences(this).getString("app_theme_preferences", value_array[0])) {
+            value_array[0] -> { // Light Mode
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                pitch_black = null
+            }
+            value_array[1] -> { // Night Mode
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                pitch_black = null
+            }
+            value_array[2] -> { // Black Mode
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                pitch_black = R.style.AppTheme_Black
+                setTheme(pitch_black!!)
+            }
+        }
     }
 }

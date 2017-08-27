@@ -13,6 +13,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -63,7 +64,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_now_playing)
+        evaluateTheme()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         seekBar.setOnSeekBarChangeListener(this)
         val pos = intent.getIntExtra("position", -1)
@@ -184,5 +185,18 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             val broadcastIntent = Intent(Broadcast_PLAY_NEW_AUDIO)
             sendBroadcast(broadcastIntent)
         }
+    }
+
+    private fun evaluateTheme() {
+        if (LibrePlayer.pitch_black != null) {
+            setTheme(LibrePlayer.pitch_black!!)
+            setContentView(R.layout.activity_now_playing)
+            val grayDark = Color.parseColor("#101010")
+            now_playing_layout.setBackgroundColor(R.color.colorPrimaryBlack)
+            now_playing_linearlayout.setBackgroundColor(grayDark)
+            seekBar.setBackgroundColor(grayDark)
+        }
+        else
+            setContentView(R.layout.activity_now_playing)
     }
 }

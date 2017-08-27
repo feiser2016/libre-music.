@@ -20,6 +20,8 @@ class PreferenceSetter : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (LibrePlayer.pitch_black != null)
+            setTheme(LibrePlayer.pitch_black!!)
         fragmentManager.beginTransaction().replace(android.R.id.content,
                 MyPreferenceFragment()).commit()
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this) // OnSharedPreferenceChangeListener
@@ -34,13 +36,22 @@ class PreferenceSetter : AppCompatActivity(), SharedPreferences.OnSharedPreferen
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (key == "enable_dark_theme") { // check night mode preference
-            // by default night mode is false
-            // try to get the boolean from the sharedPreferences using the given key
-            if (sharedPreferences.getBoolean(key, false))
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // set night mode
-            else
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) // set light mode
+        if (key == "app_theme_preferences") {
+            val value_array = resources.getStringArray(R.array.app_themes_values)
+            when (sharedPreferences.getString(key, value_array[0])) {
+                value_array[0] -> { // Light Mode
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    LibrePlayer.pitch_black = null
+                }
+                value_array[1] -> { // Night Mode
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    LibrePlayer.pitch_black = null
+                }
+                value_array[2] -> { // Black Mode
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    LibrePlayer.pitch_black = R.style.AppTheme_Black
+                }
+            }
             finish() // exit the preferences activity (needed in order to apply changes)
         }
     }

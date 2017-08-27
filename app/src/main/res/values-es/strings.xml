@@ -17,4 +17,10 @@
     <string name="reset_library_message">Libreria se va a actualizar en el proximo lanzamiento</string>
     <string name="reset_library_question">Estas seguro que quisieras resetiar tu libraria de musica en el proximo lanzamiento?</string>
     <string name="now_playing">Sonando Ahora</string>
+
+    <string-array name="app_themes">
+        <item>Light Theme</item>
+        <item>Modo nocturno</item>
+        <item>Black Theme</item>
+    </string-array>
 </resources>

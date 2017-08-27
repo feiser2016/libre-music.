@@ -13,8 +13,16 @@
     <string name="libre_player_activity">הספרייה שלי</string>
     <string name="loading">טוען</string>
     <string name="pref_advanced">⚙ הגדרות מתקדמות</string>
-    <string name="pref_night">מצב לילה</string>
+    <string name="pref_night">ערכת נושא</string>
     <string name="pref_simple">⚙ הגדרות פשוטות</string>
     <string name="settings">הגדרות</string>
     <string name="pref_cue">קידוד גיליון CUE</string>
+    <string name="pref_cue_message">בכדי שיהיה שינוי צריך לאפס את סיפריית השירים</string>
+    <string name="pref_night_message">מומלץ לפתוח מחדש את האפליקציה לאחר שינוי ערכת נושא</string>
+
+    <string-array name="app_themes">
+        <item>ערכת נושא אור</item>
+        <item>ערכת נושא לילה</item>
+        <item>ערכת נושא שחורה</item>
+    </string-array>
 </resources>
