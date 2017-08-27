@@ -127,13 +127,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?android:selectableItemBackground"
-            android:src="@android:drawable/ic_media_previous"
+            android:src="@drawable/prev"
             android:onClick="playPrev" />
 
         <ImageButton
             android:id="@+id/playPause"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_media_play"
+            android:src="@drawable/play"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
@@ -146,7 +146,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
-            android:src="@android:drawable/ic_media_next"
+            android:src="@drawable/next"
             android:layout_weight="1"
             android:onClick="playNext"/>
     </LinearLayout>

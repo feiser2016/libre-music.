@@ -117,9 +117,9 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     private fun setupUI () {
         if (!MediaPlayerService.mediaPlayer!!.isPlaying)
-            playPause.setImageResource(android.R.drawable.ic_media_play)
+            playPause.setImageResource(R.drawable.play)
         else
-            playPause.setImageResource(android.R.drawable.ic_media_pause)
+            playPause.setImageResource(R.drawable.pause)
 
         val song = MediaPlayerService.activeAudio
         val position = MediaPlayerService.mediaPlayer!!.currentPosition
@@ -152,23 +152,23 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     fun playPrev(view: View) {
         if (!MediaPlayerService.mediaPlayer!!.isPlaying)
-            playPause.setImageResource(android.R.drawable.ic_media_pause)
+            playPause.setImageResource(R.drawable.pause)
         MediaPlayerService.transportControls.skipToPrevious()
     }
 
     fun playNext(view: View) {
         if (!MediaPlayerService.mediaPlayer!!.isPlaying)
-            playPause.setImageResource(android.R.drawable.ic_media_pause)
+            playPause.setImageResource(R.drawable.pause)
         MediaPlayerService.transportControls.skipToNext()
     }
 
     fun playPause(view: View) {
         if (MediaPlayerService.mediaPlayer!!.isPlaying) {
-            playPause.setImageResource(android.R.drawable.ic_media_play)
+            playPause.setImageResource(R.drawable.play)
             MediaPlayerService.transportControls.pause()
         }
         else {
-            playPause.setImageResource(android.R.drawable.ic_media_pause)
+            playPause.setImageResource(R.drawable.pause)
             MediaPlayerService.transportControls.play()
         }
     }
