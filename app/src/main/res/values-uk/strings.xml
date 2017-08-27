@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Libre Music</string>
+    <string name="albums">Альбоми</string>
+    <string name="artists">Артисти</string>
+    <string name="libre_player_activity">Моя бібліотека</string>
+    <string name="loading">Завантаження</string>
+    <string name="no">Нi</string>
+    <string name="yes">Так</string>
+    <string name="now_playing">Зараз грає</string>
+    <string name="pref_advanced">⚙ Просунуті настройки</string>
+    <string name="pref_cue">Кодування CUE шару</string>
+    <string name="pref_night">Тема програми</string>
+    <string name="pref_simple">⚙ Прості настройки</string>
+    <string name="reset_library">Обнулити Бібліотеку</string>
+    <string name="settings">Настройки</string>
+    <string name="songs">Пісні</string>
+    <string name="pref_cue_message">Для того щоб змінення применились потрібно обнулити бібліотеку</string>
+    <string name="pref_night_message">Рекомендується перезавантажити програму після застосування нової теми</string>
+    <string name="reset_library_message">Бібліотека обнулится на наступному запуску.</string>
+    <string name="reset_library_question">Чи хочете обнулити бібліотеку на наступному запуску?</string>
+
+    <string-array name="app_themes">
+        <item>Світла Тема</item>
+        <item>Нічна Тема</item>
+        <item>Чорна Тема</item>
+    </string-array>
+</resources>
