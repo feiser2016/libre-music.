@@ -19,6 +19,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.LayerDrawable
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -406,7 +408,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         val largeIcon : Bitmap = if (activeAudio.cover != "none")
             BitmapFactory.decodeFile(activeAudio.cover)
         else
-            BitmapFactory.decodeResource(resources, R.drawable.song_big)
+            getBitmap(R.drawable.song_big)
 
         val contentIntent = PendingIntent.getActivity(applicationContext, 102,
                 Intent(applicationContext, NowPlaying::class.java),
@@ -470,6 +472,16 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
             buildNotification(PlaybackStatus.PLAYING)
         }, dur.toLong())
     } // Responsible for dealing correctly with Image+Cue style files
+
+    private fun getBitmap(drawableId : Int) : Bitmap {
+        val layerDrawable = getDrawable(drawableId) as LayerDrawable
+        val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth,
+                layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        layerDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        layerDrawable.draw(canvas)
+        return bitmap
+    } // Gets bitmap from a layer containing a shape and a vector image
 
     // Attributes that the media player will use
     private fun audioAttributes() = AudioAttributes.Builder()
