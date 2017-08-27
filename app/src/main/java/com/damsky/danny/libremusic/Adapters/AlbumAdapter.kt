@@ -66,7 +66,7 @@ class AlbumAdapter(context: Context, xItems: ArrayList<Album>) : ArrayAdapter<Al
                         .placeholder(R.drawable.album)
                         .override(height, height))
                 .into(viewHolder.cover)
-        viewHolder.duration.text = if (xItem.year > 0) "${xItem.year}" else ""
+        viewHolder.duration.text = if (xItem.year > 0) "${xItem.year}" else "        "
         // Return the completed view to render on screen
         return cv
     }

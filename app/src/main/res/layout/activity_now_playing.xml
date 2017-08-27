@@ -133,7 +133,7 @@
         <ImageButton
             android:id="@+id/playPause"
             android:scaleType="fitCenter"
-            android:src="@drawable/play"
+            android:src="@drawable/pause"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?android:selectableItemBackground"
