@@ -9,11 +9,11 @@
     </style>
 
     <style name="AppTheme.Black" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimaryGrayDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryGrayDark</item>
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryDark">#212121</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorPrimaryAlmostBlack</item>
-        <item name="android:windowBackground">@color/colorPrimaryBlack</item>
+        <item name="android:statusBarColor">#101010</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
