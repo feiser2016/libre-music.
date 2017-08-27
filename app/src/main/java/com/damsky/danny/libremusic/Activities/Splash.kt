@@ -121,14 +121,16 @@ class Splash : AppCompatActivity() {
             if (duration > 600000) { // Files shorter than 10 minutes won't be checked
                 val file_data = File(data) // The audio file
                 val folder = file_data.parentFile // The audio file's directory
+                val list_files = folder.listFiles()
                 val extension = file_data.extension // The audio file's extension
                 var cue_file : File? = null
-                for (file in folder.listFiles()) { // Scan the audio file's folder
-                    if (file.absolutePath != data && file.name.endsWith(extension)) // If songs are found in the folder
-                        return true // A cue sheet isn't required in a folder which contains more than 1 audio file, as it is most likely an album of itself.
-                    if (file.name.endsWith(".cue")) // If cue sheet is found
-                        cue_file = file // Set cue_file to the cue sheet
-                }
+                if (list_files != null)
+                    for (file in list_files) { // Scan the audio file's folder
+                        if (file.absolutePath != data && file.name.endsWith(extension)) // If songs are found in the folder
+                            return true // A cue sheet isn't required in a folder which contains more than 1 audio file, as it is most likely an album of itself.
+                        if (file.name.endsWith(".cue")) // If cue sheet is found
+                            cue_file = file // Set cue_file to the cue sheet
+                    }
                 if (cue_file == null) // If cue sheet was found during for-loop
                     cue_file = File(data) // Set the cue_file to be the file itself
 
