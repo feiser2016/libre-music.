@@ -70,7 +70,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         val pos = intent.getIntExtra("position", -1)
         if (pos != -1)
             playAudio(pos)
-        handler.postDelayed(run, 1000)
+        handler.postDelayed(run, 200)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -101,7 +101,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     override fun onRestart() {
         super.onRestart()
         setupUI()
-        handler.postDelayed(run, 1000)
+        handler.postDelayed(run, 200)
     }
 
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
