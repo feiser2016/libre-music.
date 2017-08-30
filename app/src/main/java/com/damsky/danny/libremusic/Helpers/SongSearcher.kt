@@ -1,14 +1,10 @@
 package com.damsky.danny.libremusic.Helpers
 
-import android.widget.ListAdapter
 import com.damsky.danny.libremusic.DB.Song
-import com.damsky.danny.libremusic.Enum.ListLevel
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class SongSearcher(private val songList: ArrayList<Song>) {
-    private lateinit var saveType : ListAdapter
-    private lateinit var saveLevel : ListLevel
     private var searchString = ""
     private val stringList = ArrayList<String>(0)
     private var matches : ArrayList<Int>? = null
@@ -18,7 +14,7 @@ class SongSearcher(private val songList: ArrayList<Song>) {
 
     private fun getMatches() : ArrayList<Int>? {
         val list = ArrayList<Int>(0)
-        (0 until stringList.size).filterTo(list) { pattern("^$searchString", stringList[it]).find() }
+        (0 until stringList.size).filterTo(list) { pattern(searchString, stringList[it].toLowerCase()).find() }
         return if (list.isNotEmpty()) list else null
     }
 
@@ -30,19 +26,13 @@ class SongSearcher(private val songList: ArrayList<Song>) {
     }
 
     fun Update(search: String) {
-        if (!search.contains("^$searchString") || searchString.isBlank()) {
+        val _search = search.toLowerCase()
+        if (!_search.contains("^$searchString") || searchString.isBlank()) {
             stringList.clear()
             songList.mapTo(stringList) { it.title }
         }
-        searchString = search
+        searchString = _search
     }
 
     fun getPosition(position: Int) = matches!![position]
-
-    fun setSave(save_one: ListAdapter, save_two: ListLevel) {
-        saveType = save_one
-        saveLevel = save_two
-    }
-    fun getSave() = Pair(saveType, saveLevel)
-
 }

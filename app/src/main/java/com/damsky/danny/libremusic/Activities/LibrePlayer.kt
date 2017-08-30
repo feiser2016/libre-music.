@@ -184,15 +184,10 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
             override fun onGlobalLayout() {
                 val currentVisibility = mSearchEditFrame.visibility
                 if (currentVisibility != oldVisibility) {
-                    if (currentVisibility == View.VISIBLE) {
-                        searcher.setSave(my_music.adapter, listLevel)
+                    if (currentVisibility == View.VISIBLE)
                         searcher.Searching = true
-                    } else {
-                        val (a, b) = searcher.getSave()
-                        my_music.adapter = a
-                        listLevel = b
-                        searcher.Searching = false
-                    }
+                    else
+                        navigation.selectedItemId = R.id.navigation_artists
                     oldVisibility = currentVisibility
                 }
             }
@@ -204,13 +199,11 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     override fun onQueryTextSubmit(p0: String) = false
 
     override fun onQueryTextChange(p0: String): Boolean {
-        if (p0.isNotBlank()) {
-            searcher.Update(p0)
-            val search = searcher.Search()
-            my_music.adapter = SongAdapter(this, search)
-            listLevel = ListLevel.SONGS
-            searcher.Searching = true
-        }
+        searcher.Update(p0)
+        val search = searcher.Search()
+        my_music.adapter = SongAdapter(this, search)
+        listLevel = ListLevel.SONGS
+        searcher.Searching = true
         return true
     }
 
