@@ -38,7 +38,11 @@
         <activity
             android:name=".Activities.LibrePlayer"
             android:label="@string/libre_player_activity"
-            android:screenOrientation="sensorPortrait" />
+            android:screenOrientation="sensorPortrait">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>
+
         <activity android:name=".Activities.NowPlaying"
             android:label="@string/now_playing"
             android:screenOrientation="sensorPortrait" />

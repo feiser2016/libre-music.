@@ -25,4 +25,5 @@
         <item>ערכת נושא לילה</item>
         <item>ערכת נושא שחורה</item>
     </string-array>
+    <string name="search">חיפוש</string>
 </resources>

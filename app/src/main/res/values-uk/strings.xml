@@ -25,4 +25,5 @@
         <item>Нічна Тема</item>
         <item>Чорна Тема</item>
     </string-array>
+    <string name="search">Пошук</string>
 </resources>

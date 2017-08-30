@@ -118,4 +118,5 @@
         <item>VISCII</item>
         <item>Cp1258</item>
     </string-array>
+    <string name="search">Search</string>
 </resources>
