@@ -188,8 +188,8 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     private fun evaluateTheme() {
-        if (LibrePlayer.pitch_black != null) {
-            setTheme(LibrePlayer.pitch_black!!)
+        if (LibrePlayer.pitch_black == R.style.AppTheme_Black) {
+            setTheme(LibrePlayer.pitch_black)
             setContentView(R.layout.activity_now_playing)
             val grayDark = Color.parseColor("#101010")
             now_playing_layout.setBackgroundColor(android.R.color.black)

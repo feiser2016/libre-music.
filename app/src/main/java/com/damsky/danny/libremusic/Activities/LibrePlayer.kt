@@ -57,7 +57,7 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         var listPos = 0
         var listPos_two = 0
 
-        var pitch_black : Int? = null
+        var pitch_black = R.style.AppTheme
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -209,12 +209,8 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_PREFERENCES) {
-            if (pitch_black != null)
-                setTheme(pitch_black!!)
-            else
-                setTheme(R.style.AppTheme)
-        }
+        if (requestCode == REQUEST_CODE_PREFERENCES)
+            setTheme(pitch_black)
     }
 
     fun resetButton(item: MenuItem) {
@@ -241,16 +237,16 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         when (PreferenceManager.getDefaultSharedPreferences(this).getString("app_theme_preferences", value_array[0])) {
             value_array[0] -> { // Light Mode
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                pitch_black = null
+                pitch_black = R.style.AppTheme
             }
             value_array[1] -> { // Night Mode
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                pitch_black = null
+                pitch_black = R.style.AppTheme
             }
             value_array[2] -> { // Black Mode
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 pitch_black = R.style.AppTheme_Black
-                setTheme(pitch_black!!)
+                setTheme(pitch_black)
             }
         }
     }

@@ -134,7 +134,7 @@ class Splash : AppCompatActivity() {
                 if (cue_file == null) // If cue sheet was found during for-loop
                     cue_file = File(data) // Set the cue_file to be the file itself
 
-                val splitter = CUESplitter(this@Splash, cue_file, data, cover, duration, encoding)
+                val splitter = CUESplitter(cue_file, data, cover, duration, encoding)
                 if (splitter.isReadable) {
                     // Use CUESplitter object to get a list of songs from the cue sheet
                     val list = splitter.list() // ArrayList<Song>

@@ -9,7 +9,6 @@ Editor: Danny Damsky
 
 package com.damsky.danny.libremusic.Helpers
 
-import android.content.Context
 import com.damsky.danny.libremusic.DB.Song
 import java.io.BufferedInputStream
 import java.io.File
@@ -18,7 +17,7 @@ import java.nio.charset.Charset
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-class CUESplitter(val context: Context, val data: File, private val song_file: String, val cover: String, private val duration: Int, private val encoding: String) {
+class CUESplitter(val data: File, private val song_file: String, val cover: String, private val duration: Int, private val encoding: String) {
     // These two variables are initialized immediately after creating an instance of CUESplitter
     private val content = read() // Stores the cue sheet in String form
     val isReadable = if (data.absolutePath == song_file) // Public constructor, checks if cue sheet exists within given file.

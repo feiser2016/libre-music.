@@ -20,8 +20,7 @@ class PreferenceSetter : AppCompatActivity(), SharedPreferences.OnSharedPreferen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (LibrePlayer.pitch_black != null)
-            setTheme(LibrePlayer.pitch_black!!)
+        setTheme(LibrePlayer.pitch_black)
         fragmentManager.beginTransaction().replace(android.R.id.content,
                 MyPreferenceFragment()).commit()
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this) // OnSharedPreferenceChangeListener
@@ -41,11 +40,11 @@ class PreferenceSetter : AppCompatActivity(), SharedPreferences.OnSharedPreferen
             when (sharedPreferences.getString(key, value_array[0])) {
                 value_array[0] -> { // Light Mode
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    LibrePlayer.pitch_black = null
+                    LibrePlayer.pitch_black = R.style.AppTheme
                 }
                 value_array[1] -> { // Night Mode
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    LibrePlayer.pitch_black = null
+                    LibrePlayer.pitch_black = R.style.AppTheme
                 }
                 value_array[2] -> { // Black Mode
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
