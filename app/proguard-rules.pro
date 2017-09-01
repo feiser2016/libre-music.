@@ -33,3 +33,5 @@ public static java.lang.String TABLENAME;
 -dontwarn org.greenrobot.greendao.database.**
 # If you do not use RxJava:
 -dontwarn rx.**
+
+-keep class android.support.v7.widget.SearchView { *; }
