@@ -105,10 +105,9 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-        if (p2) {
+        if (p2)
             MediaPlayerService.transportControls.seekTo(p0!!.progress.toLong() +
             MediaPlayerService.activeAudio.starttime)
-        }
     }
 
     // Useless methods
@@ -120,6 +119,16 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             playPause.setImageResource(R.drawable.play)
         else
             playPause.setImageResource(R.drawable.pause)
+
+        if (!MediaPlayerService.repeat)
+            repeat.setImageResource(R.drawable.repeat_all)
+        else
+            repeat.setImageResource(R.drawable.repeat_one)
+
+        if (!MediaPlayerService.shuffle)
+            shuffle.setImageResource(R.drawable.shuffle)
+        else
+            shuffle.setImageResource(R.drawable.shuffle_on)
 
         val song = MediaPlayerService.activeAudio
         val position = MediaPlayerService.mediaPlayer!!.currentPosition
@@ -171,6 +180,22 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             playPause.setImageResource(R.drawable.pause)
             MediaPlayerService.transportControls.play()
         }
+    }
+
+    fun repeatSet(view: View) {
+        MediaPlayerService.repeat = !MediaPlayerService.repeat
+        if (!MediaPlayerService.repeat)
+            repeat.setImageResource(R.drawable.repeat_all)
+        else
+            repeat.setImageResource(R.drawable.repeat_one)
+    }
+
+    fun shufflePlaylist(view: View) {
+        MediaPlayerService.shuffle = !MediaPlayerService.shuffle
+        if (!MediaPlayerService.shuffle)
+            shuffle.setImageResource(R.drawable.shuffle)
+        else
+            shuffle.setImageResource(R.drawable.shuffle_on)
     }
 
     private fun playAudio(position: Int) {

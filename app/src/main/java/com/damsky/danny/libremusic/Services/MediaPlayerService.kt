@@ -41,6 +41,8 @@ import com.damsky.danny.libremusic.DB.Song
 import com.damsky.danny.libremusic.Enum.PlaybackStatus
 import com.damsky.danny.libremusic.R
 import java.io.IOException
+import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
@@ -97,6 +99,8 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         lateinit var activeAudio : Song // The actual song that's active
         var mediaPlayer: MediaPlayer? = null
         lateinit var transportControls: MediaControllerCompat.TransportControls
+        var repeat = false
+        var shuffle = false
     }
 
     // The class used by the binder
@@ -368,10 +372,15 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     } // Initialization of the media session objects
 
     private fun skipToNext() {
-        if (audioIndex == audioList.size - 1)
-            audioIndex = 0
+        if (!shuffle) {
+            if (audioIndex == audioList.size - 1)
+                audioIndex = 0
+            else
+                audioIndex++
+        }
         else
-            audioIndex++
+            audioIndex = ThreadLocalRandom.current().nextInt(0, audioList.size)
+
         activeAudio = audioList[audioIndex]
 
         stopMedia()
@@ -468,8 +477,12 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         mediaPlayer!!.seekTo(from)
         mediaPlayer!!.start()
         handler.postDelayed({
-            skipToNext()
-            buildNotification(PlaybackStatus.PLAYING)
+            if (repeat)
+                seekFromTo(activeAudio.starttime, activeAudio.endtime)
+            else {
+                skipToNext()
+                buildNotification(PlaybackStatus.PLAYING)
+            }
         }, dur.toLong())
     } // Responsible for dealing correctly with Image+Cue style files
 
