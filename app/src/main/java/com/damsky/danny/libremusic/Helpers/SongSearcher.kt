@@ -1,3 +1,8 @@
+/*
+Year: 2017
+Editor: Danny Damsky
+ */
+
 package com.damsky.danny.libremusic.Helpers
 
 import com.damsky.danny.libremusic.DB.Song
