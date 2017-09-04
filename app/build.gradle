@@ -10,7 +10,7 @@ android {
         applicationId "com.damsky.danny.libremusic"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 5
+        versionCode 6
         versionName "1.2.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
