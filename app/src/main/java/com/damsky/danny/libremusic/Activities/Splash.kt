@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.damsky.danny.libremusic.DB.*
+import com.damsky.danny.libremusic.Helpers.AudioConfig
 import com.damsky.danny.libremusic.Helpers.CUESplitter
 import com.damsky.danny.libremusic.R
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -100,19 +101,21 @@ class Splash : AppCompatActivity() {
             if (songQuery.list().isEmpty()) // If there are no songs call loadAudio()
                 loadAudio() // Queries the device's storage for songs and adds them to the database
 
-            LibrePlayer.songList = songQuery.list() as ArrayList<Song> // finally fill the arrayList of songs
+            val songList = songQuery.list() as ArrayList<Song> // finally fill the arrayList of songs
 
-            LibrePlayer.albumList = daoSession.albumDao // Fill the arrayList of albums
+            val albumList = daoSession.albumDao // Fill the arrayList of albums
                     .queryBuilder()
                     .orderAsc(AlbumDao.Properties.Artist,
                             AlbumDao.Properties.Year,
                             AlbumDao.Properties.Album)
                     .build().list() as ArrayList<Album>
 
-            LibrePlayer.artistList = daoSession.artistDao // Fill the arrayList of artists
+            val artistList = daoSession.artistDao // Fill the arrayList of artists
                     .queryBuilder()
                     .orderAsc(ArtistDao.Properties.Artist)
                     .build().list() as ArrayList<Artist>
+
+            LibrePlayer.audioConfig = AudioConfig(this@Splash, songList, albumList, artistList)
 
             return null // Function expects a return statement
         }
@@ -159,7 +162,6 @@ class Splash : AppCompatActivity() {
                     null, null) // Queries the external storage for music files
 
             if (cursor != null && cursor.count > 0) {
-                LibrePlayer.songList = ArrayList()
                 while (cursor.moveToNext()) { // Every item queried is a song
                     // The metadata of the song is gathered by the cursor and is added to the database
                     val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))

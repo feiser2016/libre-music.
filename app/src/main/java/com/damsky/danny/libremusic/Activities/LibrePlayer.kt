@@ -29,11 +29,9 @@ import android.widget.AdapterView
 import com.damsky.danny.libremusic.Adapters.AlbumAdapter
 import com.damsky.danny.libremusic.Adapters.ArtistAdapter
 import com.damsky.danny.libremusic.Adapters.SongAdapter
-import com.damsky.danny.libremusic.DB.Album
-import com.damsky.danny.libremusic.DB.Artist
 import com.damsky.danny.libremusic.DB.DaoMaster
-import com.damsky.danny.libremusic.DB.Song
 import com.damsky.danny.libremusic.Enum.ListLevel
+import com.damsky.danny.libremusic.Helpers.AudioConfig
 import com.damsky.danny.libremusic.Helpers.SongSearcher
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.Services.MediaPlayerService
@@ -50,13 +48,7 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     private lateinit var searcher: SongSearcher
 
     companion object {
-        lateinit var songList : ArrayList<Song>
-        lateinit var albumList : ArrayList<Album>
-        lateinit var artistList : ArrayList<Artist>
-        lateinit var listLevel : ListLevel
-        var listPos = 0
-        var listPos_two = 0
-
+        lateinit var audioConfig : AudioConfig
         var pitch_black = R.style.AppTheme
     }
 
@@ -64,19 +56,15 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         super.onCreate(savedInstanceState)
         evaluateTheme()
         setContentView(R.layout.activity_libre_player)
-        val bool : Boolean = try {
-            songList.isNotEmpty()
-        } catch (e: Exception) {
-            false
-        }
+        val bool = audioConfig.isUsable()
 
         if (bool) {
             navigation.setOnNavigationItemSelectedListener(this)
-            searcher = SongSearcher(songList)
+            searcher = SongSearcher(audioConfig.songList)
             navigation.selectedItemId = R.id.navigation_artists
         }
         else
-            listLevel = ListLevel.ARTISTS
+            audioConfig.listLevel = ListLevel.ARTISTS
 
         my_music.onItemClickListener = this
     }
@@ -98,30 +86,23 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     }
 
     override fun onBackPressed() {
-        when (listLevel) {
-            ListLevel.ALBUM_SONGS -> navigation.selectedItemId = R.id.navigation_albums
-            ListLevel.ARTIST_ALBUMS -> navigation.selectedItemId = R.id.navigation_artists
-            ListLevel.ARTIST_SONGS -> {
-                my_music.adapter = AlbumAdapter(this, ArrayList(artistList[listPos].albums))
-                listLevel = ListLevel.ARTIST_ALBUMS
-            }
-            else -> finish()
-        }
+        if (audioConfig.goBack() == null)
+            finish()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navigation_artists -> {
-                my_music.adapter = ArtistAdapter(this, artistList)
-                listLevel = ListLevel.ARTISTS
+                my_music.adapter = ArtistAdapter(this, audioConfig.artistList)
+                audioConfig.listLevel = ListLevel.ARTISTS
             }
             R.id.navigation_albums -> {
-                my_music.adapter = AlbumAdapter(this, albumList)
-                listLevel = ListLevel.ALBUMS
+                my_music.adapter = AlbumAdapter(this, audioConfig.albumList)
+                audioConfig.listLevel = ListLevel.ALBUMS
             }
             R.id.navigation_songs -> {
-                my_music.adapter = SongAdapter(this, songList)
-                listLevel = ListLevel.SONGS
+                my_music.adapter = SongAdapter(this, audioConfig.songList)
+                audioConfig.listLevel = ListLevel.SONGS
             }
         }
         searcher.Searching = false
@@ -129,24 +110,24 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        when (listLevel) {
+        when (audioConfig.listLevel) {
             ListLevel.ARTISTS -> {
-                my_music.adapter = AlbumAdapter(this, ArrayList(artistList[position].albums))
-                listLevel = ListLevel.ARTIST_ALBUMS
-                listPos = position
+                my_music.adapter = AlbumAdapter(this, ArrayList(audioConfig.artistList[position].albums))
+                audioConfig.listLevel = ListLevel.ARTIST_ALBUMS
+                audioConfig.position[0] = position
             }
             ListLevel.ALBUMS -> {
-                my_music.adapter = SongAdapter(this, ArrayList(albumList[position].songs))
-                listLevel = ListLevel.ALBUM_SONGS
-                listPos = position
+                my_music.adapter = SongAdapter(this, ArrayList(audioConfig.albumList[position].songs))
+                audioConfig.listLevel = ListLevel.ALBUM_SONGS
+                audioConfig.position[0] = position
             }
             ListLevel.ARTIST_ALBUMS -> {
-                my_music.adapter = SongAdapter(this, ArrayList(artistList[listPos].albums[position].songs))
-                listLevel = ListLevel.ARTIST_SONGS
-                listPos_two = position
+                my_music.adapter = SongAdapter(this, ArrayList(audioConfig.artistList[audioConfig.position[0]].albums[position].songs))
+                audioConfig.listLevel = ListLevel.ARTIST_SONGS
+                audioConfig.position[1] = position
             }
             ListLevel.SONGS -> {
-                MediaPlayerService.audioList = songList
+                MediaPlayerService.audioList = audioConfig.songList
                 val nowPlaying = Intent(this, NowPlaying::class.java)
                 if (searcher.Searching)
                     nowPlaying.putExtra("position", searcher.getPosition(position))
@@ -155,13 +136,13 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
                 startActivity(nowPlaying)
             }
             ListLevel.ALBUM_SONGS -> {
-                MediaPlayerService.audioList = ArrayList(albumList[listPos].songs)
+                MediaPlayerService.audioList = ArrayList(audioConfig.albumList[audioConfig.position[0]].songs)
                 val nowPlaying = Intent(this, NowPlaying::class.java)
                 nowPlaying.putExtra("position", position)
                 startActivity(nowPlaying)
             }
             ListLevel.ARTIST_SONGS -> {
-                MediaPlayerService.audioList = ArrayList(artistList[listPos].albums[listPos_two].songs)
+                MediaPlayerService.audioList = ArrayList(audioConfig.artistList[audioConfig.position[0]].albums[audioConfig.position[1]].songs)
                 val nowPlaying = Intent(this, NowPlaying::class.java)
                 nowPlaying.putExtra("position", position)
                 startActivity(nowPlaying)
@@ -202,7 +183,7 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         searcher.Update(p0)
         val search = searcher.Search()
         my_music.adapter = SongAdapter(this, search)
-        listLevel = ListLevel.SONGS
+        audioConfig.listLevel = ListLevel.SONGS
         searcher.Searching = true
         return true
     }
