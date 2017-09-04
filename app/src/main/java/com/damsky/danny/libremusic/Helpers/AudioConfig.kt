@@ -14,45 +14,60 @@ import com.damsky.danny.libremusic.DB.Artist
 import com.damsky.danny.libremusic.DB.Song
 import com.damsky.danny.libremusic.Enum.ListLevel
 
-class AudioConfig(private val context: Context, val songList: ArrayList<Song>, val albumList: ArrayList<Album>, val artistList: ArrayList<Artist>) {
-    val position = intArrayOf(0, 0, 0)
-    lateinit var listLevel : ListLevel
+class AudioConfig(val songList: ArrayList<Song>, val albumList: ArrayList<Album>, val artistList: ArrayList<Artist>) {
+    private val position = intArrayOf(0, 0)
+    lateinit var context: Context
+    var listLevel = ListLevel.ARTISTS
 
-    fun getAdapter() = when (listLevel) {
-        ListLevel.ARTISTS ->
-            ArtistAdapter(context, artistList)
-        ListLevel.ALBUMS ->
-            AlbumAdapter(context, albumList)
-        ListLevel.SONGS ->
-            SongAdapter(context, songList)
-        ListLevel.ALBUM_SONGS ->
-            SongAdapter(context, ArrayList(albumList[position[0]].songs))
-        ListLevel.ARTIST_SONGS ->
-            SongAdapter(context, ArrayList(artistList[position[0]].albums[position[1]].songs))
-        ListLevel.ARTIST_ALBUMS ->
-            AlbumAdapter(context, ArrayList(artistList[position[0]].albums))
-    }
-
-    fun isUsable() = try {
+    val isUsable = try {
         songList.isNotEmpty()
     } catch (e: Exception) {
         false
     }
 
-    @Suppress("IMPLICIT_CAST_TO_ANY")
+    fun getArtistAdapter() : ArtistAdapter {
+        listLevel = ListLevel.ARTISTS
+        return ArtistAdapter(context, artistList)
+    }
+    fun getArtistAlbumAdapter(pos: Int) : AlbumAdapter {
+        listLevel = ListLevel.ARTIST_ALBUMS
+        setArtistPosition(pos)
+        return AlbumAdapter(context, ArrayList(artistList[getArtistPosition()].albums))
+    }
+    fun getArtistSongAdapter(pos: Int) : SongAdapter {
+        listLevel = ListLevel.ARTIST_SONGS
+        setAlbumPosition(pos)
+        return SongAdapter(context, ArrayList(artistList[getArtistPosition()].albums[getAlbumPosition()].songs))
+    }
+    fun getAlbumAdapter() : AlbumAdapter {
+        listLevel = ListLevel.ALBUMS
+        return AlbumAdapter(context, albumList)
+    }
+    fun getAlbumSongAdapter(pos: Int) : SongAdapter {
+        listLevel = ListLevel.ALBUM_SONGS
+        setAlbumPosition(pos)
+        return SongAdapter(context, ArrayList(albumList[getAlbumPosition()].songs))
+    }
+    fun getSongAdapter() : SongAdapter {
+        listLevel = ListLevel.SONGS
+        return SongAdapter(context, songList)
+    }
+
+    private fun setArtistPosition(pos: Int) {
+        position[0] = pos
+    }
+
+    private fun setAlbumPosition(pos: Int) {
+        position[1] = pos
+    }
+
+    fun getArtistPosition() = position[0]
+    fun getAlbumPosition() = position[1]
+
     fun goBack() = when (listLevel) {
-        ListLevel.ALBUM_SONGS -> {
-            listLevel = ListLevel.ALBUMS
-            AlbumAdapter(context, albumList)
-        }
-        ListLevel.ARTIST_SONGS -> {
-            listLevel = ListLevel.ARTIST_ALBUMS
-            AlbumAdapter(context, ArrayList(artistList[position[0]].albums))
-        }
-        ListLevel.ARTIST_ALBUMS -> {
-            listLevel = ListLevel.ARTISTS
-            ArtistAdapter(context, artistList)
-        }
+        ListLevel.ALBUM_SONGS -> getAlbumAdapter()
+        ListLevel.ARTIST_SONGS -> getArtistAlbumAdapter(position[0])
+        ListLevel.ARTIST_ALBUMS -> getArtistAdapter()
         else -> null
     }
 }

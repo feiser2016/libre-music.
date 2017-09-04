@@ -26,8 +26,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.AdapterView
-import com.damsky.danny.libremusic.Adapters.AlbumAdapter
-import com.damsky.danny.libremusic.Adapters.ArtistAdapter
 import com.damsky.danny.libremusic.Adapters.SongAdapter
 import com.damsky.danny.libremusic.DB.DaoMaster
 import com.damsky.danny.libremusic.Enum.ListLevel
@@ -56,15 +54,13 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         super.onCreate(savedInstanceState)
         evaluateTheme()
         setContentView(R.layout.activity_libre_player)
-        val bool = audioConfig.isUsable()
+        audioConfig.context = this
 
-        if (bool) {
+        if (audioConfig.isUsable) {
             navigation.setOnNavigationItemSelectedListener(this)
             searcher = SongSearcher(audioConfig.songList)
             navigation.selectedItemId = R.id.navigation_artists
         }
-        else
-            audioConfig.listLevel = ListLevel.ARTISTS
 
         my_music.onItemClickListener = this
     }
@@ -86,24 +82,19 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     }
 
     override fun onBackPressed() {
-        if (audioConfig.goBack() == null)
+        val adapter = audioConfig.goBack()
+        if (adapter == null)
             finish()
+        else
+            my_music.adapter = adapter
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.navigation_artists -> {
-                my_music.adapter = ArtistAdapter(this, audioConfig.artistList)
-                audioConfig.listLevel = ListLevel.ARTISTS
-            }
-            R.id.navigation_albums -> {
-                my_music.adapter = AlbumAdapter(this, audioConfig.albumList)
-                audioConfig.listLevel = ListLevel.ALBUMS
-            }
-            R.id.navigation_songs -> {
-                my_music.adapter = SongAdapter(this, audioConfig.songList)
-                audioConfig.listLevel = ListLevel.SONGS
-            }
+        my_music.adapter = when (item.itemId) {
+            R.id.navigation_artists -> audioConfig.getArtistAdapter()
+            R.id.navigation_albums -> audioConfig.getAlbumAdapter()
+            R.id.navigation_songs -> audioConfig.getSongAdapter()
+            else -> null
         }
         searcher.Searching = false
         return true
@@ -111,21 +102,9 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         when (audioConfig.listLevel) {
-            ListLevel.ARTISTS -> {
-                my_music.adapter = AlbumAdapter(this, ArrayList(audioConfig.artistList[position].albums))
-                audioConfig.listLevel = ListLevel.ARTIST_ALBUMS
-                audioConfig.position[0] = position
-            }
-            ListLevel.ALBUMS -> {
-                my_music.adapter = SongAdapter(this, ArrayList(audioConfig.albumList[position].songs))
-                audioConfig.listLevel = ListLevel.ALBUM_SONGS
-                audioConfig.position[0] = position
-            }
-            ListLevel.ARTIST_ALBUMS -> {
-                my_music.adapter = SongAdapter(this, ArrayList(audioConfig.artistList[audioConfig.position[0]].albums[position].songs))
-                audioConfig.listLevel = ListLevel.ARTIST_SONGS
-                audioConfig.position[1] = position
-            }
+            ListLevel.ARTISTS -> my_music.adapter = audioConfig.getArtistAlbumAdapter(position)
+            ListLevel.ALBUMS -> my_music.adapter = audioConfig.getAlbumSongAdapter(position)
+            ListLevel.ARTIST_ALBUMS -> my_music.adapter = audioConfig.getArtistSongAdapter(position)
             ListLevel.SONGS -> {
                 MediaPlayerService.audioList = audioConfig.songList
                 val nowPlaying = Intent(this, NowPlaying::class.java)
@@ -136,13 +115,13 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
                 startActivity(nowPlaying)
             }
             ListLevel.ALBUM_SONGS -> {
-                MediaPlayerService.audioList = ArrayList(audioConfig.albumList[audioConfig.position[0]].songs)
+                MediaPlayerService.audioList = ArrayList(audioConfig.albumList[audioConfig.getArtistPosition()].songs)
                 val nowPlaying = Intent(this, NowPlaying::class.java)
                 nowPlaying.putExtra("position", position)
                 startActivity(nowPlaying)
             }
             ListLevel.ARTIST_SONGS -> {
-                MediaPlayerService.audioList = ArrayList(audioConfig.artistList[audioConfig.position[0]].albums[audioConfig.position[1]].songs)
+                MediaPlayerService.audioList = ArrayList(audioConfig.artistList[audioConfig.getArtistPosition()].albums[audioConfig.getAlbumPosition()].songs)
                 val nowPlaying = Intent(this, NowPlaying::class.java)
                 nowPlaying.putExtra("position", position)
                 startActivity(nowPlaying)
@@ -153,26 +132,28 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.libre_player_menu, menu)
 
-        // Associate searchable configuration with the SearchView
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu.findItem(R.id.search).actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView.setOnQueryTextListener(this)
+        if (audioConfig.isUsable) {
+            // Associate searchable configuration with the SearchView
+            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+            val searchView = menu.findItem(R.id.search).actionView as SearchView
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            searchView.setOnQueryTextListener(this)
 
-        val mSearchEditFrame = searchView.findViewById<View>(android.support.v7.appcompat.R.id.search_edit_frame)
-        mSearchEditFrame.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            internal var oldVisibility = -1
-            override fun onGlobalLayout() {
-                val currentVisibility = mSearchEditFrame.visibility
-                if (currentVisibility != oldVisibility) {
-                    if (currentVisibility == View.VISIBLE)
-                        searcher.Searching = true
-                    else
-                        navigation.selectedItemId = R.id.navigation_artists
-                    oldVisibility = currentVisibility
+            val mSearchEditFrame = searchView.findViewById<View>(android.support.v7.appcompat.R.id.search_edit_frame)
+            mSearchEditFrame.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+                internal var oldVisibility = -1
+                override fun onGlobalLayout() {
+                    val currentVisibility = mSearchEditFrame.visibility
+                    if (currentVisibility != oldVisibility) {
+                        if (currentVisibility == View.VISIBLE)
+                            searcher.Searching = true
+                        else
+                            navigation.selectedItemId = R.id.navigation_artists
+                        oldVisibility = currentVisibility
+                    }
                 }
-            }
-        })
+            })
+        }
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -216,14 +197,8 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     private fun evaluateTheme() {
         val value_array = resources.getStringArray(R.array.app_themes_values)
         when (PreferenceManager.getDefaultSharedPreferences(this).getString("app_theme_preferences", value_array[0])) {
-            value_array[0] -> { // Light Mode
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                pitch_black = R.style.AppTheme
-            }
-            value_array[1] -> { // Night Mode
+            value_array[1] -> // Night Mode
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                pitch_black = R.style.AppTheme
-            }
             value_array[2] -> { // Black Mode
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 pitch_black = R.style.AppTheme_Black

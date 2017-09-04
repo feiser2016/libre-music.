@@ -59,7 +59,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             }
         }
 
-        val Broadcast_PLAY_NEW_AUDIO = "com.damsky.danny.libremusic.PlayNewAudio"
+        const val Broadcast_PLAY_NEW_AUDIO = "com.damsky.danny.libremusic.PlayNewAudio"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

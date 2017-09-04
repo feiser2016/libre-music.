@@ -34,13 +34,10 @@ class Splash : AppCompatActivity() {
     loadingText = TextView
     progressBar = ProgressBar
      */
-    lateinit var daoSession : DaoSession // A database session
-    lateinit var encoding : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        encoding = PreferenceManager.getDefaultSharedPreferences(this).getString("file_encoding", "Cp1251")
         makePermissions() // Splash screen initialization starts by checking for permissions
     }
 
@@ -75,8 +72,11 @@ class Splash : AppCompatActivity() {
     } // this function runs after the makePermissions() function if permissions were requested
 
     inner class DataCollector : AsyncTask<Void?, Void?, Void?>() {
+        private lateinit var daoSession : DaoSession // A database session
+        private lateinit var encoding : String
         override fun onPreExecute() {
             super.onPreExecute()
+            encoding = PreferenceManager.getDefaultSharedPreferences(this@Splash).getString("file_encoding", "Cp1251")
             runOnUiThread { progressBar.visibility = View.VISIBLE }
         } // Show the progressBar before starting any operations.
 
@@ -115,7 +115,7 @@ class Splash : AppCompatActivity() {
                     .orderAsc(ArtistDao.Properties.Artist)
                     .build().list() as ArrayList<Artist>
 
-            LibrePlayer.audioConfig = AudioConfig(this@Splash, songList, albumList, artistList)
+            LibrePlayer.audioConfig = AudioConfig(songList, albumList, artistList)
 
             return null // Function expects a return statement
         }
