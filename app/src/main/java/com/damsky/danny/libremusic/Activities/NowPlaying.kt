@@ -2,7 +2,7 @@
 This activity opens up when a song is pressed in the library presented in LibrePlayer,
 it's in charge of playing said song as well as showing the song's information and allowing the user
 to control the song's progress with a SeekBar as well as media control buttons.
-HI
+
 Year: 2017
 Editor: Danny Damsky
  */

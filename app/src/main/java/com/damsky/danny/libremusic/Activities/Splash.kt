@@ -2,7 +2,7 @@
 This activity opens up with the application.
 It is in charge of querying for music and loading it into the database.
 After it's done it will open up LibrePlayer.
-HI
+
 Year: 2017
 Editor: Danny Damsky
  */

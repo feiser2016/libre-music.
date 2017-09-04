@@ -1,5 +1,4 @@
 /*
-HI
 Year: 2017
 Editor: Danny Damsky
  */
