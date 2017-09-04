@@ -3,6 +3,7 @@ This activity opens up immediately after the Splash activity
 finishes loading all the song information
 Information is loaded into songList (for songs), albumList (for albums) and artistList (for artists)
 This activity shows the music library to the user.
+HI
 
 Year: 2017
 Editor: Danny Damsky
