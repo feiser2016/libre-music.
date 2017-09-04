@@ -25,13 +25,13 @@
         <item>Black Theme</item>
     </string-array>
 
-    <string-array name="app_themes_values">
+    <string-array name="app_themes_values" tools:ignore="MissingTranslation">
         <item>light_theme</item>
         <item>night_theme</item>
         <item>black_theme</item>
     </string-array>
 
-    <string-array name="encoding_list" tools:ignore="TypographyDashes">
+    <string-array name="encoding_list" tools:ignore="TypographyDashes,MissingTranslation" >
         <item>Default, Cyrillic (Windows-1251)</item>
         <item>Universal (UTF-8)</item>
         <item>Universal (UTF-16)</item>
@@ -75,7 +75,7 @@
         <item>Vietnamese (Windows-1258)</item>
     </string-array>
 
-    <string-array name="encoding_values" tools:ignore="TypographyDashes">
+    <string-array name="encoding_values" tools:ignore="TypographyDashes,MissingTranslation">
         <item>Cp1251</item>
         <item>UTF8</item>
         <item>UTF-16</item>
