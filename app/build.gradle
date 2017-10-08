@@ -5,13 +5,13 @@ apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.damsky.danny.libremusic"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 6
-        versionName "1.2.01"
+        versionCode 7
+        versionName "1.2.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -44,9 +44,9 @@ dependencies {
     compile 'com.android.support:support-vector-drawable:26.+'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.bumptech.glide:glide:4.0.0'
+    compile 'com.github.bumptech.glide:glide:4.2.0'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 }
 repositories {
     mavenCentral()

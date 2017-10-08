@@ -177,7 +177,7 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
 
     fun resetButton(item: MenuItem) {
         val builder = AlertDialog.Builder(this)
-        builder.setIcon(R.mipmap.ic_launcher_round)
+        builder.setIcon(R.mipmap.ic_launcher)
         builder.setTitle(R.string.reset_library)
         builder.setMessage(R.string.reset_library_question)
         builder.setPositiveButton(R.string.yes, {dialog, _ ->

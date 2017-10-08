@@ -407,10 +407,10 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
 
         // Build a new notification according to the current state of the MediaPlayer
         if (playbackStatus == PlaybackStatus.PLAYING) {
-            notificationAction = android.R.drawable.ic_media_pause
+            notificationAction = R.drawable.pause
             playPauseAction = playbackAction(1)
         } else if (playbackStatus == PlaybackStatus.PAUSED) {
-            notificationAction = android.R.drawable.ic_media_play
+            notificationAction = R.drawable.play
             playPauseAction = playbackAction(0)
         }
 
@@ -429,16 +429,16 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
                 .setStyle(NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession!!.sessionToken)
                         .setShowActionsInCompactView(0, 1, 2))
-                .setColor(R.color.colorPrimary)
+                .setColor(resources.getColor(R.color.colorPrimary))
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.mipmap.ic_foreground)
                 .setContentText(activeAudio.artist)
                 .setContentTitle(activeAudio.title)
                 .setContentInfo(activeAudio.album)
                 .setContentIntent(contentIntent)
-                .addAction(android.R.drawable.ic_media_previous, "previous", playbackAction(3))
+                .addAction(R.drawable.prev, "previous", playbackAction(3))
                 .addAction(notificationAction, "pause", playPauseAction)
-                .addAction(android.R.drawable.ic_media_next, "next", playbackAction(2))
+                .addAction(R.drawable.next, "next", playbackAction(2))
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
                 .notify(NOTIFICATION_ID, notificationBuilder.build())
     } // Builds the media player notification
