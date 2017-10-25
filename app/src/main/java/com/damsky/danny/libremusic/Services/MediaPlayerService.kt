@@ -10,9 +10,7 @@ Editor: Danny Damsky
 package com.damsky.danny.libremusic.Services
 
 import android.annotation.TargetApi
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -30,9 +28,11 @@ import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.RemoteException
+import android.support.annotation.RequiresApi
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v7.app.NotificationCompat
+import android.support.v4.app.NotificationCompat
+import android.support.v4.media.app.NotificationCompat.MediaStyle
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
@@ -114,6 +114,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         callStateListener()             // 1. Start listening for calls
         registerBecomingNoisyReceiver() // 2. Register the becomingNoisyReceiver object
         registerPlayNewAudio()          // 3. Register the playNewAudio object
+        createChannel()                 // 4. Create the channel for Android O
     }
 
     // Returns the binder when an activity is trying to bind this service
@@ -423,13 +424,14 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
                 Intent(applicationContext, NowPlaying::class.java),
                 PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val notificationBuilder = NotificationCompat.Builder(this)
+        createChannel()
+        val notificationBuilder = NotificationCompat.Builder(this, "media_player_id")
                 .setShowWhen(false)
                 .setOngoing(playbackStatus == PlaybackStatus.PLAYING)
-                .setStyle(NotificationCompat.MediaStyle()
+                .setStyle(MediaStyle()
                         .setMediaSession(mediaSession!!.sessionToken)
                         .setShowActionsInCompactView(0, 1, 2))
-                .setColor(resources.getColor(R.color.colorPrimary))
+                .setColor(uniColor(R.color.colorPrimary))
                 .setLargeIcon(largeIcon)
                 .setSmallIcon(R.mipmap.ic_foreground)
                 .setContentText(activeAudio.artist)
@@ -502,10 +504,29 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .build()
 
+
+    private fun uniColor(resourceId: Int) =
+            if (Build.VERSION.SDK_INT >= 23)
+                getColor(resourceId)
+            else
+                resources.getColor(resourceId)
+
     /* This request is only needed from API 26 and above for
        when the media player requests audio focus */
     @TargetApi(26)
     private fun audioFocusRequest() = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
             .setAudioAttributes(audioAttributes())
             .build()
+
+    @TargetApi(26)
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            val mNotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val mChannel = NotificationChannel("media_player_id", "Media Playback", NotificationManager.IMPORTANCE_LOW)
+            mChannel.description = "Media playback controls"
+            mChannel.setShowBadge(false)
+            mChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            mNotificationManager.createNotificationChannel(mChannel)
+        }
+    }
 }
