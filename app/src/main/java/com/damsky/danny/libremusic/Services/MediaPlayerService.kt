@@ -28,7 +28,6 @@ import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.RemoteException
-import android.support.annotation.RequiresApi
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.app.NotificationCompat
