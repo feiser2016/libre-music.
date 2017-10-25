@@ -113,7 +113,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         callStateListener()             // 1. Start listening for calls
         registerBecomingNoisyReceiver() // 2. Register the becomingNoisyReceiver object
         registerPlayNewAudio()          // 3. Register the playNewAudio object
-        createChannel()                 // 4. Create the channel for Android O
+        createChannel()                 // 4. Create the channel for Android API >= 26
     }
 
     // Returns the binder when an activity is trying to bind this service
