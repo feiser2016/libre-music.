@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.Services.MediaPlayerService
 import kotlinx.android.synthetic.main.activity_now_playing.*
+import java.util.concurrent.TimeUnit
 
 class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     /*
@@ -149,14 +150,26 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 .into(coverArt)
     }
 
-    private fun getTime(i : Int) : String {
-        val hours = (i / 3600000) % 24
-        val minutes = (i / 60000) % 60
-        val seconds = (i / 1000) % 60
-        val Shours = if (hours > 9) "$hours:" else if (hours > 0) "0$hours:" else "00:"
-        val Sminutes = if (minutes > 9) "$minutes:" else "0$minutes:"
-        val Sseconds = if (seconds > 9) "$seconds" else "0$seconds"
-        return "$Shours$Sminutes$Sseconds"
+    private fun getTime(timeInMillis: Int): String {
+        val long = timeInMillis.toLong()
+        val hours = TimeUnit.MILLISECONDS.toHours(long)
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(long) - TimeUnit.HOURS.toMinutes(hours)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(long) - TimeUnit.MINUTES.toSeconds(minutes)
+
+        val time = StringBuilder()
+
+        if (hours > 9)
+            time.append(hours).append(":")
+
+        if (minutes < 9)
+            time.append(0)
+        time.append(minutes).append(":")
+
+        if (seconds < 9)
+            time.append(0)
+        time.append(seconds)
+
+        return time.toString()
     }
 
     fun playPrev(view: View) {
