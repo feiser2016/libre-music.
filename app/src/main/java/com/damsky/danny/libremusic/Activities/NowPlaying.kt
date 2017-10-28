@@ -158,14 +158,16 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
         val time = StringBuilder()
 
-        if (hours > 9)
+        if (hours in 1..9)
+            time.append(0).append(hours).append(":")
+        else if (hours > 9)
             time.append(hours).append(":")
 
-        if (minutes < 9)
+        if (minutes < 10)
             time.append(0)
         time.append(minutes).append(":")
 
-        if (seconds < 9)
+        if (seconds < 10)
             time.append(0)
         time.append(seconds)
 
