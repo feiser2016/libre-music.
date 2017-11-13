@@ -1,13 +1,13 @@
 package com.damsky.danny.libremusic.DB;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
-import org.greenrobot.greendao.annotation.Generated;
 
-@Entity (nameInDb = "SONGS")
+@Entity(nameInDb = "SONGS")
 public class Song {
-    @Id (autoincrement = true)
+    @Id(autoincrement = true)
     private Long id;
 
     @NotNull
@@ -42,8 +42,8 @@ public class Song {
 
     @Generated(hash = 253332579)
     public Song(Long id, @NotNull String data, @NotNull String title,
-            @NotNull String album, @NotNull String artist, int track, int year,
-            int starttime, int endtime, int duration, @NotNull String cover) {
+                @NotNull String album, @NotNull String artist, int track, int year,
+                int starttime, int endtime, int duration, @NotNull String cover) {
         this.id = id;
         this.data = data;
         this.title = title;

@@ -28,13 +28,12 @@ import android.os.Binder
 import android.os.Build
 import android.os.Handler
 import android.os.RemoteException
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.app.NotificationCompat
 import android.support.v4.media.app.NotificationCompat.MediaStyle
+import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.MediaSessionCompat
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
-import android.util.Log
 import com.damsky.danny.libremusic.Activities.NowPlaying
 import com.damsky.danny.libremusic.DB.Song
 import com.damsky.danny.libremusic.Enum.PlaybackStatus
@@ -44,8 +43,7 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener, AudioManager.OnAudioFocusChangeListener {
+        MediaPlayer.OnPreparedListener, AudioManager.OnAudioFocusChangeListener {
 
     private val iBinder = LocalBinder() // A binder for this entire service
     private lateinit var audioManager: AudioManager // AudioManager is in charge of requests
@@ -93,9 +91,9 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     private val ACTION_STOP = "com.damsky.danny.libremusic.ACTION_STOP"
 
     companion object {
-        lateinit var audioList : ArrayList<Song> // A queue of songs to be played
+        lateinit var audioList: ArrayList<Song> // A queue of songs to be played
         var audioIndex = -1 // Current song number in the audioList that's active
-        lateinit var activeAudio : Song // The actual song that's active
+        lateinit var activeAudio: Song // The actual song that's active
         var mediaPlayer: MediaPlayer? = null
         lateinit var transportControls: MediaControllerCompat.TransportControls
         var repeat = false
@@ -128,24 +126,6 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         playMedia()
     } // If the media player is prepared - start playing
 
-    override fun onError(p0: MediaPlayer?, p1: Int, p2: Int): Boolean {
-        when (p1) {
-            MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK ->
-                Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK $p2")
-            MediaPlayer.MEDIA_ERROR_SERVER_DIED ->
-                Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED $p2")
-            MediaPlayer.MEDIA_ERROR_UNKNOWN ->
-                Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN $p2")
-        }
-        return false
-    } // Invoked when there has been an error during an asynchronous operation.
-
-    override fun onSeekComplete(p0: MediaPlayer?) {} // Indicates that a seek operation completed
-
-    override fun onInfo(p0: MediaPlayer?, p1: Int, p2: Int): Boolean = false // Communicates info
-
-    override fun onBufferingUpdate(p0: MediaPlayer?, p1: Int) {} // Used for internet buffering updates
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         try {
             audioIndex = intent!!.extras.getInt("position")
@@ -157,17 +137,17 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         if (!requestAudioFocus()) // Try to request audio focus
             stopSelf()            // Stop the service upon failure
 
-          if (mediaSessionManager == null) { // if the media session manager hasn't been initialized
-              try { // Initialize the media session and the media player
-                  initMediaSession()
-                  initMediaPlayer()
-              } catch (e: RemoteException) {
-                  e.printStackTrace()
-                  stopSelf()
-              }
+        if (mediaSessionManager == null) { // if the media session manager hasn't been initialized
+            try { // Initialize the media session and the media player
+                initMediaSession()
+                initMediaPlayer()
+            } catch (e: RemoteException) {
+                e.printStackTrace()
+                stopSelf()
+            }
 
-              buildNotification(PlaybackStatus.PLAYING) // Creates an audio notification
-          }
+            buildNotification(PlaybackStatus.PLAYING) // Creates an audio notification
+        }
 
         handleIncomingActions(intent) // Sorts out what to do with the passed intent's action
         return super.onStartCommand(intent, flags, startId)
@@ -223,7 +203,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
 
     private fun requestAudioFocus(): Boolean {
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        val result : Int = if (Build.VERSION.SDK_INT >= 26)
+        val result: Int = if (Build.VERSION.SDK_INT >= 26)
             audioManager.requestAudioFocus(audioFocusRequest())
         else
             audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
@@ -243,11 +223,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
 
         // set up media event listeners
         mediaPlayer!!.setOnCompletionListener(this)
-        mediaPlayer!!.setOnErrorListener(this)
         mediaPlayer!!.setOnPreparedListener(this)
-        mediaPlayer!!.setOnBufferingUpdateListener(this)
-        mediaPlayer!!.setOnSeekCompleteListener(this)
-        mediaPlayer!!.setOnInfoListener(this)
 
         // Make sure that the MediaPlayer is not pointing to another data source
         mediaPlayer!!.reset()
@@ -303,7 +279,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         phoneStateListener = object : PhoneStateListener() {
             override fun onCallStateChanged(state: Int, incomingNumber: String) {
                 when (state) {
-                    // Pause upon any call
+                // Pause upon any call
                     TelephonyManager.CALL_STATE_OFFHOOK, TelephonyManager.CALL_STATE_RINGING ->
                         if (mediaPlayer != null) {
                             pauseMedia()
@@ -377,8 +353,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
                 audioIndex = 0
             else
                 audioIndex++
-        }
-        else
+        } else
             audioIndex = ThreadLocalRandom.current().nextInt(0, audioList.size)
 
         activeAudio = audioList[audioIndex]
@@ -414,7 +389,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
             playPauseAction = playbackAction(0)
         }
 
-        val largeIcon : Bitmap = if (activeAudio.cover != "none")
+        val largeIcon: Bitmap = if (activeAudio.cover != "none")
             BitmapFactory.decodeFile(activeAudio.cover)
         else
             getBitmap(R.drawable.song_big)
@@ -449,7 +424,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     } // Removes the notification
 
 
-    private fun playbackAction(actionNumber: Int) : PendingIntent? {
+    private fun playbackAction(actionNumber: Int): PendingIntent? {
         val playbackAction = Intent(this, MediaPlayerService::class.java)
         when (actionNumber) {
             0 -> playbackAction.action = ACTION_PLAY
@@ -487,7 +462,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         }, dur.toLong())
     } // Responsible for dealing correctly with Image+Cue style files
 
-    private fun getBitmap(drawableId : Int) : Bitmap {
+    private fun getBitmap(drawableId: Int): Bitmap {
         val layerDrawable = getDrawable(drawableId) as LayerDrawable
         val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth,
                 layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)

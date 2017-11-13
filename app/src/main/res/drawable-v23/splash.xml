@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/colorPrimary"/>
-    <item android:gravity="center" android:width="120dp" android:height="120dp">
+    <item android:drawable="@color/colorPrimary" />
+    <item
+        android:width="120dp"
+        android:height="120dp"
+        android:gravity="center">
         <bitmap
-            android:gravity="fill"
             android:antialias="true"
             android:dither="true"
-            android:src="@mipmap/ic_foreground"/>
+            android:gravity="fill"
+            android:src="@mipmap/ic_foreground" />
     </item>
 </layer-list>

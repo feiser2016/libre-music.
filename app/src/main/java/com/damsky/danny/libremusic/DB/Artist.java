@@ -11,24 +11,28 @@ import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
 
-@Entity (nameInDb = "ARTISTS")
+@Entity(nameInDb = "ARTISTS")
 public class Artist {
 
-    @Id (autoincrement = true)
+    @Id(autoincrement = true)
     private Long id;
 
     @NotNull
     private String artist;
 
-    @ToMany (referencedJoinProperty = "artist")
-    @OrderBy ("year ASC")
+    @ToMany(referencedJoinProperty = "artist")
+    @OrderBy("year ASC")
     private List<Album> albums;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 619827925)
     private transient ArtistDao myDao;
 
@@ -80,7 +84,9 @@ public class Artist {
         return albums;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 320857755)
     public synchronized void resetAlbums() {
         albums = null;
@@ -122,7 +128,9 @@ public class Artist {
         myDao.update(this);
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated(hash = 964463518)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;

@@ -52,8 +52,8 @@ class Splash : AppCompatActivity() {
                     2. The permission to read phone state (Improves mediaPlayer experience)
                      */
                     ActivityCompat.requestPermissions(this,
-                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                            Manifest.permission.READ_PHONE_STATE), 1)
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_PHONE_STATE), 1)
                 }, 400)
             else
                 DataCollector().execute() // If all permissions are granted, start the AsyncTask
@@ -72,8 +72,8 @@ class Splash : AppCompatActivity() {
     } // this function runs after the makePermissions() function if permissions were requested
 
     inner class DataCollector : AsyncTask<Void?, Void?, Void?>() {
-        private lateinit var daoSession : DaoSession // A database session
-        private lateinit var encoding : String
+        private lateinit var daoSession: DaoSession // A database session
+        private lateinit var encoding: String
         override fun onPreExecute() {
             super.onPreExecute()
             encoding = PreferenceManager.getDefaultSharedPreferences(this@Splash).getString("file_encoding", "Cp1251")
@@ -120,13 +120,13 @@ class Splash : AppCompatActivity() {
             return null // Function expects a return statement
         }
 
-        private fun checkAuthenticity(duration: Int, data: String, cover: String) : Boolean {
+        private fun checkAuthenticity(duration: Int, data: String, cover: String): Boolean {
             if (duration > 600000) { // Files shorter than 10 minutes won't be checked
                 val file_data = File(data) // The audio file
                 val folder = file_data.parentFile // The audio file's directory
                 val list_files = folder.listFiles()
                 val extension = file_data.extension // The audio file's extension
-                var cue_file : File? = null
+                var cue_file: File? = null
                 if (list_files != null)
                     for (file in list_files) { // Scan the audio file's folder
                         if (file.absolutePath != data && file.name.endsWith(extension)) // If songs are found in the folder
@@ -165,7 +165,8 @@ class Splash : AppCompatActivity() {
                 while (cursor.moveToNext()) { // Every item queried is a song
                     // The metadata of the song is gathered by the cursor and is added to the database
                     val data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
-                    runOnUiThread { // Update the TextView to show which file is currently being scanned.
+                    runOnUiThread {
+                        // Update the TextView to show which file is currently being scanned.
                         loadingText.text = StringBuilder().append("${resources.getString(R.string.loading)}: ").append(data).toString()
                     }
                     val cover = getCoverArtPath(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))

@@ -13,16 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:menu="@menu/navigation"
-        android:background="?android:attr/windowBackground"/>
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/navigation" />
 
     <ListView
+        android:id="@+id/my_music"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/my_music"
-        android:fastScrollEnabled="true"
-        android:paddingBottom="100dp"
         android:clipToPadding="false"
-        android:divider="@null"/>
+        android:divider="@null"
+        android:fastScrollEnabled="true"
+        android:paddingBottom="100dp" />
 
 </android.support.design.widget.CoordinatorLayout>

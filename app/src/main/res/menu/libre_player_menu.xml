@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="@string/search"
-        android:icon="@drawable/search"
+    <item
         android:id="@+id/search"
-        app:showAsAction="collapseActionView|always"
-        app:actionViewClass="android.support.v7.widget.SearchView"/>
+        android:icon="@drawable/search"
+        android:title="@string/search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|always" />
 
-    <item android:title="@string/settings"
-        android:onClick="launchSettingsMenu" />
-    <item android:title="@string/reset_library"
-        android:onClick="resetButton" />
+    <item
+        android:onClick="launchSettingsMenu"
+        android:title="@string/settings" />
+    <item
+        android:onClick="resetButton"
+        android:title="@string/reset_library" />
 </menu>

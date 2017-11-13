@@ -25,30 +25,35 @@ class AudioConfig(val songList: ArrayList<Song>, val albumList: ArrayList<Album>
         false
     }
 
-    fun getArtistAdapter() : ArtistAdapter {
+    fun getArtistAdapter(): ArtistAdapter {
         listLevel = ListLevel.ARTISTS
         return ArtistAdapter(context, artistList)
     }
-    fun getArtistAlbumAdapter(pos: Int) : AlbumAdapter {
+
+    fun getArtistAlbumAdapter(pos: Int): AlbumAdapter {
         listLevel = ListLevel.ARTIST_ALBUMS
         setArtistPosition(pos)
         return AlbumAdapter(context, ArrayList(artistList[getArtistPosition()].albums))
     }
-    fun getArtistSongAdapter(pos: Int) : SongAdapter {
+
+    fun getArtistSongAdapter(pos: Int): SongAdapter {
         listLevel = ListLevel.ARTIST_SONGS
         setAlbumPosition(pos)
         return SongAdapter(context, ArrayList(artistList[getArtistPosition()].albums[getAlbumPosition()].songs))
     }
-    fun getAlbumAdapter() : AlbumAdapter {
+
+    fun getAlbumAdapter(): AlbumAdapter {
         listLevel = ListLevel.ALBUMS
         return AlbumAdapter(context, albumList)
     }
-    fun getAlbumSongAdapter(pos: Int) : SongAdapter {
+
+    fun getAlbumSongAdapter(pos: Int): SongAdapter {
         listLevel = ListLevel.ALBUM_SONGS
         setAlbumPosition(pos)
         return SongAdapter(context, ArrayList(albumList[getAlbumPosition()].songs))
     }
-    fun getSongAdapter() : SongAdapter {
+
+    fun getSongAdapter(): SongAdapter {
         listLevel = ListLevel.SONGS
         return SongAdapter(context, songList)
     }

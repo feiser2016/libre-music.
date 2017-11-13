@@ -46,7 +46,7 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
     private lateinit var searcher: SongSearcher
 
     companion object {
-        lateinit var audioConfig : AudioConfig
+        lateinit var audioConfig: AudioConfig
         var pitch_black = R.style.AppTheme
     }
 
@@ -180,13 +180,13 @@ class LibrePlayer : AppCompatActivity(), AdapterView.OnItemClickListener, Bottom
         builder.setIcon(R.mipmap.ic_launcher)
         builder.setTitle(R.string.reset_library)
         builder.setMessage(R.string.reset_library_question)
-        builder.setPositiveButton(R.string.yes, {dialog, _ ->
+        builder.setPositiveButton(R.string.yes, { dialog, _ ->
             destroy = true
             Snackbar.make(findViewById(android.R.id.content), R.string.reset_library_message, Snackbar.LENGTH_SHORT).show()
             item.isVisible = false
             dialog.dismiss()
         })
-        builder.setNegativeButton(R.string.no, {dialog, _ -> dialog.dismiss()})
+        builder.setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
         builder.create().show()
     }
 

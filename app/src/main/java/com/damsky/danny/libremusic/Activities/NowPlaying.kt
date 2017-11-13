@@ -36,7 +36,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     ImageView: coverArt
      */
     private val handler = Handler()
-    private val run : Runnable = object : Runnable {
+    private val run: Runnable = object : Runnable {
         override fun run() {
             setupUI()
             handler.postDelayed(this, 1000)
@@ -89,11 +89,6 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         serviceBound = savedInstanceState.getBoolean("ServiceState")
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.now_playing_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
     override fun onStop() {
         super.onStop()
         handler.removeCallbacksAndMessages(null)
@@ -108,14 +103,15 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
         if (p2)
             MediaPlayerService.transportControls.seekTo(p0!!.progress.toLong() +
-            MediaPlayerService.activeAudio.starttime)
+                    MediaPlayerService.activeAudio.starttime)
     }
 
     // Useless methods
     override fun onStartTrackingTouch(p0: SeekBar?) {}
+
     override fun onStopTrackingTouch(p0: SeekBar?) {}
 
-    private fun setupUI () {
+    private fun setupUI() {
         if (!MediaPlayerService.mediaPlayer!!.isPlaying)
             playPause.setImageResource(R.drawable.play)
         else
@@ -190,8 +186,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
         if (MediaPlayerService.mediaPlayer!!.isPlaying) {
             playPause.setImageResource(R.drawable.play)
             MediaPlayerService.transportControls.pause()
-        }
-        else {
+        } else {
             playPause.setImageResource(R.drawable.pause)
             MediaPlayerService.transportControls.play()
         }
@@ -235,8 +230,7 @@ class NowPlaying : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             now_playing_layout.setBackgroundColor(android.R.color.black)
             now_playing_linearlayout.setBackgroundColor(grayDark)
             seekBar.setBackgroundColor(grayDark)
-        }
-        else
+        } else
             setContentView(R.layout.activity_now_playing)
     }
 }

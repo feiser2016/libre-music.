@@ -3,16 +3,17 @@
 
     <item
         android:id="@+id/navigation_artists"
-        android:title="@string/artists"
-        android:icon="@drawable/artist_nav"/>
+        android:icon="@drawable/artist_nav"
+        android:title="@string/artists" />
 
     <item
         android:id="@+id/navigation_albums"
-        android:title="@string/albums"
-        android:icon="@drawable/album_nav"/>
+        android:icon="@drawable/album_nav"
+        android:title="@string/albums" />
 
-    <item android:id="@+id/navigation_songs"
-        android:title="@string/songs"
-        android:icon="@drawable/song_nav"/>
+    <item
+        android:id="@+id/navigation_songs"
+        android:icon="@drawable/song_nav"
+        android:title="@string/songs" />
 
 </menu>

@@ -25,11 +25,11 @@ class CUESplitter(val data: File, private val song_file: String, val cover: Stri
     else
         true
 
-    private fun pattern(s: String) : Matcher = Pattern.compile(s).matcher(content) // Regex pattern matcher
+    private fun pattern(s: String): Matcher = Pattern.compile(s).matcher(content) // Regex pattern matcher
     // convert_to_ms converts HH:MM:SS format to milliseconds
-    private fun convert_to_ms(s: String) : Int = ((s.substring(0, 2).toInt() * 60000) + (s.substring(3, 5).toInt() * 1000) + s.substring(6, 8).toInt())
+    private fun convert_to_ms(s: String): Int = ((s.substring(0, 2).toInt() * 60000) + (s.substring(3, 5).toInt() * 1000) + s.substring(6, 8).toInt())
 
-    private fun read() : String {
+    private fun read(): String {
         val bis = BufferedInputStream(FileInputStream(data)) // In charge of reading the file
         val contents = ByteArray(1024) // A byte array that will store contents of the file
 
@@ -44,7 +44,7 @@ class CUESplitter(val data: File, private val song_file: String, val cover: Stri
         return builder.toString() // Returns a string what was read during the loop
     } // Reads the first 500 kilobytes of the file allegedly containing the cue sheet.
 
-    private fun artist() : String {
+    private fun artist(): String {
         val get = pattern("PERFORMER\\s\"(.*)\"|PERFORMER\\s(.*)") // Regex pattern used to get artist name
         if (get.find()) { // find() moves the pointer to the next match, returns True if anything was found
             if (get.group(1) == null) // First group contains "", second group doesn't
@@ -54,7 +54,7 @@ class CUESplitter(val data: File, private val song_file: String, val cover: Stri
         return "<unknown>" // In case no match was found, the artist will be called "<unknown>"
     } // Returns the name of the artist
 
-    private fun titles() : ArrayList<String> {
+    private fun titles(): ArrayList<String> {
         /* The first title is the album's name,
            the rest are the names of songs in the album. */
         val get = pattern("TITLE\\s\"(.*)\"|TITLE\\s(.*)") // Regex pattern used to get titles
@@ -68,14 +68,14 @@ class CUESplitter(val data: File, private val song_file: String, val cover: Stri
         return rethis
     } // Returns album title in index 0 and all the song titles in indexes > 0
 
-    private fun date() : Int {
+    private fun date(): Int {
         val get_date = pattern("DATE\\s(\\d+)") // Regex pattern used to get the date
         if (get_date.find())
             return get_date.group(1).toInt()
         return 0
     } // Returns the album's date of publishing
 
-    private fun get_indexone() : ArrayList<Int> {
+    private fun get_indexone(): ArrayList<Int> {
         val get = pattern("INDEX 01 (\\d\\d:\\d\\d:\\d\\d)") // Regex pattern used to get song start times
         val list = ArrayList<Int>(0) // Initialize the ArrayList
 
@@ -89,7 +89,7 @@ class CUESplitter(val data: File, private val song_file: String, val cover: Stri
         return list
     } // Returns start times of songs throughout the album
 
-    fun list() : ArrayList<Song> {
+    fun list(): ArrayList<Song> {
         val titles = titles() // Get all titles
         val artist = artist() // Get the album's artist name
         val album = titles[0] // The first index in titles is the album's name

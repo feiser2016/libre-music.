@@ -2,22 +2,23 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/pref_simple">
         <ListPreference
-            android:title="@string/pref_night"
-            android:summary="@string/pref_night_message"
             android:defaultValue="light_theme"
-            android:key="app_theme_preferences"
             android:entries="@array/app_themes"
             android:entryValues="@array/app_themes_values"
-            android:icon="@drawable/night" />
+            android:icon="@drawable/night"
+            android:key="app_theme_preferences"
+            android:summary="@string/pref_night_message"
+            android:title="@string/pref_night" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_advanced">
-        <ListPreference android:title="@string/pref_cue"
-            android:summary="@string/pref_cue_message"
+        <ListPreference
+            android:defaultValue="Cp1251"
             android:entries="@array/encoding_list"
             android:entryValues="@array/encoding_values"
-            android:key="file_encoding"
             android:icon="@drawable/encodings"
-            android:defaultValue="Cp1251"/>
+            android:key="file_encoding"
+            android:summary="@string/pref_cue_message"
+            android:title="@string/pref_cue" />
     </PreferenceCategory>
 </PreferenceScreen>

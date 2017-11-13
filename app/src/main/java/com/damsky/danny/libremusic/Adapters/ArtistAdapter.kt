@@ -73,7 +73,7 @@ class ArtistAdapter(context: Context, xItems: ArrayList<Artist>) : ArrayAdapter<
                         .placeholder(R.drawable.artist)
                         .override(height, height))
                 .into(viewHolder.cover)
-        
+
         // Return the completed view to render on screen
         return cv
     }

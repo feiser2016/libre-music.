@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="4" >
+    android:orientation="horizontal"
+    android:weightSum="4">
 
     <ImageView
+        android:id="@+id/itemImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:src="@drawable/artist"
-        android:id="@+id/itemImage"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
-        android:layout_marginTop="16dp"/>
+        android:src="@drawable/artist" />
 
     <TextView
         android:id="@+id/itemText"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:layout_weight="2"
+        android:ems="10"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:ems="10"
-        android:layout_marginTop="16dp" />
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
     <TextView
         android:id="@+id/itemDuration"
-        android:text="        "
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:layout_marginTop="16dp" />
+        android:text="        "
+        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
 </LinearLayout>

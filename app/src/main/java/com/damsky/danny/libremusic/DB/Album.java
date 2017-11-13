@@ -11,10 +11,10 @@ import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
 
-@Entity (nameInDb = "ALBUMS")
+@Entity(nameInDb = "ALBUMS")
 public class Album {
 
-    @Id (autoincrement = true)
+    @Id(autoincrement = true)
     private Long id;
 
     @NotNull
@@ -29,21 +29,25 @@ public class Album {
     @NotNull
     private String cover;
 
-    @ToMany (referencedJoinProperty = "album")
+    @ToMany(referencedJoinProperty = "album")
     @OrderBy("track ASC")
     private List<Song> songs;
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 172302968)
     private transient AlbumDao myDao;
 
     @Generated(hash = 727009229)
     public Album(Long id, @NotNull String artist, @NotNull String album, int year,
-            @NotNull String cover) {
+                 @NotNull String cover) {
         this.id = id;
         this.artist = artist;
         this.album = album;
@@ -117,7 +121,9 @@ public class Album {
         return songs;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 432021166)
     public synchronized void resetSongs() {
         songs = null;
@@ -159,7 +165,9 @@ public class Album {
         myDao.update(this);
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated(hash = 1023911229)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
