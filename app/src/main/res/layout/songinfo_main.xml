@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/slideView"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_gravity="bottom"
+    android:background="?attr/colorPrimary"
+    android:elevation="8dp">
+
+    <ImageView
+        android:id="@+id/slideView_cover"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/song_big" />
+
+    <TextView
+        android:id="@+id/slideView_songName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/slideView_cover"
+        android:ems="10"
+        android:maxLines="1"
+        android:text="@string/temp_songName"
+        android:textColor="#FFF"
+        android:textDirection="locale" />
+
+    <TextView
+        android:id="@+id/slideView_artistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/slideView_cover"
+        android:ems="10"
+        android:maxLines="1"
+        android:text="@string/temp_artistName"
+        android:textColor="#FFF"
+        android:textDirection="locale" />
+
+    <TextView
+        android:id="@+id/slideView_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:maxLines="1"
+        android:text="00:00:00/59:59:59"
+        android:textColor="#FFF"
+        android:textDirection="locale" />
+
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.damsky.danny.libremusic.ui.main.MainActivity">
+
+    <group
+        android:id="@+id/grp1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_library"
+            android:checked="true"
+            android:icon="@drawable/library"
+            android:title="@string/library"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/action_queue"
+            android:icon="@drawable/queue"
+            android:title="@string/queue"
+            app:showAsAction="always" />
+    </group>
+
+    <group android:id="@+id/grp2">
+        <item
+            android:id="@+id/action_reset"
+            android:icon="@drawable/reset"
+            android:title="@string/reset_library"
+            app:showAsAction="always" />
+    </group>
+
+    <group android:id="@+id/grp3">
+        <item
+            android:id="@+id/action_settings"
+            android:icon="@drawable/settings"
+            android:title="@string/action_settings"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/action_about"
+            android:icon="@drawable/about"
+            android:title="@string/about"
+            app:showAsAction="always" />
+    </group>
+</menu>
