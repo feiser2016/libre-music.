@@ -33,15 +33,13 @@ public class GenreDao extends AbstractDao<Genre, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"GENRES\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"GENRE\" TEXT NOT NULL );"); // 1: genre
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"GENRES\"";
         db.execSQL(sql);
@@ -93,14 +91,14 @@ public class GenreDao extends AbstractDao<Genre, Long> {
     public void readEntity(Cursor cursor, Genre entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setGenre(cursor.getString(offset + 1));
-    }
-
+     }
+     
     @Override
     protected final Long updateKeyAfterInsert(Genre entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Genre entity) {
         if (entity != null) {
@@ -109,7 +107,7 @@ public class GenreDao extends AbstractDao<Genre, Long> {
             return null;
         }
     }
-
+    
     @Override
     public boolean hasKey(Genre entity) {
         return entity.getId() != null;
@@ -128,5 +126,5 @@ public class GenreDao extends AbstractDao<Genre, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Genre = new Property(1, String.class, "genre", false, "GENRE");
     }
-
+    
 }

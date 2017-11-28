@@ -24,7 +24,6 @@ public class SongDao extends AbstractDao<Song, Long> {
     private Query<Song> genre_SongsQuery;
     private Query<Song> playlist_SongsQuery;
     private Query<Song> album_SongsQuery;
-
     public SongDao(DaoConfig config) {
         super(config);
     }
@@ -37,7 +36,7 @@ public class SongDao extends AbstractDao<Song, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
+        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"SONGS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"DATA\" TEXT NOT NULL ," + // 1: data
@@ -53,9 +52,7 @@ public class SongDao extends AbstractDao<Song, Long> {
                 "\"COVER\" TEXT NOT NULL );"); // 11: cover
     }
 
-    /**
-     * Drops the underlying database table.
-     */
+    /** Drops the underlying database table. */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"SONGS\"";
         db.execSQL(sql);
@@ -141,14 +138,14 @@ public class SongDao extends AbstractDao<Song, Long> {
         entity.setEndTime(cursor.getInt(offset + 9));
         entity.setDuration(cursor.getInt(offset + 10));
         entity.setCover(cursor.getString(offset + 11));
-    }
-
+     }
+     
     @Override
     protected final Long updateKeyAfterInsert(Song entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-
+    
     @Override
     public Long getKey(Song entity) {
         if (entity != null) {
@@ -157,7 +154,7 @@ public class SongDao extends AbstractDao<Song, Long> {
             return null;
         }
     }
-
+    
     @Override
     public boolean hasKey(Song entity) {
         return entity.getId() != null;
@@ -168,9 +165,7 @@ public class SongDao extends AbstractDao<Song, Long> {
         return true;
     }
 
-    /**
-     * Internal query to resolve the "songs" to-many relationship of Genre.
-     */
+    /** Internal query to resolve the "songs" to-many relationship of Genre. */
     public List<Song> _queryGenre_Songs(String genre) {
         synchronized (this) {
             if (genre_SongsQuery == null) {
@@ -185,9 +180,7 @@ public class SongDao extends AbstractDao<Song, Long> {
         return query.list();
     }
 
-    /**
-     * Internal query to resolve the "songs" to-many relationship of Playlist.
-     */
+    /** Internal query to resolve the "songs" to-many relationship of Playlist. */
     public List<Song> _queryPlaylist_Songs(Long playListId) {
         synchronized (this) {
             if (playlist_SongsQuery == null) {
@@ -202,9 +195,7 @@ public class SongDao extends AbstractDao<Song, Long> {
         return query.list();
     }
 
-    /**
-     * Internal query to resolve the "songs" to-many relationship of Album.
-     */
+    /** Internal query to resolve the "songs" to-many relationship of Album. */
     public List<Song> _queryAlbum_Songs(String album) {
         synchronized (this) {
             if (album_SongsQuery == null) {
