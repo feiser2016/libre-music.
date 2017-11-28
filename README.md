@@ -16,9 +16,8 @@ files with embedded cue sheets and is also fast and practical to use.
 ### How do I get set up? ###
 
 Do a checkout of the repository in Android Studio.
-Make sure you have the Kotlin plugin installed (If you don't have Android Studio 3 and above)
-and of course the latest SDK available, because I'll be updating the SDK and the libraries as
-often as I can.
+Make sure you have the latest SDK available, 
+because I'll be updating the SDK and the libraries as often as I can.
 
 ### Contribution guidelines ###
 
