@@ -33,13 +33,15 @@ public class PlaylistDao extends AbstractDao<Playlist, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "\"PLAYLISTS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"PLAY_LIST\" TEXT NOT NULL );"); // 1: playList
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"PLAYLISTS\"";
         db.execSQL(sql);
@@ -91,14 +93,14 @@ public class PlaylistDao extends AbstractDao<Playlist, Long> {
     public void readEntity(Cursor cursor, Playlist entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setPlayList(cursor.getString(offset + 1));
-     }
-     
+    }
+
     @Override
     protected final Long updateKeyAfterInsert(Playlist entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-    
+
     @Override
     public Long getKey(Playlist entity) {
         if (entity != null) {
@@ -107,7 +109,7 @@ public class PlaylistDao extends AbstractDao<Playlist, Long> {
             return null;
         }
     }
-    
+
     @Override
     public boolean hasKey(Playlist entity) {
         return entity.getId() != null;
@@ -126,5 +128,5 @@ public class PlaylistDao extends AbstractDao<Playlist, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property PlayList = new Property(1, String.class, "playList", false, "PLAY_LIST");
     }
-    
+
 }

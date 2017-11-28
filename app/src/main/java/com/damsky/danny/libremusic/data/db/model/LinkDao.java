@@ -31,14 +31,16 @@ public class LinkDao extends AbstractDao<Link, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "\"LINKS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"PLAY_LIST_ID\" INTEGER," + // 1: playListId
                 "\"SONG_ID\" INTEGER);"); // 2: songId
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"LINKS\"";
         db.execSQL(sql);
@@ -104,14 +106,14 @@ public class LinkDao extends AbstractDao<Link, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setPlayListId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
         entity.setSongId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-     }
-     
+    }
+
     @Override
     protected final Long updateKeyAfterInsert(Link entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-    
+
     @Override
     public Long getKey(Link entity) {
         if (entity != null) {
@@ -120,7 +122,7 @@ public class LinkDao extends AbstractDao<Link, Long> {
             return null;
         }
     }
-    
+
     @Override
     public boolean hasKey(Link entity) {
         return entity.getId() != null;
@@ -140,5 +142,5 @@ public class LinkDao extends AbstractDao<Link, Long> {
         public final static Property PlayListId = new Property(1, Long.class, "playListId", false, "PLAY_LIST_ID");
         public final static Property SongId = new Property(2, Long.class, "songId", false, "SONG_ID");
     }
-    
+
 }

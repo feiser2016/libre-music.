@@ -37,7 +37,7 @@ public class AlbumDao extends AbstractDao<Album, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "\"ALBUMS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"ALBUM\" TEXT NOT NULL ," + // 1: album
@@ -46,7 +46,9 @@ public class AlbumDao extends AbstractDao<Album, Long> {
                 "\"COVER\" TEXT NOT NULL );"); // 4: cover
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"ALBUMS\"";
         db.execSQL(sql);
@@ -110,14 +112,14 @@ public class AlbumDao extends AbstractDao<Album, Long> {
         entity.setArtist(cursor.getString(offset + 2));
         entity.setYear(cursor.getInt(offset + 3));
         entity.setCover(cursor.getString(offset + 4));
-     }
-     
+    }
+
     @Override
     protected final Long updateKeyAfterInsert(Album entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-    
+
     @Override
     public Long getKey(Album entity) {
         if (entity != null) {
@@ -126,7 +128,7 @@ public class AlbumDao extends AbstractDao<Album, Long> {
             return null;
         }
     }
-    
+
     @Override
     public boolean hasKey(Album entity) {
         return entity.getId() != null;
@@ -137,7 +139,9 @@ public class AlbumDao extends AbstractDao<Album, Long> {
         return true;
     }
 
-    /** Internal query to resolve the "albums" to-many relationship of Artist. */
+    /**
+     * Internal query to resolve the "albums" to-many relationship of Artist.
+     */
     public List<Album> _queryArtist_Albums(String artist) {
         synchronized (this) {
             if (artist_AlbumsQuery == null) {
@@ -151,7 +155,7 @@ public class AlbumDao extends AbstractDao<Album, Long> {
         query.setParameter(0, artist);
         return query.list();
     }
-    
+
     /**
      * Properties of entity Album.<br/>
      * Can be used for QueryBuilder and for referencing column names.

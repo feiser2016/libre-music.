@@ -33,13 +33,15 @@ public class ArtistDao extends AbstractDao<Artist, Long> {
      * Creates the underlying database table.
      */
     public static void createTable(Database db, boolean ifNotExists) {
-        String constraint = ifNotExists ? "IF NOT EXISTS ": "";
+        String constraint = ifNotExists ? "IF NOT EXISTS " : "";
         db.execSQL("CREATE TABLE " + constraint + "\"ARTISTS\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"ARTIST\" TEXT NOT NULL );"); // 1: artist
     }
 
-    /** Drops the underlying database table. */
+    /**
+     * Drops the underlying database table.
+     */
     public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"ARTISTS\"";
         db.execSQL(sql);
@@ -91,14 +93,14 @@ public class ArtistDao extends AbstractDao<Artist, Long> {
     public void readEntity(Cursor cursor, Artist entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setArtist(cursor.getString(offset + 1));
-     }
-     
+    }
+
     @Override
     protected final Long updateKeyAfterInsert(Artist entity, long rowId) {
         entity.setId(rowId);
         return rowId;
     }
-    
+
     @Override
     public Long getKey(Artist entity) {
         if (entity != null) {
@@ -107,7 +109,7 @@ public class ArtistDao extends AbstractDao<Artist, Long> {
             return null;
         }
     }
-    
+
     @Override
     public boolean hasKey(Artist entity) {
         return entity.getId() != null;
@@ -126,5 +128,5 @@ public class ArtistDao extends AbstractDao<Artist, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Artist = new Property(1, String.class, "artist", false, "ARTIST");
     }
-    
+
 }
