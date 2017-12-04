@@ -21,6 +21,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.fitCenter
 import com.bumptech.glide.request.RequestOptions
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
@@ -44,7 +45,7 @@ import java.util.concurrent.TimeUnit
  * Service class containing static variables/functions for use with MainActivity
 
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-04
  */
 
 class MainPresenter {
@@ -52,8 +53,8 @@ class MainPresenter {
         val Broadcast_PLAY_AUDIO = "com.damsky.danny.libremusic.PlayAudio"
 
         /**
-         * @param   fab       Is shown when the returned SlideUp is swiped out of visibility.
-         * @param   slideUp   Is shown when the returned SlideUp is swiped out of visibility.
+         * @param fab     Is shown when the returned SlideUp is swiped out of visibility.
+         * @param slideUp Is shown when the returned SlideUp is swiped out of visibility.
          * @return            SlideUp object with the following settings.
          */
         fun View.getSlideUp(fab: FloatingActionButton, slideUp: SlideUp): SlideUp =
@@ -101,10 +102,10 @@ class MainPresenter {
         }
 
         fun MainActivity.getArtistAdapter(): RecycleAdapter =
-                getAdapter(ArtistModel((this.application as App).appDbHelper.getArtists()))
+                getAdapter(ArtistModel((application as App).appDbHelper.getArtists()))
 
         fun MainActivity.getAlbumAdapter(): RecycleAdapter =
-                getAdapter(AlbumModel((this.application as App).appDbHelper.getAlbums()))
+                getAdapter(AlbumModel((application as App).appDbHelper.getAlbums()))
 
         fun MainActivity.getSongAdapter(): RecycleAdapter =
                 getAdapter(SongModel((application as App).appDbHelper.getSongs()),
@@ -156,26 +157,20 @@ class MainPresenter {
         fun MainActivity.getPlaylistSong(position: Int): Song =
                 (application as App).appDbHelper.getPlaylistSong(position)
 
-        fun ImageView.glideLoad(context: MainActivity, imageString: String) {
-            val size = this.height
+        private fun ImageView.glideLoad(context: Context, imageString: String, requestOptions: RequestOptions) {
             Glide.with(context.applicationContext).load(imageString)
-                    .apply(RequestOptions()
-                            .fitCenter()
-                            .placeholder(R.drawable.song_big)
-                            .override(size, size))
+                    .apply(requestOptions)
                     .into(this)
         }
 
-        fun ImageView.glideLoad(context: Context, imageString: String, placeholderDrawable: Int) {
-            val size = this.height
-            Glide.with(context).load(imageString)
-                    .apply(RequestOptions()
-                            .fitCenter()
-                            .circleCrop()
-                            .placeholder(placeholderDrawable)
-                            .override(size, size))
-                    .into(this)
-        }
+        private fun ImageView.getDefaultRequestOptions(placeholderDrawable: Int)
+                = RequestOptions().fitCenter().placeholder(placeholderDrawable).override(this.height)
+
+        fun ImageView.glideLoad(context: MainActivity, imageString: String)
+                = glideLoad(context, imageString, getDefaultRequestOptions(R.drawable.song_big))
+
+        fun ImageView.glideLoad(context: Context, imageString: String, placeholderDrawable: Int)
+                = glideLoad(context, imageString, getDefaultRequestOptions(placeholderDrawable).circleCrop())
 
         fun MainActivity.showDialog(title: Int, message: Int, positiveAction: () -> Unit) {
             val builder = getBuilder(title, message)
@@ -317,8 +312,8 @@ class MainPresenter {
                         RingtoneManager.TYPE_RINGTONE, newUri)
 
                 runOnUiThread {
-                    Snackbar.make(findViewById(R.id.main_content), R.string.ringtone_success,
-                            Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(this@setRingtone.applicationContext, R.string.ringtone_success,
+                            Toast.LENGTH_SHORT).show()
                 }
             }.await()
         }

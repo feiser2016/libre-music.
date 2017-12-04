@@ -36,7 +36,7 @@ import java.util.concurrent.ThreadLocalRandom
  * Service class containing static variables/functions for use with MediaPlayerService
 
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-04
  */
 
 

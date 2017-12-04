@@ -75,4 +75,6 @@
     <string name="about_rate">דרג</string>
     <string name="about_donate">תרומה</string>
     <string name="send_mail_title">שלח אימייל באמצעות…</string>
+    <string name="eq">שוין</string>
+    <string name="eq_summary">פותח את השוין המובנה במכשירכם (ייתכן שלא יעבוד על מכשירים מסוימים)</string>
 </resources>

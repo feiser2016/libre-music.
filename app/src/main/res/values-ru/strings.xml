@@ -75,4 +75,6 @@
     <string name="about_donate">Пожертвовать</string>
     <string name="send_mail_title">Прислать на почту с помощью…</string>
     <string name="about_code">Исходный код</string>
+    <string name="eq">Эквалайзер</string>
+    <string name="eq_summary">Открывает встроенный на вашем устройстве эквалайзер (может не работать на некоторых устройствах)</string>
 </resources>

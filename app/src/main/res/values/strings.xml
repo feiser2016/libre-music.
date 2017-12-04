@@ -75,5 +75,7 @@
     <string name="about_rate">Rate</string>
     <string name="about_donate">Donate</string>
     <string name="send_mail_title">Send mail using…</string>
+    <string name="eq">Equalizer</string>
+    <string name="eq_summary">Opens your device\'s built-in equalizer (Might not work on some devices)</string>
 
 </resources>

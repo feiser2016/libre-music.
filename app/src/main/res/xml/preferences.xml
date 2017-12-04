@@ -9,6 +9,12 @@
             android:key="app_theme_preferences"
             android:summary="@string/pref_night_message"
             android:title="@string/pref_night" />
+        <Preference
+            android:icon="@drawable/eq"
+            android:summary="@string/eq_summary"
+            android:title="@string/eq">
+            <intent android:action="android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL" />
+        </Preference>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_advanced">

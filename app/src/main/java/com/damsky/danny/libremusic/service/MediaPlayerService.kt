@@ -32,7 +32,7 @@ import com.damsky.danny.libremusic.service.MediaPlayerCompanion.Companion.stopMe
  * This class is a service which is in charge of all music playback operations.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-04
  */
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,

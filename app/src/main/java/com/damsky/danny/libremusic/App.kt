@@ -14,7 +14,7 @@ import com.damsky.danny.libremusic.service.MediaPlayerService
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-04
  */
 
 class App : Application() {

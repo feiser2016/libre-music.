@@ -75,4 +75,6 @@
     <string name="about_rate">Оцінити</string>
     <string name="about_donate">Пожертвувати</string>
     <string name="send_mail_title">Надіслати на пошту за допомогою…</string>
+    <string name="eq">Еквалайзер</string>
+    <string name="eq_summary">Відкриває вбудований на вашому пристрої еквалайзер (може не працювати на деяких пристроях)</string>
 </resources>

@@ -17,14 +17,14 @@ import java.io.File
  * Service class containing static variables/functions for use with SplashActivity
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-04
  */
 class SplashPresenter {
     companion object {
         const val START_INTRO_REQUEST = 101
         const val START_MAIN_REQUEST = 102
 
-        private const val MIN_SONG_FILE_DURATION = 600_000
+        private const val MIN_DURATION_FOR_CUE_PARSING = 600_000
 
         /**
          * Asynchronously runs asyncLoading() in order to set up the DB before continuing and
@@ -151,10 +151,9 @@ class SplashPresenter {
                                                       duration: Int,
                                                       data: String,
                                                       cover: String): Boolean {
-            if (duration > MIN_SONG_FILE_DURATION) {
+            if (duration > MIN_DURATION_FOR_CUE_PARSING) {
                 val fileData = File(data)
-                val folder = fileData.parentFile
-                val listFiles = folder.listFiles()
+                val listFiles = fileData.parentFile.listFiles()
                 val extension = fileData.extension
                 var cueFile: File? = null
                 if (listFiles != null)
