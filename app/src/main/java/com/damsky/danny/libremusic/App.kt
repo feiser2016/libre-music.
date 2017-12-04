@@ -47,4 +47,12 @@ class App : Application() {
 
         appDbHelper.setSongs()
     }
+
+    fun onSleepTimerEnabled() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun onSleepTimerDisabled() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

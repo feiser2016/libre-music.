@@ -76,4 +76,5 @@
     <string name="about_donate">Dona</string>
     <string name="send_mail_title">Mande un mail usando…</string>
     <string name="eq">Igualada</string>
+    <string name="eq_summary">Abre el ecualizador incorporado en tu dispositivo (podra no andar en unos dispositivos)</string>
 </resources>
