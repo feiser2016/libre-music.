@@ -163,15 +163,15 @@ class MediaPlayerCompanion {
                     when (state) {
                         TelephonyManager.CALL_STATE_OFFHOOK, TelephonyManager.CALL_STATE_RINGING -> {
                             mediaPlayer?.let {
+                                ongoingCall = mediaPlayer!!.isPlaying
                                 pauseMedia()
-                                ongoingCall = true
                             }
                         }
                         TelephonyManager.CALL_STATE_IDLE -> {
                             mediaPlayer?.let {
                                 if (ongoingCall) {
                                     ongoingCall = false
-                                    //resumeMedia() TODO: See if this is necessary
+                                    resumeMedia()
                                 }
                             }
                         }

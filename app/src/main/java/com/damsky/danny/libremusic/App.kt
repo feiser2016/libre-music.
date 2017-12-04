@@ -43,8 +43,7 @@ class App : Application() {
         preferencesHelper = AppPreferencesHelper(this)
 
         val pair = preferencesHelper.getIndexes()
-        if (pair != null)
-            appDbHelper.updateLocations(pair.first, pair.second)
+        pair?.let { appDbHelper.updateLocations(pair.first, pair.second) }
 
         appDbHelper.setSongs()
     }

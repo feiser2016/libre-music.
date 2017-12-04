@@ -118,8 +118,8 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
             AudioManager.AUDIOFOCUS_GAIN -> {
                 if (mediaPlayer == null)
                     initMediaPlayer()
-                //else if (!mediaPlayer!!.isPlaying) TODO: See if this is necessary
-                //mediaPlayer!!.start()
+                else if (!mediaPlayer!!.isPlaying)
+                    mediaPlayer!!.start()
                 mediaPlayer!!.setVolume(1f, 1f)
             }
             AudioManager.AUDIOFOCUS_LOSS -> {
