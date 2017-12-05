@@ -10,9 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.provider.Settings
-import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.view.View
@@ -21,7 +19,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils.fitCenter
 import com.bumptech.glide.request.RequestOptions
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
@@ -45,12 +42,15 @@ import java.util.concurrent.TimeUnit
  * Service class containing static variables/functions for use with MainActivity
 
  * @author Danny Damsky
- * @since 2017-12-04
+ * @since 2017-12-05
  */
 
 class MainPresenter {
     companion object {
-        val Broadcast_PLAY_AUDIO = "com.damsky.danny.libremusic.PlayAudio"
+        private const val REQUEST_WRITE_SETTINGS = 200
+
+        const val Broadcast_PLAY_AUDIO = "com.damsky.danny.libremusic.PlayAudio"
+        const val UI_UPDATE_INTERVAL_MILLIS: Long = 500
 
         /**
          * @param fab     Is shown when the returned SlideUp is swiped out of visibility.
@@ -236,7 +236,7 @@ class MainPresenter {
                                 (application as App).
                                         appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
                             }
-                    Snackbar.make(findViewById(R.id.main_content), R.string.success, Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show()
                     dialog.dismiss()
                 })
 
@@ -251,12 +251,12 @@ class MainPresenter {
                 builder.setView(editText)
                 builder.setPositiveButton(R.string.ok, { dialog, _ ->
                     if (editText.text.isEmpty())
-                        Snackbar.make(findViewById<CoordinatorLayout>(R.id.main_content), R.string.text_empty, Snackbar.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
                     else {
                         (application as App).appDbHelper.insertPlaylist("${editText.text}")
                         (application as App).appDbHelper.setPlaylists()
                         (application as App).appDbHelper.insertSongsToPlaylist(editText.text.toString(), songsList)
-                        Snackbar.make(findViewById(R.id.main_content), R.string.success, Snackbar.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show()
                     }
                     dialog.dismiss()
                 })
@@ -333,7 +333,7 @@ class MainPresenter {
                     startActivityForResult(
                             Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
                                     Uri.parse("package:$packageName")),
-                            200)
+                            REQUEST_WRITE_SETTINGS)
                 } else
                     setRingtone(song)
             } else
@@ -399,7 +399,7 @@ class MainPresenter {
                 runOnUiThread {
                     repeat.setImageResource(repeatVal)
                     shuffle.setImageResource(shuffleVal)
-                    handler.postDelayed(run, 500)
+                    handler.postDelayed(run, UI_UPDATE_INTERVAL_MILLIS)
                 }
             }.await()
         }
@@ -486,8 +486,7 @@ class MainPresenter {
                     R.string.action_add_playlist,
                     {
                         if (editText.text.isEmpty())
-                            Snackbar.make(findViewById<CoordinatorLayout>(R.id.main_content),
-                                    R.string.text_empty, Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
                         else {
                             (application as App).appDbHelper.updatePlaylist(
                                     (application as App).appDbHelper.getPlaylistsClean()[index],

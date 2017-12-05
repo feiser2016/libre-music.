@@ -77,4 +77,11 @@
     <string name="send_mail_title">שלח אימייל באמצעות…</string>
     <string name="eq">שוין</string>
     <string name="eq_summary">פותח את השוין המובנה במכשירכם (ייתכן שלא יעבוד על מכשירים מסוימים)</string>
+    <string name="action_sleep_timer">טיימר שינה</string>
+    <string name="action_sleep_message">הגדירו את משך ההשמעה</string>
+    <string name="action_sleep_toast">מוזיקה תעצור ב</string>
+    <string name="action_sleep_disable">האם ברצונכם להשבית את טיימר השינה?</string>
+    <string name="sleep_timer_disabled">טיימר שינה הושבת בהצלחה</string>
+    <string name="action_sleep_time_extension">ביום שאחרי</string>
+    <string name="eq_error">השוין לא נמצא</string>
 </resources>

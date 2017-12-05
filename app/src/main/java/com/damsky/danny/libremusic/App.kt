@@ -3,18 +3,23 @@ package com.damsky.danny.libremusic
 import android.app.Application
 import android.content.ComponentName
 import android.content.ServiceConnection
+import android.os.Handler
 import android.os.IBinder
+import android.widget.Toast
 import com.damsky.danny.libremusic.data.db.AppDbHelper
 import com.damsky.danny.libremusic.data.db.model.DaoMaster
 import com.damsky.danny.libremusic.data.prefs.AppPreferencesHelper
+import com.damsky.danny.libremusic.service.MediaPlayerCompanion
 import com.damsky.danny.libremusic.service.MediaPlayerService
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * The main Application class, it holds the application's database and preferences.
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2017-12-04
+ * @since 2017-12-05
  */
 
 class App : Application() {
@@ -35,6 +40,9 @@ class App : Application() {
         }
     } // Binds MediaPlayerService to the application
 
+    private val handler = Handler()
+    var sleepTime = ""
+
     override fun onCreate() {
         super.onCreate()
         appDbHelper = AppDbHelper(DaoMaster(
@@ -48,11 +56,63 @@ class App : Application() {
         appDbHelper.setSongs()
     }
 
-    fun onSleepTimerEnabled() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    /**
+     * Enables sleep timer that will stop after the given hours/minutes
+     *
+     * @param hours   The amount of hours until playback stops
+     * @param minutes The amount of minutes until playback stops
+     */
+    fun onSleepTimerEnabled(hours: Int, minutes: Int) {
+        val delayMillis = TimeUnit.HOURS.toMillis(hours.toLong()) +
+                TimeUnit.MINUTES.toMillis(minutes.toLong())
+
+        handler.postDelayed({
+            MediaPlayerCompanion.mediaPlayer?.let {
+                if (MediaPlayerCompanion.mediaPlayer!!.isPlaying)
+                    MediaPlayerCompanion.transportControls.pause()
+            }
+            onSleepTimerDisabled()
+        }, delayMillis)
+
+        sleepTime = getRealTimePlusDuration(hours, minutes)
+
+        Toast.makeText(this,
+                "${getString(R.string.action_sleep_toast)} $sleepTime",
+                Toast.LENGTH_LONG).show()
     }
 
     fun onSleepTimerDisabled() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        handler.removeCallbacksAndMessages(null)
+        sleepTime = ""
+        Toast.makeText(this, R.string.sleep_timer_disabled, Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * @param hoursToAdd   Hours to add to real time
+     * @param minutesToAdd Minutes to add to real time
+     *
+     * @return Real time with hours/minutes added to it, will look like this HH:MM (The next day)
+     */
+    private fun getRealTimePlusDuration(hoursToAdd: Int, minutesToAdd: Int): String {
+        val realTime = Calendar.getInstance()
+        val realHours = realTime.get(Calendar.HOUR_OF_DAY)
+        realTime.add(Calendar.HOUR_OF_DAY, hoursToAdd)
+        realTime.add(Calendar.MINUTE, minutesToAdd)
+
+        val hours = realTime.get(Calendar.HOUR_OF_DAY)
+        val minutes = realTime.get(Calendar.MINUTE)
+
+        val timeFormat = StringBuilder()
+        if (hours < 10)
+            timeFormat.append(0)
+        timeFormat.append(hours).append(":")
+        if (minutes < 10)
+            timeFormat.append(0)
+        timeFormat.append(minutes)
+
+        if (hoursToAdd == realHours || hours < realHours)
+            timeFormat.append(" ").append(getString(R.string.action_sleep_time_extension))
+
+        return timeFormat.toString()
     }
 }

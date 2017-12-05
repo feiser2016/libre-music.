@@ -1,11 +1,13 @@
 package com.damsky.danny.libremusic.ui.prefs
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
+import android.widget.Toast
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 
@@ -13,7 +15,7 @@ import com.damsky.danny.libremusic.R
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-05
  */
 class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -46,6 +48,20 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
                     .detectAppTheme(resources.getStringArray(R.array.app_themes_values)).second)
             finish()
         }
+    }
+
+    /**
+     * This function only runs when user pressed on "Equalizer" in the preferences activity.
+     * Overriding this functions prevents the app from crashing in case the equalizer was not
+     * found on the device.
+     */
+    override fun startActivity(intent: Intent) {
+        if (intent.action == "android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL")
+            try {
+                super.startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, R.string.eq_error, Toast.LENGTH_SHORT).show()
+            }
     }
 
     class PreferencesFragment : PreferenceFragment() {

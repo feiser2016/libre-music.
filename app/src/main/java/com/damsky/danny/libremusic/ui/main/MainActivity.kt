@@ -3,16 +3,16 @@ package com.damsky.danny.libremusic.ui.main
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.SearchManager
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.DefaultItemAnimator
@@ -22,12 +22,14 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.Toast
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Song
 import com.damsky.danny.libremusic.service.MediaPlayerCompanion
 import com.damsky.danny.libremusic.ui.about.AboutActivity
+import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.UI_UPDATE_INTERVAL_MILLIS
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.addSongsToQueue
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getAdapter
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getAlbumAdapter
@@ -78,7 +80,7 @@ import kotlinx.android.synthetic.main.songinfo_main.*
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2017-12-05
  */
 class MainActivity : AppCompatActivity(),
         View.OnClickListener,
@@ -113,7 +115,7 @@ class MainActivity : AppCompatActivity(),
     val run: Runnable = object : Runnable {
         override fun run() {
             setupPlayerUi((application as App).appDbHelper.getSong())
-            handler.postDelayed(this, 500)
+            handler.postDelayed(this, UI_UPDATE_INTERVAL_MILLIS)
         }
     }
 
@@ -196,7 +198,7 @@ class MainActivity : AppCompatActivity(),
     override fun onRestart() {
         super.onRestart()
         setupPlayerUi((application as App).appDbHelper.getSong())
-        handler.postDelayed(run, 500)
+        handler.postDelayed(run, UI_UPDATE_INTERVAL_MILLIS)
     }
 
     override fun onClick(view: View) {
@@ -242,7 +244,7 @@ class MainActivity : AppCompatActivity(),
                     R.string.action_add_playlist,
                     {
                         if (editText.text.isEmpty())
-                            Snackbar.make(findViewById<CoordinatorLayout>(R.id.main_content), R.string.text_empty, Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
                         else {
                             (application as App).appDbHelper.insertPlaylist("${editText.text}")
                             (application as App).appDbHelper.setPlaylists()
@@ -354,6 +356,26 @@ class MainActivity : AppCompatActivity(),
             R.id.action_about -> {
                 startActivity(Intent(this, AboutActivity::class.java))
                 drawerLayout.closeDrawers()
+            }
+
+            R.id.action_sleep -> {
+                if ((application as App).sleepTime == "") {
+                    val sleepTimer = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hours, minutes ->
+                        (application as App).onSleepTimerEnabled(hours, minutes)
+                    }, 0, 0, true)
+                    sleepTimer.setTitle(R.string.action_sleep_message)
+                    sleepTimer.show()
+                } else
+                    AlertDialog.Builder(this)
+                            .setTitle("${getString(R.string.action_sleep_timer)} - ${(application as App).sleepTime}")
+                            .setMessage(R.string.action_sleep_disable)
+                            .setIcon(R.mipmap.ic_launcher)
+                            .setPositiveButton(R.string.yes, { dialog, _ ->
+                                (application as App).onSleepTimerDisabled()
+                                dialog.dismiss()
+                            })
+                            .setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
+                            .create().show()
             }
         }
         return true

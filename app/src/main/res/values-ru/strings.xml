@@ -77,4 +77,11 @@
     <string name="about_code">Исходный код</string>
     <string name="eq">Эквалайзер</string>
     <string name="eq_summary">Открывает встроенный на вашем устройстве эквалайзер (может не работать на некоторых устройствах)</string>
+    <string name="action_sleep_timer">Таймер сна</string>
+    <string name="action_sleep_message">Установите продолжительность воспроизведения</string>
+    <string name="action_sleep_toast">Музыка остановится в</string>
+    <string name="action_sleep_disable">Вы хотите отключить таймер сна?</string>
+    <string name="sleep_timer_disabled">Таймер сна отключен успешно</string>
+    <string name="action_sleep_time_extension">на следующем дне</string>
+    <string name="eq_error">Эквалайзер не был найден</string>
 </resources>

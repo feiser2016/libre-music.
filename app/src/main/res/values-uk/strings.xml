@@ -77,4 +77,11 @@
     <string name="send_mail_title">Надіслати на пошту за допомогою…</string>
     <string name="eq">Еквалайзер</string>
     <string name="eq_summary">Відкриває вбудований на вашому пристрої еквалайзер (може не працювати на деяких пристроях)</string>
+    <string name="action_sleep_toast">Музика зупиниться в</string>
+    <string name="action_sleep_timer">Таймер сну</string>
+    <string name="action_sleep_message">Встановіть тривалість відтворення</string>
+    <string name="action_sleep_disable">Ви хочете відключити таймер сну?</string>
+    <string name="sleep_timer_disabled">Таймер сну відключений успішно</string>
+    <string name="action_sleep_time_extension">на наступний день</string>
+    <string name="eq_error">Еквалайзер не був знайдений</string>
 </resources>

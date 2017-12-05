@@ -22,7 +22,7 @@
     <group android:id="@+id/grp2">
         <item android:id="@+id/action_sleep"
             android:icon="@drawable/timer"
-            android:title="Enable Sleep Timer"
+            android:title="@string/action_sleep_timer"
             app:showAsAction="always" />
 
         <item
