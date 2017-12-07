@@ -77,4 +77,11 @@
     <string name="send_mail_title">Mande un mail usando…</string>
     <string name="eq">Igualada</string>
     <string name="eq_summary">Abre el ecualizador incorporado en tu dispositivo (podra no andar en unos dispositivos)</string>
+    <string name="action_sleep_timer">Minutero de dormir</string>
+    <string name="action_sleep_message">Configure la duration de reproduccion</string>
+    <string name="action_sleep_toast">La musica va a parar en</string>
+    <string name="action_sleep_disable">Queres desactivar el minutero de dormir?</string>
+    <string name="sleep_timer_disabled">Minutero de dormir fue desactivado exsitosamente</string>
+    <string name="action_sleep_time_extension">El proximo dia</string>
+    <string name="eq_error">El Ecualizador no fue encntrado</string>
 </resources>
