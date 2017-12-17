@@ -376,6 +376,7 @@ class MainActivity : AppCompatActivity(),
                             })
                             .setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
                             .create().show()
+                drawerLayout.closeDrawers()
             }
         }
         return true
@@ -462,9 +463,11 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-        if (p2)
-            MediaPlayerCompanion.transportControls.seekTo(p0!!.progress.toLong() +
-                    (application as App).appDbHelper.getSong().startTime)
+        MediaPlayerCompanion.mediaPlayer?.let {
+            if (p2)
+                MediaPlayerCompanion.transportControls.seekTo(p0!!.progress.toLong() +
+                        (application as App).appDbHelper.getSong().startTime)
+        }
     }
 
     fun playPrevious(view: View) = playNextOrPrevious(
