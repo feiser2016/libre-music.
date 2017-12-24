@@ -33,7 +33,7 @@
         </activity>
         <activity
             android:name="com.damsky.danny.libremusic.ui.splash.SplashActivity"
-            android:screenOrientation="locked"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +43,7 @@
         </activity>
         <activity
             android:name="com.damsky.danny.libremusic.ui.intro.IntroActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.damsky.danny.libremusic.ui.prefs.PreferencesActivity"

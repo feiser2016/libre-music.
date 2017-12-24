@@ -13,8 +13,8 @@ android {
         applicationId "com.damsky.danny.libremusic"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 9
-        versionName "2.1.00"
+        versionCode 10
+        versionName "2.1.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

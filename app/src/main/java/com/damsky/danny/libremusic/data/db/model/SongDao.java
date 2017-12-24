@@ -39,8 +39,8 @@ public class SongDao extends AbstractDao<Song, Long> {
         public final static Property Cover = new Property(11, String.class, "cover", false, "COVER");
     }
 
-    private Query<Song> genre_SongsQuery;
     private Query<Song> playlist_SongsQuery;
+    private Query<Song> genre_SongsQuery;
     private Query<Song> album_SongsQuery;
 
     public SongDao(DaoConfig config) {
@@ -182,21 +182,6 @@ public class SongDao extends AbstractDao<Song, Long> {
         return true;
     }
     
-    /** Internal query to resolve the "songs" to-many relationship of Genre. */
-    public List<Song> _queryGenre_Songs(String genre) {
-        synchronized (this) {
-            if (genre_SongsQuery == null) {
-                QueryBuilder<Song> queryBuilder = queryBuilder();
-                queryBuilder.where(Properties.Genre.eq(null));
-                queryBuilder.orderRaw("T.'ARTIST' ASC");
-                genre_SongsQuery = queryBuilder.build();
-            }
-        }
-        Query<Song> query = genre_SongsQuery.forCurrentThread();
-        query.setParameter(0, genre);
-        return query.list();
-    }
-
     /** Internal query to resolve the "songs" to-many relationship of Playlist. */
     public List<Song> _queryPlaylist_Songs(Long playListId) {
         synchronized (this) {
@@ -209,6 +194,21 @@ public class SongDao extends AbstractDao<Song, Long> {
         }
         Query<Song> query = playlist_SongsQuery.forCurrentThread();
         query.setParameter(0, playListId);
+        return query.list();
+    }
+
+    /** Internal query to resolve the "songs" to-many relationship of Genre. */
+    public List<Song> _queryGenre_Songs(String genre) {
+        synchronized (this) {
+            if (genre_SongsQuery == null) {
+                QueryBuilder<Song> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.Genre.eq(null));
+                queryBuilder.orderRaw("T.'ARTIST' ASC");
+                genre_SongsQuery = queryBuilder.build();
+            }
+        }
+        Query<Song> query = genre_SongsQuery.forCurrentThread();
+        query.setParameter(0, genre);
         return query.list();
     }
 

@@ -80,7 +80,7 @@ import kotlinx.android.synthetic.main.songinfo_main.*
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2017-12-05
+ * @since 2017-12-17
  */
 class MainActivity : AppCompatActivity(),
         View.OnClickListener,
