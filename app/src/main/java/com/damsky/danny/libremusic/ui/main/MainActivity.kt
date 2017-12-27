@@ -197,8 +197,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun onRestart() {
         super.onRestart()
-        setupPlayerUi((application as App).appDbHelper.getSong())
-        handler.postDelayed(run, UI_UPDATE_INTERVAL_MILLIS)
+        if (!(application as App).appDbHelper.songsEmpty()) {
+            setupPlayerUi((application as App).appDbHelper.getSong())
+            handler.postDelayed(run, UI_UPDATE_INTERVAL_MILLIS)
+        }
     }
 
     override fun onClick(view: View) {
