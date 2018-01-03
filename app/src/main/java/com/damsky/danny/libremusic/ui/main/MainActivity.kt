@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
@@ -22,7 +23,6 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SeekBar
-import android.widget.Toast
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
@@ -69,6 +69,7 @@ import com.damsky.danny.libremusic.ui.main.adapters.models.*
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 import com.damsky.danny.libremusic.ui.main.listeners.OnSwipeTouchListener
 import com.damsky.danny.libremusic.ui.prefs.PreferencesActivity
+import com.damsky.danny.libremusic.utils.Display
 import com.damsky.danny.libremusic.utils.LibrarySearcher
 import com.mancj.slideup.SlideUp
 import com.mancj.slideup.SlideUpBuilder
@@ -82,12 +83,9 @@ import kotlinx.android.synthetic.main.songinfo_main.*
  * @author Danny Damsky
  * @since 2018-01-03
  */
-class MainActivity : AppCompatActivity(),
-        View.OnClickListener,
-        CustomOnClickListener,
+class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener,
-        NavigationView.OnNavigationItemSelectedListener,
-        SearchView.OnQueryTextListener,
+        NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener,
         SeekBar.OnSeekBarChangeListener {
 
 
@@ -120,11 +118,13 @@ class MainActivity : AppCompatActivity(),
     }
 
     lateinit var appReference: App
+    lateinit var display: Display
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appReference = application as App
+        display = Display(this)
 
         val pair: Pair<Boolean, Int> = appReference.preferencesHelper
                 .detectAppTheme(resources.getStringArray(R.array.app_themes_values))
@@ -249,7 +249,7 @@ class MainActivity : AppCompatActivity(),
                     R.string.action_add_playlist,
                     {
                         if (editText.text.isEmpty())
-                            Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
+                            display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
                         else {
                             appReference.appDbHelper.insertPlaylist("${editText.text}")
                             appReference.appDbHelper.setPlaylists()

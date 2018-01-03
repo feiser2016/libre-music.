@@ -14,7 +14,7 @@ import java.util.regex.Pattern
  * @param encoding A string containing a charset to be used for encoding when reading the cue file.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-03
  */
 class CueParser(encoding: String) {
     private val charset = Charset.forName(encoding)
@@ -127,7 +127,7 @@ class CueParser(encoding: String) {
 
     private fun getIndexOne(): ArrayList<Int> {
         val matcher = indexPattern.matcher(content)
-        val list = ArrayList<Int>(0)
+        val list = ArrayList<Int>(1)
 
         list.add(0)
         matcher.find()
@@ -154,18 +154,8 @@ class CueParser(encoding: String) {
         return Array(titles.size, { i ->
             val endTime = indexes[i + 1]
             val startTime = indexes[i]
-            Song(null,
-                    songFile,
-                    titles[i],
-                    album,
-                    artist,
-                    genre,
-                    i + 1,
-                    year,
-                    startTime,
-                    endTime,
-                    endTime - startTime,
-                    cover)
+            Song(null, songFile, titles[i], album, artist, genre, i + 1, year, startTime,
+                    endTime, endTime - startTime, cover)
         })
     }
 }

@@ -5,11 +5,12 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
-import android.widget.Toast
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
+import com.damsky.danny.libremusic.utils.Display
 
 /**
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
@@ -32,10 +33,9 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
                 else
                     R.style.AppTheme
         )
-        fragmentManager.beginTransaction().replace(android.R.id.content,
-                PreferencesFragment()).commit()
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .registerOnSharedPreferenceChangeListener(this)
+
+        fragmentManager.beginTransaction().replace(android.R.id.content, PreferencesFragment()).commit()
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -64,7 +64,7 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
             try {
                 super.startActivity(intent)
             } catch (e: Exception) {
-                Toast.makeText(this, R.string.eq_error, Toast.LENGTH_SHORT).show()
+                Display(this).showSnack(R.string.eq_error, Snackbar.LENGTH_SHORT)
             }
     }
 
