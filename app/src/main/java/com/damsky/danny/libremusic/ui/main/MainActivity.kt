@@ -80,7 +80,7 @@ import kotlinx.android.synthetic.main.songinfo_main.*
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2017-12-17
+ * @since 2018-01-03
  */
 class MainActivity : AppCompatActivity(),
         View.OnClickListener,
@@ -114,16 +114,19 @@ class MainActivity : AppCompatActivity(),
     val handler = Handler()
     val run: Runnable = object : Runnable {
         override fun run() {
-            setupPlayerUi((application as App).appDbHelper.getSong())
+            setupPlayerUi(appReference.appDbHelper.getSong())
             handler.postDelayed(this, UI_UPDATE_INTERVAL_MILLIS)
         }
     }
 
+    lateinit var appReference: App
+
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appReference = application as App
 
-        val pair: Pair<Boolean, Int> = (application as App).preferencesHelper
+        val pair: Pair<Boolean, Int> = appReference.preferencesHelper
                 .detectAppTheme(resources.getStringArray(R.array.app_themes_values))
 
         if (pair.first)
@@ -153,7 +156,7 @@ class MainActivity : AppCompatActivity(),
         superToolbar.setNavigationOnClickListener({ toggleView(false) })
         navigationDrawer.setNavigationItemSelectedListener(this)
 
-        if (!(application as App).appDbHelper.songsEmpty()) {
+        if (!appReference.appDbHelper.songsEmpty()) {
             fab.setOnClickListener(this)
             slideView.setOnClickListener(this)
             navigation.setOnNavigationItemSelectedListener(this)
@@ -197,8 +200,8 @@ class MainActivity : AppCompatActivity(),
 
     override fun onRestart() {
         super.onRestart()
-        if (!(application as App).appDbHelper.songsEmpty()) {
-            setupPlayerUi((application as App).appDbHelper.getSong())
+        if (!appReference.appDbHelper.songsEmpty()) {
+            setupPlayerUi(appReference.appDbHelper.getSong())
             handler.postDelayed(run, UI_UPDATE_INTERVAL_MILLIS)
         }
     }
@@ -248,8 +251,8 @@ class MainActivity : AppCompatActivity(),
                         if (editText.text.isEmpty())
                             Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
                         else {
-                            (application as App).appDbHelper.insertPlaylist("${editText.text}")
-                            (application as App).appDbHelper.setPlaylists()
+                            appReference.appDbHelper.insertPlaylist("${editText.text}")
+                            appReference.appDbHelper.setPlaylists()
                             myList.adapter = getPlaylistAdapter()
                         }
                     })
@@ -264,7 +267,7 @@ class MainActivity : AppCompatActivity(),
         superUp.isVisible ->
             toggleView(false)
 
-        else -> when ((application as App).appDbHelper.getLevel()) {
+        else -> when (appReference.appDbHelper.getLevel()) {
             ListLevel.ARTISTS,
             ListLevel.ALBUMS,
             ListLevel.SONGS,
@@ -279,7 +282,7 @@ class MainActivity : AppCompatActivity(),
                 myList.adapter = getArtistAdapter()
 
             ListLevel.ARTIST_SONGS ->
-                myList.adapter = getArtistAlbumsAdapter((application as App).appDbHelper.getArtistIndex())
+                myList.adapter = getArtistAlbumsAdapter(appReference.appDbHelper.getArtistIndex())
 
             ListLevel.ALBUM_SONGS ->
                 myList.adapter = getAlbumAdapter()
@@ -334,7 +337,7 @@ class MainActivity : AppCompatActivity(),
                 myList.adapter = getQueueAdapter()
                 navigationUp.hide()
                 drawerLayout.closeDrawers()
-                (application as App).appDbHelper.setLevel(ListLevel.QUEUE)
+                appReference.appDbHelper.setLevel(ListLevel.QUEUE)
             }
 
             R.id.action_settings -> {
@@ -361,19 +364,19 @@ class MainActivity : AppCompatActivity(),
             }
 
             R.id.action_sleep -> {
-                if ((application as App).sleepTime == "") {
+                if (appReference.sleepTime == "") {
                     val sleepTimer = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hours, minutes ->
-                        (application as App).onSleepTimerEnabled(hours, minutes)
+                        appReference.onSleepTimerEnabled(hours, minutes)
                     }, 0, 0, true)
                     sleepTimer.setTitle(R.string.action_sleep_message)
                     sleepTimer.show()
                 } else
                     AlertDialog.Builder(this)
-                            .setTitle("${getString(R.string.action_sleep_timer)} - ${(application as App).sleepTime}")
+                            .setTitle("${getString(R.string.action_sleep_timer)} - ${appReference.sleepTime}")
                             .setMessage(R.string.action_sleep_disable)
                             .setIcon(R.mipmap.ic_launcher)
                             .setPositiveButton(R.string.yes, { dialog, _ ->
-                                (application as App).onSleepTimerDisabled()
+                                appReference.onSleepTimerDisabled()
                                 dialog.dismiss()
                             })
                             .setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
@@ -385,7 +388,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onRecyclerClick(position: Int) =
-            when ((application as App).appDbHelper.getLevel()) {
+            when (appReference.appDbHelper.getLevel()) {
                 ListLevel.ARTIST_ALBUMS ->
                     myList.adapter = getArtistSongsAdapter(position)
 
@@ -442,20 +445,20 @@ class MainActivity : AppCompatActivity(),
         if (navigationUp.isVisible) {
             when (navigation.selectedItemId) {
                 R.id.navigation_artists ->
-                    searcher.setDataSource(ArtistModel((application as App).appDbHelper.getArtists()))
+                    searcher.setDataSource(ArtistModel(appReference.appDbHelper.getArtists()))
                 R.id.navigation_albums ->
-                    searcher.setDataSource(AlbumModel((application as App).appDbHelper.getAlbums()))
+                    searcher.setDataSource(AlbumModel(appReference.appDbHelper.getAlbums()))
                 R.id.navigation_songs -> {
-                    searcher.setDataSource(SongModel((application as App).appDbHelper.getSongs()))
+                    searcher.setDataSource(SongModel(appReference.appDbHelper.getSongs()))
                     listLevel = ListLevel.SONGS
                 }
                 R.id.navigation_genres ->
-                    searcher.setDataSource(GenreModel((application as App).appDbHelper.getGenres()))
+                    searcher.setDataSource(GenreModel(appReference.appDbHelper.getGenres()))
                 R.id.navigation_playlists ->
-                    searcher.setDataSource(PlaylistModel((application as App).appDbHelper.getPlaylists()))
+                    searcher.setDataSource(PlaylistModel(appReference.appDbHelper.getPlaylists()))
             }
         } else {
-            searcher.setDataSource(SongModel((application as App).appDbHelper.getQueue()))
+            searcher.setDataSource(SongModel(appReference.appDbHelper.getQueue()))
             listLevel = ListLevel.QUEUE
         }
         searcher.update(newText)
@@ -468,25 +471,25 @@ class MainActivity : AppCompatActivity(),
         MediaPlayerCompanion.mediaPlayer?.let {
             if (p2)
                 MediaPlayerCompanion.transportControls.seekTo(p0!!.progress.toLong() +
-                        (application as App).appDbHelper.getSong().startTime)
+                        appReference.appDbHelper.getSong().startTime)
         }
     }
 
     fun playPrevious(view: View) = playNextOrPrevious(
-            { (application as App).appDbHelper.decrementAudioIndex() },
+            { appReference.appDbHelper.decrementAudioIndex() },
             { MediaPlayerCompanion.transportControls.skipToPrevious() }
     )
 
     fun playNext(view: View) = playNextOrPrevious(
-            { (application as App).appDbHelper.incrementAudioIndex() },
+            { appReference.appDbHelper.incrementAudioIndex() },
             { MediaPlayerCompanion.transportControls.skipToNext() }
     )
 
     fun playPause(view: View) = playOrPause()
 
     fun onShuffle(view: View) {
-        val bool = (application as App).preferencesHelper.getShufflePreference()
-        (application as App).preferencesHelper.setShufflePreference(!bool)
+        val bool = appReference.preferencesHelper.getShufflePreference()
+        appReference.preferencesHelper.setShufflePreference(!bool)
         if (!bool)
             shuffle.setImageResource(R.drawable.shuffle_on)
         else
@@ -494,8 +497,8 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun onRepeat(view: View) {
-        val bool = (application as App).preferencesHelper.getRepeatPreference()
-        (application as App).preferencesHelper.setRepeatPreference(!bool)
+        val bool = appReference.preferencesHelper.getRepeatPreference()
+        appReference.preferencesHelper.setRepeatPreference(!bool)
         if (!bool)
             repeat.setImageResource(R.drawable.repeat_one)
         else

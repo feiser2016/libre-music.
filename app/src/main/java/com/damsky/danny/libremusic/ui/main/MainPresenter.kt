@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit
  * Service class containing static variables/functions for use with MainActivity
 
  * @author Danny Damsky
- * @since 2017-12-05
+ * @since 2018-01-03
  */
 
 class MainPresenter {
@@ -102,60 +102,60 @@ class MainPresenter {
         }
 
         fun MainActivity.getArtistAdapter(): RecycleAdapter =
-                getAdapter(ArtistModel((application as App).appDbHelper.getArtists()))
+                getAdapter(ArtistModel(appReference.appDbHelper.getArtists()))
 
         fun MainActivity.getAlbumAdapter(): RecycleAdapter =
-                getAdapter(AlbumModel((application as App).appDbHelper.getAlbums()))
+                getAdapter(AlbumModel(appReference.appDbHelper.getAlbums()))
 
         fun MainActivity.getSongAdapter(): RecycleAdapter =
-                getAdapter(SongModel((application as App).appDbHelper.getSongs()),
-                        (application as App).appDbHelper.getLevel())
+                getAdapter(SongModel(appReference.appDbHelper.getSongs()),
+                        appReference.appDbHelper.getLevel())
 
         fun MainActivity.getGenreAdapter(): RecycleAdapter =
-                getAdapter(GenreModel((application as App).appDbHelper.getGenres()))
+                getAdapter(GenreModel(appReference.appDbHelper.getGenres()))
 
         fun MainActivity.getPlaylistAdapter(): RecycleAdapter =
-                getAdapter(PlaylistModel((application as App).appDbHelper.getPlaylists()))
+                getAdapter(PlaylistModel(appReference.appDbHelper.getPlaylists()))
 
         fun MainActivity.getArtistAlbumsAdapter(position: Int): RecycleAdapter =
-                getAdapter(AlbumModel((application as App).appDbHelper.getArtistAlbums(position)))
+                getAdapter(AlbumModel(appReference.appDbHelper.getArtistAlbums(position)))
 
         fun MainActivity.getArtistSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel((application as App).appDbHelper.getArtistSongs(position)),
-                        (application as App).appDbHelper.getLevel())
+                getAdapter(SongModel(appReference.appDbHelper.getArtistSongs(position)),
+                        appReference.appDbHelper.getLevel())
 
         fun MainActivity.getAlbumSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel((application as App).appDbHelper.getAlbumSongs(position)),
-                        (application as App).appDbHelper.getLevel())
+                getAdapter(SongModel(appReference.appDbHelper.getAlbumSongs(position)),
+                        appReference.appDbHelper.getLevel())
 
         fun MainActivity.getGenreSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel((application as App).appDbHelper.getGenreSongs(position)),
-                        (application as App).appDbHelper.getLevel())
+                getAdapter(SongModel(appReference.appDbHelper.getGenreSongs(position)),
+                        appReference.appDbHelper.getLevel())
 
         fun MainActivity.getPlaylistSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel((application as App).appDbHelper.getPlaylistSongs(position)),
-                        (application as App).appDbHelper.getLevel())
+                getAdapter(SongModel(appReference.appDbHelper.getPlaylistSongs(position)),
+                        appReference.appDbHelper.getLevel())
 
         fun MainActivity.getQueueAdapter(): RecycleAdapter =
-                getAdapter(SongModel((application as App).appDbHelper.getQueue()), ListLevel.QUEUE)
+                getAdapter(SongModel(appReference.appDbHelper.getQueue()), ListLevel.QUEUE)
 
         fun MainActivity.getSong(position: Int): Song =
-                (application as App).appDbHelper.getSong(position)
+                appReference.appDbHelper.getSong(position)
 
         fun MainActivity.getQueueSong(position: Int): Song =
-                (application as App).appDbHelper.getQueueSong(position)
+                appReference.appDbHelper.getQueueSong(position)
 
         fun MainActivity.getAlbumSong(position: Int): Song =
-                (application as App).appDbHelper.getAlbumSong(position)
+                appReference.appDbHelper.getAlbumSong(position)
 
         fun MainActivity.getArtistSong(position: Int): Song =
-                (application as App).appDbHelper.getArtistSong(position)
+                appReference.appDbHelper.getArtistSong(position)
 
         fun MainActivity.getGenreSong(position: Int): Song =
-                (application as App).appDbHelper.getGenreSong(position)
+                appReference.appDbHelper.getGenreSong(position)
 
         fun MainActivity.getPlaylistSong(position: Int): Song =
-                (application as App).appDbHelper.getPlaylistSong(position)
+                appReference.appDbHelper.getPlaylistSong(position)
 
         private fun ImageView.glideLoad(context: Context, imageString: String, requestOptions: RequestOptions) {
             Glide.with(context.applicationContext).load(imageString)
@@ -218,7 +218,7 @@ class MainPresenter {
          * @return          An AlertDialog with an editText asking the user to create a new playlist to add the songs to.
          */
         fun MainActivity.setSongsToPlaylist(songsList: Array<Song>) {
-            val playList = (application as App).appDbHelper.getPlaylistsClean()
+            val playList = appReference.appDbHelper.getPlaylistsClean()
             if (playList.isNotEmpty()) {
                 val builder = getBuilder(R.string.add_to_playlist)
                 val playSize = playList.size
@@ -233,7 +233,7 @@ class MainPresenter {
                     (0 until playSize)
                             .filter { boolList[it] }
                             .forEach {
-                                (application as App).
+                                appReference.
                                         appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
                             }
                     Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show()
@@ -253,9 +253,9 @@ class MainPresenter {
                     if (editText.text.isEmpty())
                         Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
                     else {
-                        (application as App).appDbHelper.insertPlaylist("${editText.text}")
-                        (application as App).appDbHelper.setPlaylists()
-                        (application as App).appDbHelper.insertSongsToPlaylist(editText.text.toString(), songsList)
+                        appReference.appDbHelper.insertPlaylist("${editText.text}")
+                        appReference.appDbHelper.setPlaylists()
+                        appReference.appDbHelper.insertSongsToPlaylist(editText.text.toString(), songsList)
                         Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show()
                     }
                     dialog.dismiss()
@@ -341,45 +341,45 @@ class MainPresenter {
         }
 
         fun MainActivity.updateIndexes() {
-            (application as App).preferencesHelper.updateIndexes(
-                    (application as App).appDbHelper.getPlayableLevel(),
-                    (application as App).appDbHelper.getPositions()
+            appReference.preferencesHelper.updateIndexes(
+                    appReference.appDbHelper.getPlayableLevel(),
+                    appReference.appDbHelper.getPositions()
             )
         }
 
         fun MainActivity.updateIndex(position: Int) {
-            (application as App).preferencesHelper.updateIndex(position)
+            appReference.preferencesHelper.updateIndex(position)
         }
 
         fun MainActivity.addSongsToQueue(list: Array<Song>) {
-            (application as App).appDbHelper.addToQueue(list)
+            appReference.appDbHelper.addToQueue(list)
         }
 
         fun MainActivity.playAudio() {
-            if (!(application as App).serviceBound) {
+            if (!appReference.serviceBound) {
                 val playerIntent = Intent(applicationContext, MediaPlayerService::class.java)
                 startService(playerIntent)
-                bindService(playerIntent, (application as App).serviceConnection, Context.BIND_AUTO_CREATE)
+                bindService(playerIntent, appReference.serviceConnection, Context.BIND_AUTO_CREATE)
             } else
                 sendBroadcast(Intent(Broadcast_PLAY_AUDIO))
         }
 
         fun MainActivity.initializeUi() = launch {
             async {
-                val indexes = (application as App).preferencesHelper.getIndexes()
+                val indexes = appReference.preferencesHelper.getIndexes()
                 val song: Song
                 if (indexes != null) {
                     song = when (indexes.second) {
                         ListLevel.ARTIST_SONGS ->
-                            getArtistSong((application as App).appDbHelper.getAudioIndex())
+                            getArtistSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.ALBUM_SONGS ->
-                            getAlbumSong((application as App).appDbHelper.getAudioIndex())
+                            getAlbumSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.SONGS ->
-                            getSong((application as App).appDbHelper.getAudioIndex())
+                            getSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.GENRE_SONGS ->
-                            getGenreSong((application as App).appDbHelper.getAudioIndex())
+                            getGenreSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.PLAYLIST_SONGS ->
-                            getPlaylistSong((application as App).appDbHelper.getAudioIndex())
+                            getPlaylistSong(appReference.appDbHelper.getAudioIndex())
                         else ->
                             getSong(0)
                     }
@@ -387,12 +387,12 @@ class MainPresenter {
                     song = getSong(0)
 
                 setupPlayerUi(song)
-                val repeatVal = if ((application as App).preferencesHelper.getRepeatPreference())
+                val repeatVal = if (appReference.preferencesHelper.getRepeatPreference())
                     R.drawable.repeat_one
                 else
                     R.drawable.repeat_all
 
-                val shuffleVal = if ((application as App).preferencesHelper.getShufflePreference())
+                val shuffleVal = if (appReference.preferencesHelper.getShufflePreference())
                     R.drawable.shuffle_on
                 else
                     R.drawable.shuffle
@@ -425,7 +425,7 @@ class MainPresenter {
                 val seekBarProgress = position - song.startTime
                 val durationInTime = "${(position - song.startTime).getTime()} / ${song.duration.getTime()}"
                 val artistNameString = "${song.artist} - ${song.album}"
-                val infoString = "${(application as App).appDbHelper.getAudioIndex() + 1} / ${(application as App).appDbHelper.getQueue().size}"
+                val infoString = "${appReference.appDbHelper.getAudioIndex() + 1} / ${appReference.appDbHelper.getQueue().size}"
 
                 runOnUiThread {
                     setImages(playVal)
@@ -476,7 +476,7 @@ class MainPresenter {
                 }
 
         fun MainActivity.playNewList(audioList: Array<Song>) {
-            (application as App).appDbHelper.setQueue(audioList)
+            appReference.appDbHelper.setQueue(audioList)
             playAudio()
         }
 
@@ -488,8 +488,8 @@ class MainPresenter {
                         if (editText.text.isEmpty())
                             Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
                         else {
-                            (application as App).appDbHelper.updatePlaylist(
-                                    (application as App).appDbHelper.getPlaylistsClean()[index],
+                            appReference.appDbHelper.updatePlaylist(
+                                    appReference.appDbHelper.getPlaylistsClean()[index],
                                     editText.text.toString()
                             )
                             myList.adapter = getPlaylistAdapter()
@@ -498,17 +498,17 @@ class MainPresenter {
         }
 
         fun MainActivity.removePlaylist(index: Int) {
-            (application as App).appDbHelper.deletePlaylist(
-                    (application as App).appDbHelper.getPlaylistsClean()[index]
+            appReference.appDbHelper.deletePlaylist(
+                    appReference.appDbHelper.getPlaylistsClean()[index]
             )
             myList.adapter = getPlaylistAdapter()
         }
 
         fun MainActivity.removeFromPlaylist(song: Song) {
-            (application as App).appDbHelper.deleteSongFromPlaylist(song,
-                    (application as App).appDbHelper.getPlaylistsClean()[
-                            (application as App).appDbHelper.getSecondIndex()])
-            myList.adapter = getPlaylistSongsAdapter((application as App).appDbHelper.getSecondIndex())
+            appReference.appDbHelper.deleteSongFromPlaylist(song,
+                    appReference.appDbHelper.getPlaylistsClean()[
+                            appReference.appDbHelper.getSecondIndex()])
+            myList.adapter = getPlaylistSongsAdapter(appReference.appDbHelper.getSecondIndex())
         }
     }
 }

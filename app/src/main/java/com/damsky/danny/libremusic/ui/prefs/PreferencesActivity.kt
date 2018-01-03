@@ -15,14 +15,18 @@ import com.damsky.danny.libremusic.R
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
  *
  * @author Danny Damsky
- * @since 2017-12-05
+ * @since 2018-01-03
  */
 class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private lateinit var appReference: App
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appReference = application as App
+
         setTheme(
-                if ((application as App).preferencesHelper
+                if (appReference.preferencesHelper
                         .detectAppTheme(resources.getStringArray(R.array.app_themes_values)).first)
                     R.style.AppTheme_Black
                 else
@@ -44,7 +48,7 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (key == "app_theme_preferences") {
-            AppCompatDelegate.setDefaultNightMode((application as App).preferencesHelper
+            AppCompatDelegate.setDefaultNightMode(appReference.preferencesHelper
                     .detectAppTheme(resources.getStringArray(R.array.app_themes_values)).second)
             finish()
         }

@@ -16,14 +16,19 @@ import com.damsky.danny.libremusic.ui.splash.SplashPresenter.Companion.scanSongs
  * This activity is in charge of making sure the DB and preferences are set-up before continuing.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-03
  */
 class SplashActivity : AppCompatActivity() {
+
+    lateinit var appReference: App
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        if ((application as App).preferencesHelper.isFirstRun())
+
+        appReference = application as App
+
+        if (appReference.preferencesHelper.isFirstRun())
             startActivityForResult(Intent(this, IntroActivity::class.java),
                     START_INTRO_REQUEST)
         else
@@ -36,7 +41,7 @@ class SplashActivity : AppCompatActivity() {
             finish()
         else {
             if (requestCode == START_MAIN_REQUEST)
-                (application as App).appDbHelper.deleteAll()
+                appReference.appDbHelper.deleteAll()
 
             scanSongs()
         }

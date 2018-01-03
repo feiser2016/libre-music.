@@ -14,14 +14,14 @@ import android.view.View.OnTouchListener
  * @param context The context of the activity which implements this listener.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-03
  */
 abstract class OnSwipeTouchListener(context: Context) : OnTouchListener {
 
     private val gestureDetector: GestureDetector
 
     companion object {
-        private const val SWIPE_THRESHOLD = 200
+        private const val SWIPE_THRESHOLD = 500
         private const val SWIPE_VELOCITY_THRESHOLD = 200
     }
 

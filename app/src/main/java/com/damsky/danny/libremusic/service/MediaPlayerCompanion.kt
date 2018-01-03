@@ -91,7 +91,7 @@ class MediaPlayerCompanion {
 
                 override fun onSeekTo(position: Long) {
                     super.onSeekTo(position)
-                    seekFromTo(position.toInt(), (application as App).appDbHelper.getSong().endTime)
+                    seekFromTo(position.toInt(), appReference.appDbHelper.getSong().endTime)
                 }
             })
 
@@ -109,7 +109,7 @@ class MediaPlayerCompanion {
             mediaPlayer!!.setAudioAttributes(audioAttributes())
 
             try {
-                mediaPlayer!!.setDataSource((application as App).appDbHelper.getSong().data)
+                mediaPlayer!!.setDataSource(appReference.appDbHelper.getSong().data)
             } catch (e: IOException) {
                 stopSelf()
             }
@@ -182,7 +182,7 @@ class MediaPlayerCompanion {
         }
 
         fun MediaPlayerService.buildNotification(playbackStatus: PlaybackStatus) {
-            val song = (application as App).appDbHelper.getSong()
+            val song = appReference.appDbHelper.getSong()
 
             var notificationAction = R.drawable.pause
             var playPauseAction: PendingIntent? = null
@@ -283,7 +283,7 @@ class MediaPlayerCompanion {
 
         fun MediaPlayerService.playMedia() {
             if (!mediaPlayer!!.isPlaying) {
-                val song = (application as App).appDbHelper.getSong()
+                val song = appReference.appDbHelper.getSong()
                 seekFromTo(song.startTime, song.endTime)
             }
         }
@@ -306,31 +306,31 @@ class MediaPlayerCompanion {
 
         fun MediaPlayerService.resumeMedia() {
             if (!mediaPlayer!!.isPlaying)
-                seekFromTo(resumePosition, (application as App).appDbHelper.getSong().endTime)
+                seekFromTo(resumePosition, appReference.appDbHelper.getSong().endTime)
         }
 
         fun MediaPlayerService.skipToNext() = skipToNextOrPrevious {
-            (application as App).appDbHelper.incrementAudioIndex()
+            appReference.appDbHelper.incrementAudioIndex()
         }
 
 
         fun MediaPlayerService.skipToPrevious() = skipToNextOrPrevious {
-            (application as App).appDbHelper.decrementAudioIndex()
+            appReference.appDbHelper.decrementAudioIndex()
         }
 
         private fun MediaPlayerService.skipToNextOrPrevious(incrementOrDecrement: () -> Unit) {
-            if (!(application as App).preferencesHelper.getShufflePreference())
+            if (!appReference.preferencesHelper.getShufflePreference())
                 incrementOrDecrement()
             else
-                (application as App).appDbHelper.setAudioIndex(ThreadLocalRandom.current()
-                        .nextInt(0, (application as App).appDbHelper.getQueue().size))
+                appReference.appDbHelper.setAudioIndex(ThreadLocalRandom.current()
+                        .nextInt(0, appReference.appDbHelper.getQueue().size))
 
             stopMedia()
             mediaPlayer!!.reset()
             initMediaPlayer()
 
-            (application as App).preferencesHelper.updateIndex(
-                    (application as App).appDbHelper.getAudioIndex()
+            appReference.preferencesHelper.updateIndex(
+                    appReference.appDbHelper.getAudioIndex()
             )
         }
 
@@ -340,9 +340,9 @@ class MediaPlayerCompanion {
             mediaPlayer!!.seekTo(from)
             mediaPlayer!!.start()
             handler.postDelayed({
-                if ((application as App).preferencesHelper.getRepeatPreference())
-                    seekFromTo((application as App).appDbHelper.getSong().startTime,
-                            (application as App).appDbHelper.getSong().endTime)
+                if (appReference.preferencesHelper.getRepeatPreference())
+                    seekFromTo(appReference.appDbHelper.getSong().startTime,
+                            appReference.appDbHelper.getSong().endTime)
                 else {
                     skipToNext()
                     buildNotification(PlaybackStatus.PLAYING)

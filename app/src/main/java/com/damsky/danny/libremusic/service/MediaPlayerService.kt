@@ -12,6 +12,7 @@ import android.os.RemoteException
 import android.support.v4.media.session.MediaSessionCompat
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
+import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.service.MediaPlayerCompanion.Companion.buildNotification
 import com.damsky.danny.libremusic.service.MediaPlayerCompanion.Companion.callStateListener
 import com.damsky.danny.libremusic.service.MediaPlayerCompanion.Companion.createChannel
@@ -56,10 +57,14 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     var mediaSessionManager: MediaSessionManager? = null
     var mediaSession: MediaSessionCompat? = null
 
+    lateinit var appReference: App
+
     override fun onBind(intent: Intent?): IBinder = iBinder
 
     override fun onCreate() {
         super.onCreate()
+        appReference = application as App
+
         callStateListener()
         registerReceivers()
         createChannel()
