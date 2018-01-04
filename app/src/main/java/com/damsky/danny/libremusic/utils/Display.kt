@@ -20,11 +20,11 @@ class Display {
     }
 
     fun showToast(resourceId: Int, length: Int) {
-        Toast.makeText(context, resourceId, length).show()
+        Toast.makeText(context.applicationContext, resourceId, length).show()
     }
 
     fun showToast(text: String, length: Int) {
-        Toast.makeText(context, text, length).show()
+        Toast.makeText(context.applicationContext, text, length).show()
     }
 
     fun showSnack(resourceId: Int, length: Int) {

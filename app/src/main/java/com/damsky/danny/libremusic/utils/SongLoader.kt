@@ -14,7 +14,7 @@ import java.io.File
  * (i.e. allows it to query files on the internal storage)
  *
  * @author Danny Damsky
- * @since 2018-01-03
+ * @since 2018-01-04
  */
 
 class SongLoader(private val contentResolver: ContentResolver) {

@@ -11,6 +11,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.view.View
@@ -20,7 +21,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Song
@@ -236,7 +236,7 @@ class MainPresenter {
                                 appReference.
                                         appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
                             }
-                    Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show()
+                    display.showSnack(R.string.success, Snackbar.LENGTH_SHORT)
                     dialog.dismiss()
                 })
 
@@ -251,12 +251,12 @@ class MainPresenter {
                 builder.setView(editText)
                 builder.setPositiveButton(R.string.ok, { dialog, _ ->
                     if (editText.text.isEmpty())
-                        Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
+                        display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
                     else {
                         appReference.appDbHelper.insertPlaylist("${editText.text}")
                         appReference.appDbHelper.setPlaylists()
                         appReference.appDbHelper.insertSongsToPlaylist(editText.text.toString(), songsList)
-                        Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT).show()
+                        display.showSnack(R.string.success, Snackbar.LENGTH_SHORT)
                     }
                     dialog.dismiss()
                 })
@@ -312,8 +312,7 @@ class MainPresenter {
                         RingtoneManager.TYPE_RINGTONE, newUri)
 
                 runOnUiThread {
-                    Toast.makeText(this@setRingtone.applicationContext, R.string.ringtone_success,
-                            Toast.LENGTH_SHORT).show()
+                    display.showToast(R.string.ringtone_success, Toast.LENGTH_SHORT)
                 }
             }.await()
         }
@@ -327,9 +326,7 @@ class MainPresenter {
         fun MainActivity.setAsRingtone(song: Song) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.System.canWrite(applicationContext)) {
-                    Toast.makeText(this,
-                            R.string.permission_modify_settings,
-                            Toast.LENGTH_LONG).show()
+                    display.showToast(R.string.permission_modify_settings, Toast.LENGTH_LONG)
                     startActivityForResult(
                             Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
                                     Uri.parse("package:$packageName")),
@@ -486,7 +483,7 @@ class MainPresenter {
                     R.string.action_add_playlist,
                     {
                         if (editText.text.isEmpty())
-                            Toast.makeText(this, R.string.text_empty, Toast.LENGTH_SHORT).show()
+                            display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
                         else {
                             appReference.appDbHelper.updatePlaylist(
                                     appReference.appDbHelper.getPlaylistsClean()[index],
