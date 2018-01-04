@@ -3,7 +3,6 @@ package com.damsky.danny.libremusic.ui.main
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
@@ -12,10 +11,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AlertDialog
-import android.text.InputType
 import android.view.View
-import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -42,7 +38,7 @@ import java.util.concurrent.TimeUnit
  * Service class containing static variables/functions for use with MainActivity
 
  * @author Danny Damsky
- * @since 2018-01-03
+ * @since 2018-01-04
  */
 
 class MainPresenter {
@@ -80,13 +76,13 @@ class MainPresenter {
             val time = StringBuilder()
 
             if (hours in 1..9)
-                time.append(0).append(hours).append(":")
+                time.append(0).append(hours).append(':')
             else if (hours > 9)
-                time.append(hours).append(":")
+                time.append(hours).append(':')
 
             if (minutes < 10)
                 time.append(0)
-            time.append(minutes).append(":")
+            time.append(minutes).append(':')
 
             if (seconds < 10)
                 time.append(0)
@@ -183,36 +179,19 @@ class MainPresenter {
         fun MainActivity.setSongsToPlaylist(songsList: Array<Song>) {
             val playList = appReference.appDbHelper.getPlaylistsClean()
             if (playList.isNotEmpty()) {
-                val builder = display.getDialogBuilder(R.string.add_to_playlist)
                 val playSize = playList.size
                 val itemList = Array(playSize, { i -> playList[i].playList })
                 val boolList = BooleanArray(playSize, { _ -> false })
 
-                builder.setMultiChoiceItems(itemList, boolList, { _: DialogInterface, which: Int, isChecked: Boolean ->
-                    boolList[which] = isChecked
-                })
-
-                builder.setPositiveButton(R.string.ok, { dialog, _ ->
-                    (0 until playSize)
-                            .filter { boolList[it] }
-                            .forEach {
-                                appReference.
-                                        appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
-                            }
+                display.showDialog(R.string.add_to_playlist, itemList, boolList, {
+                    (0 until playSize).filter { boolList[it] }.forEach {
+                        appReference.appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
+                    }
                     display.showSnack(R.string.success, Snackbar.LENGTH_SHORT)
-                    dialog.dismiss()
                 })
-
-                builder.setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
-                builder.create().show()
             } else {
                 val editText = EditText(this)
-                editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                editText.setHint(R.string.action_add_playlist_hint)
-
-                val builder = display.getDialogBuilder(R.string.add_to_playlist)
-                builder.setView(editText)
-                builder.setPositiveButton(R.string.ok, { dialog, _ ->
+                display.showDialog(R.string.add_to_playlist, R.string.action_add_playlist_hint, editText, {
                     if (editText.text.isEmpty())
                         display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
                     else {
@@ -221,12 +200,7 @@ class MainPresenter {
                         appReference.appDbHelper.insertSongsToPlaylist(editText.text.toString(), songsList)
                         display.showSnack(R.string.success, Snackbar.LENGTH_SHORT)
                     }
-                    dialog.dismiss()
                 })
-                builder.setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
-                val dialog = builder.create()
-                dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-                dialog.show()
             }
         }
 
@@ -287,15 +261,10 @@ class MainPresenter {
          */
         @SuppressLint("InlinedApi")
         fun MainActivity.setAsRingtone(song: Song) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.System.canWrite(applicationContext)) {
-                    display.showToast(R.string.permission_modify_settings, Toast.LENGTH_LONG)
-                    startActivityForResult(
-                            Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
-                                    Uri.parse("package:$packageName")),
-                            REQUEST_WRITE_SETTINGS)
-                } else
-                    setRingtone(song)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(applicationContext)) {
+                display.showToast(R.string.permission_modify_settings, Toast.LENGTH_LONG)
+                startActivityForResult(Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                        Uri.parse("package:$packageName")), REQUEST_WRITE_SETTINGS)
             } else
                 setRingtone(song)
         }
@@ -411,14 +380,16 @@ class MainPresenter {
         }
 
         fun MainActivity.playOrPause() =
-                if (MediaPlayerCompanion.mediaPlayer == null) {
-                    playAudio()
-                    setImages(R.drawable.pause)
-                } else {
-                    if (MediaPlayerCompanion.mediaPlayer!!.isPlaying) {
+                when {
+                    MediaPlayerCompanion.mediaPlayer == null -> {
+                        playAudio()
+                        setImages(R.drawable.pause)
+                    }
+                    MediaPlayerCompanion.mediaPlayer!!.isPlaying -> {
                         MediaPlayerCompanion.transportControls.pause()
                         setImages(R.drawable.play)
-                    } else {
+                    }
+                    else -> {
                         MediaPlayerCompanion.transportControls.play()
                         setImages(R.drawable.pause)
                     }
@@ -442,8 +413,7 @@ class MainPresenter {
 
         fun MainActivity.renamePlaylist(index: Int) {
             val editText = EditText(this)
-            display.showDialog(editText, R.string.action_add_playlist_hint,
-                    R.string.action_add_playlist,
+            display.showDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
                     {
                         if (editText.text.isEmpty())
                             display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
@@ -466,8 +436,7 @@ class MainPresenter {
 
         fun MainActivity.removeFromPlaylist(song: Song) {
             appReference.appDbHelper.deleteSongFromPlaylist(song,
-                    appReference.appDbHelper.getPlaylistsClean()[
-                            appReference.appDbHelper.getSecondIndex()])
+                    appReference.appDbHelper.getPlaylistsClean()[appReference.appDbHelper.getSecondIndex()])
             myList.adapter = getPlaylistSongsAdapter(appReference.appDbHelper.getSecondIndex())
         }
     }

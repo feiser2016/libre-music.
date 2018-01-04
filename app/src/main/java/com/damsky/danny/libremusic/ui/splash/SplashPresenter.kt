@@ -1,9 +1,7 @@
 package com.damsky.danny.libremusic.ui.splash
 
 import android.content.Intent
-import android.provider.MediaStore
 import android.view.View
-import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.ui.main.MainActivity
 import com.damsky.danny.libremusic.utils.CueParser
@@ -12,13 +10,12 @@ import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
-import java.io.File
 
 /**
  * Service class containing static variables/functions for use with SplashActivity
  *
  * @author Danny Damsky
- * @since 2018-01-03
+ * @since 2018-01-04
  */
 class SplashPresenter {
     companion object {

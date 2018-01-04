@@ -13,7 +13,6 @@ import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import android.support.v7.widget.DefaultItemAnimator
@@ -62,7 +61,6 @@ import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.setAsRingtone
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.setSongsToPlaylist
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.setupPlayerUi
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.shareFiles
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.showDialog
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.updateIndex
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.updateIndexes
 import com.damsky.danny.libremusic.ui.main.adapters.models.*
@@ -81,7 +79,7 @@ import kotlinx.android.synthetic.main.songinfo_main.*
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2018-01-03
+ * @since 2018-01-04
  */
 class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener,
@@ -245,8 +243,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.addPlaylist) {
             val editText = EditText(this)
-            showDialog(editText, R.string.action_add_playlist_hint,
-                    R.string.action_add_playlist,
+            display.showDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
                     {
                         if (editText.text.isEmpty())
                             display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
@@ -346,7 +343,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             }
 
             R.id.action_reset -> {
-                showDialog(R.string.reset_library,
+                display.showDialog(R.string.reset_library,
                         R.string.reset_library_question,
                         {
                             handler.removeCallbacksAndMessages(null)
@@ -371,16 +368,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     sleepTimer.setTitle(R.string.action_sleep_message)
                     sleepTimer.show()
                 } else
-                    AlertDialog.Builder(this)
-                            .setTitle("${getString(R.string.action_sleep_timer)} - ${appReference.sleepTime}")
-                            .setMessage(R.string.action_sleep_disable)
-                            .setIcon(R.mipmap.ic_launcher)
-                            .setPositiveButton(R.string.yes, { dialog, _ ->
-                                appReference.onSleepTimerDisabled()
-                                dialog.dismiss()
-                            })
-                            .setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
-                            .create().show()
+                    display.showDialog("${getString(R.string.action_sleep_timer)} - ${appReference.sleepTime}",
+                            R.string.action_sleep_disable,
+                            { appReference.onSleepTimerDisabled() })
                 drawerLayout.closeDrawers()
             }
         }

@@ -1,6 +1,7 @@
 package com.damsky.danny.libremusic.utils
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.text.InputType
@@ -9,6 +10,14 @@ import android.view.WindowManager
 import android.widget.EditText
 import android.widget.Toast
 import com.damsky.danny.libremusic.R
+
+/**
+ * This class is used to display UI elements that are not part of the layout such as
+ * Toasts, Snackbars and AlertDialogs.
+ *
+ * @author Danny Damsky
+ * @since 2018-01-04
+ */
 
 class Display {
     private val context: Activity
@@ -40,42 +49,94 @@ class Display {
         Snackbar.make(view, text, length).show()
     }
 
-    fun getDialogBuilder(title: Int): AlertDialog.Builder =
-            AlertDialog.Builder(context)
-                    .setTitle(title)
-                    .setIcon(R.mipmap.ic_launcher)
+    private fun getDialogBuilder(): AlertDialog.Builder =
+            AlertDialog.Builder(context).setIcon(R.mipmap.ic_launcher)
 
-    fun getDialogBuilder(title: Int, message: Int): AlertDialog.Builder =
-            AlertDialog.Builder(context)
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setIcon(R.mipmap.ic_launcher)
+    private fun getDialogBuilder(title: Int): AlertDialog.Builder =
+            getDialogBuilder().setTitle(title)
 
-    fun showDialog(title: Int, message: Int, positiveAction: () -> Unit) {
-        val builder = getDialogBuilder(title, message)
-        builder.setPositiveButton(R.string.yes, { dialog, _ ->
+    private fun getDialogBuilder(title: String): AlertDialog.Builder =
+            getDialogBuilder().setTitle(title)
+
+    private fun getDialogBuilder(title: Int, message: Int): AlertDialog.Builder =
+            getDialogBuilder(title).setMessage(message)
+
+    private fun getDialogBuilder(title: String, message: Int): AlertDialog.Builder =
+            getDialogBuilder(title).setMessage(message)
+
+    private fun getDialogBuilder(title: Int, message: String): AlertDialog.Builder =
+            getDialogBuilder(title).setMessage(message)
+
+    private fun getDialogBuilder(title: String, message: String): AlertDialog.Builder =
+            getDialogBuilder(title).setMessage(message)
+
+    private fun setDialogActions(builder: AlertDialog.Builder, positiveText: Int, negativeText: Int, positiveAction: () -> Unit) {
+        builder.setPositiveButton(positiveText, { dialog, _ ->
             positiveAction()
             dialog.dismiss()
         })
-        builder.setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
-        builder.create().show()
+
+        builder.setNegativeButton(negativeText, { dialog, _ -> dialog.dismiss() })
     }
 
-    fun showDialog(editText: EditText, hint: Int, title: Int, positiveAction: () -> Unit) {
+    private fun showDialogWithEditText(builder: AlertDialog.Builder, editText: EditText, positiveAction: () -> Unit) {
         editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-        editText.setHint(hint)
 
-        val builder = getDialogBuilder(title)
         builder.setView(editText)
-        builder.setPositiveButton(R.string.ok, { dialog, _ ->
-            positiveAction()
-            dialog.dismiss()
-        })
-        builder.setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
+        setDialogActions(builder, R.string.ok, R.string.cancel, positiveAction)
         val dialog = builder.create()
         dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         dialog.show()
     }
 
+    private fun showBasicDialog(builder: AlertDialog.Builder, positiveAction: () -> Unit) {
+        setDialogActions(builder, R.string.yes, R.string.no, positiveAction)
+        builder.create().show()
+    }
 
+    private fun showMultiChoiceDialog(builder: AlertDialog.Builder, itemList: Array<String>, boolList: BooleanArray, positiveAction: () -> Unit) {
+        builder.setMultiChoiceItems(itemList, boolList, { _: DialogInterface, which: Int, isChecked: Boolean ->
+            boolList[which] = isChecked
+        })
+        setDialogActions(builder, R.string.ok, R.string.cancel, positiveAction)
+        builder.create().show()
+    }
+
+    fun showDialog(title: Int, message: Int, positiveAction: () -> Unit) =
+            showBasicDialog(getDialogBuilder(title, message), positiveAction)
+
+    fun showDialog(title: String, message: Int, positiveAction: () -> Unit) =
+            showBasicDialog(getDialogBuilder(title, message), positiveAction)
+
+    fun showDialog(title: Int, message: String, positiveAction: () -> Unit) =
+            showBasicDialog(getDialogBuilder(title, message), positiveAction)
+
+    fun showDialog(title: String, message: String, positiveAction: () -> Unit) =
+            showBasicDialog(getDialogBuilder(title, message), positiveAction)
+
+    fun showDialog(title: Int, hint: Int, editText: EditText, positiveAction: () -> Unit) {
+        editText.setHint(hint)
+        showDialogWithEditText(getDialogBuilder(title), editText, positiveAction)
+    }
+
+    fun showDialog(title: Int, hint: String, editText: EditText, positiveAction: () -> Unit) {
+        editText.hint = hint
+        showDialogWithEditText(getDialogBuilder(title), editText, positiveAction)
+    }
+
+    fun showDialog(title: String, hint: Int, editText: EditText, positiveAction: () -> Unit) {
+        editText.setHint(hint)
+        showDialogWithEditText(getDialogBuilder(title), editText, positiveAction)
+    }
+
+    fun showDialog(title: String, hint: String, editText: EditText, positiveAction: () -> Unit) {
+        editText.hint = hint
+        showDialogWithEditText(getDialogBuilder(title), editText, positiveAction)
+    }
+
+    fun showDialog(title: Int, itemList: Array<String>, boolList: BooleanArray, positiveAction: () -> Unit) =
+            showMultiChoiceDialog(getDialogBuilder(title), itemList, boolList, positiveAction)
+
+    fun showDialog(title: String, itemList: Array<String>, boolList: BooleanArray, positiveAction: () -> Unit) =
+            showMultiChoiceDialog(getDialogBuilder(title), itemList, boolList, positiveAction)
 }
