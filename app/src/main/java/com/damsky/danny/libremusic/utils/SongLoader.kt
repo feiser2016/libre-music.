@@ -1,7 +1,9 @@
 package com.damsky.danny.libremusic.utils
 
 import android.content.ContentResolver
+import android.database.Cursor
 import android.provider.MediaStore
+import android.util.ArrayMap
 import com.damsky.danny.libremusic.data.db.model.Song
 import java.io.File
 
@@ -26,9 +28,22 @@ class SongLoader(private val contentResolver: ContentResolver) {
             "${MediaStore.Audio.Media.IS_MUSIC}!= 0",
             null, null)
 
-    private fun getInt(string: String) = cursor.getInt(cursor.getColumnIndex(string))
+    private val mMap = ArrayMap<String, Int>()
 
-    private fun getString(string: String) = cursor.getString(cursor.getColumnIndex(string))
+    /**
+     * Function for caching the columns of the cursor (Improves performance)
+     * @param columnName The name of the column to add to cache.
+     * @return           The index of the column
+     */
+    private fun getColumnIndex(columnName: String): Int {
+        if (!mMap.containsKey(columnName))
+            mMap.put(columnName, cursor.getColumnIndex(columnName))
+        return mMap[columnName]!!
+    }
+
+    private fun getInt(string: String) = cursor.getInt(getColumnIndex(string))
+
+    private fun getString(string: String) = cursor.getString(getColumnIndex(string))
 
     /**
      * Queries for album art using a cursor.
@@ -63,7 +78,7 @@ class SongLoader(private val contentResolver: ContentResolver) {
 
     fun getData(): String = getString(MediaStore.Audio.Media.DATA)
 
-    fun getCover(): String = getCoverArtPath(cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
+    fun getCover(): String = getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
 
     fun getDuration(): Int = getInt(MediaStore.Audio.Media.DURATION)
 
@@ -115,6 +130,7 @@ class SongLoader(private val contentResolver: ContentResolver) {
     }
 
     fun close() {
+        mMap.clear()
         cursor.close()
     }
 
