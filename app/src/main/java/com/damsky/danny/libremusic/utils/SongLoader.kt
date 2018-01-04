@@ -22,11 +22,8 @@ class SongLoader(private val contentResolver: ContentResolver) {
         private const val MIN_DURATION_FOR_CUE_PARSING = 600_000
     }
 
-    private val cursor = contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            null,
-            "${MediaStore.Audio.Media.IS_MUSIC}!= 0",
-            null, null)
+    private val cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
+            "${MediaStore.Audio.Media.IS_MUSIC}!= 0", null, null)
 
     private val mMap = ArrayMap<String, Int>()
 
@@ -51,13 +48,9 @@ class SongLoader(private val contentResolver: ContentResolver) {
      * @return        A string containing the path of the album art (Or "none" if not found).
      */
     private fun getCoverArtPath(albumId: Long): String {
-        val albumCursor = contentResolver.query(
-                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                arrayOf(MediaStore.Audio.Albums.ALBUM_ART),
-                "${MediaStore.Audio.Albums._ID} = ?",
-                arrayOf("$albumId"),
-                null
-        )
+        val albumCursor = contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                arrayOf(MediaStore.Audio.Albums.ALBUM_ART), "${MediaStore.Audio.Albums._ID} = ?",
+                arrayOf("$albumId"), null)
 
         val queryResult = albumCursor.moveToFirst()
 

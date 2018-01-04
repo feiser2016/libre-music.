@@ -172,43 +172,6 @@ class MainPresenter {
         fun ImageView.glideLoad(context: Context, imageString: String, placeholderDrawable: Int)
                 = glideLoad(context, imageString, getDefaultRequestOptions(placeholderDrawable).circleCrop())
 
-        fun MainActivity.showDialog(title: Int, message: Int, positiveAction: () -> Unit) {
-            val builder = getBuilder(title, message)
-            builder.setPositiveButton(R.string.yes, { dialog, _ ->
-                positiveAction()
-                dialog.dismiss()
-            })
-            builder.setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() })
-            builder.create().show()
-        }
-
-        fun MainActivity.showDialog(editText: EditText, hint: Int, title: Int, positiveAction: () -> Unit) {
-            editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            editText.setHint(hint)
-
-            val builder = getBuilder(title)
-            builder.setView(editText)
-            builder.setPositiveButton(R.string.ok, { dialog, _ ->
-                positiveAction()
-                dialog.dismiss()
-            })
-            builder.setNegativeButton(R.string.cancel, { dialog, _ -> dialog.dismiss() })
-            val dialog = builder.create()
-            dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-            dialog.show()
-        }
-
-        private fun MainActivity.getBuilder(title: Int): AlertDialog.Builder =
-                AlertDialog.Builder(this)
-                        .setTitle(title)
-                        .setIcon(R.mipmap.ic_launcher)
-
-        private fun MainActivity.getBuilder(title: Int, message: Int): AlertDialog.Builder =
-                AlertDialog.Builder(this)
-                        .setTitle(title)
-                        .setMessage(message)
-                        .setIcon(R.mipmap.ic_launcher)
-
         /**
          * @param songsList List of songs to add to a playlist
          *
@@ -220,7 +183,7 @@ class MainPresenter {
         fun MainActivity.setSongsToPlaylist(songsList: Array<Song>) {
             val playList = appReference.appDbHelper.getPlaylistsClean()
             if (playList.isNotEmpty()) {
-                val builder = getBuilder(R.string.add_to_playlist)
+                val builder = display.getDialogBuilder(R.string.add_to_playlist)
                 val playSize = playList.size
                 val itemList = Array(playSize, { i -> playList[i].playList })
                 val boolList = BooleanArray(playSize, { _ -> false })
@@ -247,7 +210,7 @@ class MainPresenter {
                 editText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
                 editText.setHint(R.string.action_add_playlist_hint)
 
-                val builder = getBuilder(R.string.add_to_playlist)
+                val builder = display.getDialogBuilder(R.string.add_to_playlist)
                 builder.setView(editText)
                 builder.setPositiveButton(R.string.ok, { dialog, _ ->
                     if (editText.text.isEmpty())
@@ -479,7 +442,7 @@ class MainPresenter {
 
         fun MainActivity.renamePlaylist(index: Int) {
             val editText = EditText(this)
-            showDialog(editText, R.string.action_add_playlist_hint,
+            display.showDialog(editText, R.string.action_add_playlist_hint,
                     R.string.action_add_playlist,
                     {
                         if (editText.text.isEmpty())
