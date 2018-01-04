@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2017-12-05
+ * @since 2018-01-04
  */
 
 class App : Application() {
@@ -86,6 +86,9 @@ class App : Application() {
         sleepTime = ""
         Toast.makeText(this, R.string.sleep_timer_disabled, Toast.LENGTH_SHORT).show()
     }
+
+    fun updateIndexes() =
+            preferencesHelper.updateIndexes(appDbHelper.getPlayableLevel(), appDbHelper.getPositions())
 
     /**
      * @param hoursToAdd   Hours to add to real time

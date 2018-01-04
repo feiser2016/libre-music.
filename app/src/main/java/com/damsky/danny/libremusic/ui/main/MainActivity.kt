@@ -26,29 +26,12 @@ import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Song
+import com.damsky.danny.libremusic.data.models.*
 import com.damsky.danny.libremusic.service.MediaPlayerCompanion
 import com.damsky.danny.libremusic.ui.about.AboutActivity
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.UI_UPDATE_INTERVAL_MILLIS
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.addSongsToQueue
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getAlbumAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getAlbumSong
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getAlbumSongsAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getArtistAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getArtistAlbumsAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getArtistSong
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getArtistSongsAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getGenreAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getGenreSong
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getGenreSongsAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getPlaylistAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getPlaylistSong
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getPlaylistSongsAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getQueueAdapter
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getQueueSong
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getSlideUp
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getSong
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.getSongAdapter
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.initializeUi
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.playAudio
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.playNewList
@@ -61,9 +44,6 @@ import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.setAsRingtone
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.setSongsToPlaylist
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.setupPlayerUi
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.shareFiles
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.updateIndex
-import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.updateIndexes
-import com.damsky.danny.libremusic.ui.main.adapters.models.*
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 import com.damsky.danny.libremusic.ui.main.listeners.OnSwipeTouchListener
 import com.damsky.danny.libremusic.ui.prefs.PreferencesActivity
@@ -228,9 +208,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                 val currentVisibility = mSearchEditFrame.visibility
                 if (currentVisibility != oldVisibility) {
                     when {
-                        currentVisibility == View.VISIBLE -> searcher.isSearching = true
                         navigationUp.isVisible -> navigation.selectedItemId = navigation.selectedItemId
-                        else -> myList.adapter = getQueueAdapter()
+                        else -> myList.adapter = getAdapter(appReference.appDbHelper.getQueueModel())
                     }
                     oldVisibility = currentVisibility
                 }
@@ -250,7 +229,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                         else {
                             appReference.appDbHelper.insertPlaylist("${editText.text}")
                             appReference.appDbHelper.setPlaylists()
-                            myList.adapter = getPlaylistAdapter()
+                            myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistModel())
                         }
                     })
         }
@@ -276,52 +255,47 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                 drawerLayout.openDrawer(Gravity.START)
 
             ListLevel.ARTIST_ALBUMS ->
-                myList.adapter = getArtistAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getArtistModel())
 
             ListLevel.ARTIST_SONGS ->
-                myList.adapter = getArtistAlbumsAdapter(appReference.appDbHelper.getArtistIndex())
+                myList.adapter = getAdapter(appReference.appDbHelper.getArtistAlbumsModel(appReference.appDbHelper.getArtistIndex()))
 
             ListLevel.ALBUM_SONGS ->
-                myList.adapter = getAlbumAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getAlbumModel())
 
             ListLevel.GENRE_SONGS ->
-                myList.adapter = getGenreAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getGenreModel())
 
             ListLevel.PLAYLIST_SONGS ->
-                myList.adapter = getPlaylistAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistModel())
         }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navigation_artists -> {
-                myList.adapter = getArtistAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getArtistModel())
                 addPlaylist.isVisible = false
-                searcher.isSearching = false
             }
 
             R.id.navigation_albums -> {
-                myList.adapter = getAlbumAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getAlbumModel())
                 addPlaylist.isVisible = false
-                searcher.isSearching = false
             }
 
             R.id.navigation_songs -> {
-                myList.adapter = getSongAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getSongModel())
                 addPlaylist.isVisible = false
-                searcher.isSearching = false
             }
 
             R.id.navigation_genres -> {
-                myList.adapter = getGenreAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getGenreModel())
                 addPlaylist.isVisible = false
-                searcher.isSearching = false
             }
 
             R.id.navigation_playlists -> {
-                myList.adapter = getPlaylistAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistModel())
                 addPlaylist.isVisible = true
-                searcher.isSearching = false
             }
 
             R.id.action_library -> {
@@ -331,7 +305,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             }
 
             R.id.action_queue -> {
-                myList.adapter = getQueueAdapter()
+                myList.adapter = getAdapter(appReference.appDbHelper.getQueueModel())
                 navigationUp.hide()
                 drawerLayout.closeDrawers()
                 appReference.appDbHelper.setLevel(ListLevel.QUEUE)
@@ -380,48 +354,48 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     override fun onRecyclerClick(position: Int) =
             when (appReference.appDbHelper.getLevel()) {
                 ListLevel.ARTIST_ALBUMS ->
-                    myList.adapter = getArtistSongsAdapter(position)
+                    myList.adapter = getAdapter(appReference.appDbHelper.getArtistSongsModel(position))
 
                 ListLevel.ARTISTS ->
-                    myList.adapter = getArtistAlbumsAdapter(getSearchablePosition(position))
+                    myList.adapter = getAdapter(appReference.appDbHelper.getArtistAlbumsModel(searcher.getPosition(position)))
 
                 ListLevel.ALBUMS ->
-                    myList.adapter = getAlbumSongsAdapter(getSearchablePosition(position))
+                    myList.adapter = getAdapter(appReference.appDbHelper.getAlbumSongsModel(searcher.getPosition(position)))
 
                 ListLevel.GENRES ->
-                    myList.adapter = getGenreSongsAdapter(getSearchablePosition(position))
+                    myList.adapter = getAdapter(appReference.appDbHelper.getGenreSongsModel(searcher.getPosition(position)))
 
                 ListLevel.PLAYLISTS ->
-                    myList.adapter = getPlaylistSongsAdapter(getSearchablePosition(position))
+                    myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistSongsModel(searcher.getPosition(position)))
 
                 ListLevel.SONGS ->
-                    songPress(getSong(getSearchablePosition(position)))
+                    songPress(appReference.appDbHelper.getSong(searcher.getPosition(position)))
 
                 ListLevel.ARTIST_SONGS ->
-                    songPress(getArtistSong(position))
+                    songPress(appReference.appDbHelper.getArtistSong(position))
 
                 ListLevel.ALBUM_SONGS ->
-                    songPress(getAlbumSong(position))
+                    songPress(appReference.appDbHelper.getAlbumSong(position))
 
                 ListLevel.GENRE_SONGS ->
-                    songPress(getGenreSong(position))
+                    songPress(appReference.appDbHelper.getGenreSong(position))
 
                 ListLevel.PLAYLIST_SONGS ->
-                    songPress(getPlaylistSong(position))
+                    songPress(appReference.appDbHelper.getPlaylistSong(position))
 
                 ListLevel.QUEUE -> {
-                    val posInt = getSearchablePosition(position)
-                    val pos = getQueueSong(posInt)
+                    val posInt = searcher.getPosition(position)
+                    val pos = appReference.appDbHelper.getQueueSong(posInt)
                     playAudio()
                     setupPlayerUi(pos)
-                    updateIndex(posInt)
+                    appReference.preferencesHelper.updateIndex(posInt)
                 }
             }
 
     override fun onContextMenuClick(songsList: Array<Song>, action: MenuAction, index: Int) =
             when (action) {
                 MenuAction.ACTION_PLAY -> playNewList(songsList)
-                MenuAction.ACTION_ADD_TO_QUEUE -> addSongsToQueue(songsList)
+                MenuAction.ACTION_ADD_TO_QUEUE -> appReference.appDbHelper.addToQueue(songsList)
                 MenuAction.ACTION_ADD_TO_PLAYLIST -> setSongsToPlaylist(songsList)
                 MenuAction.ACTION_SHARE -> shareFiles(songsList)
                 MenuAction.ACTION_SET_AS_RINGTONE -> setAsRingtone(songsList[0])
@@ -452,8 +426,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             listLevel = ListLevel.QUEUE
         }
         searcher.update(newText)
-        myList.adapter = getAdapter(searcher.search(), listLevel)
-        searcher.isSearching = true
+        myList.adapter = getAdapter(Pair(searcher.search(), listLevel))
         return true
     }
 
@@ -509,14 +482,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     private fun songPress(song: Song) {
         playAudio()
         setupPlayerUi(song)
-        updateIndexes()
+        appReference.updateIndexes()
     }
-
-    private fun getSearchablePosition(position: Int) =
-            if (searcher.isSearching)
-                searcher.getPosition(position)
-            else
-                position
 
     private fun customFinish() {
         val returnIntent = intent

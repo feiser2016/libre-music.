@@ -1,4 +1,4 @@
-package com.damsky.danny.libremusic.ui.main.adapters.models
+package com.damsky.danny.libremusic.data.models
 
 import android.content.res.Resources
 import android.widget.PopupMenu
@@ -13,7 +13,7 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * @param playlists An array of playlists to use with the PlaylistModel.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-04
  */
 
 class PlaylistModel(val playlists: Array<Playlist>) : TypeModel {

@@ -1,6 +1,7 @@
 package com.damsky.danny.libremusic.data.db
 
 import com.damsky.danny.libremusic.data.db.model.*
+import com.damsky.danny.libremusic.data.models.*
 
 /**
  * This class is used to handle database operations.
@@ -8,7 +9,7 @@ import com.damsky.danny.libremusic.data.db.model.*
  * @param daoSession A session containing a writable DB file.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-04
  */
 
 class AppDbHelper(private val daoSession: DaoSession) {
@@ -141,18 +142,27 @@ class AppDbHelper(private val daoSession: DaoSession) {
     }
 
     /**
-     * @param playlist The playlist to delete
+     * Same as above function but this function assumes that the playlist currently
+     * being viewed by the user.
      */
-    fun deletePlaylist(playlist: Playlist) {
-        daoSession.playlistDao.delete(playlist)
+    fun deleteSongFromPlaylist(song: Song) {
+        deleteSongFromPlaylist(song, getPlaylistsClean()[getSecondIndex()])
+    }
+
+    /**
+     * @param index The array index of the playlist to delete
+     */
+    fun deletePlaylist(index: Int) {
+        daoSession.playlistDao.delete(playList[index])
         setPlaylists()
     }
 
     /**
-     * @param playlist The playlist to be updated.
+     * @param index The index of the playlist to be updated in the array.
      * @param newName  The name that the playlist should be updated with to.
      */
-    fun updatePlaylist(playlist: Playlist, newName: String) {
+    fun updatePlaylist(index: Int, newName: String) {
+        val playlist = playList[index]
         playlist.playList = newName
         daoSession.playlistDao.update(playlist)
         setPlaylists()
@@ -360,4 +370,30 @@ class AppDbHelper(private val daoSession: DaoSession) {
     fun setLevel(level: ListLevel) {
         listLevel = level
     }
+
+    /**
+     * The following functions are used for adapter setup.
+     */
+
+    fun getArtistModel(): Pair<TypeModel, ListLevel?> = Pair(ArtistModel(getArtists()), null)
+
+    fun getAlbumModel(): Pair<TypeModel, ListLevel?> = Pair(AlbumModel(getAlbums()), null)
+
+    fun getSongModel(): Pair<TypeModel, ListLevel?> = Pair(SongModel(getSongs()), getLevel())
+
+    fun getGenreModel(): Pair<TypeModel, ListLevel?> = Pair(GenreModel(getGenres()), null)
+
+    fun getPlaylistModel(): Pair<TypeModel, ListLevel?> = Pair(PlaylistModel(getPlaylists()), null)
+
+    fun getArtistAlbumsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(AlbumModel(getArtistAlbums(position)), null)
+
+    fun getArtistSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getArtistSongs(position)), getLevel())
+
+    fun getAlbumSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getAlbumSongs(position)), getLevel())
+
+    fun getGenreSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getGenreSongs(position)), getLevel())
+
+    fun getPlaylistSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getPlaylistSongs(position)), getLevel())
+
+    fun getQueueModel(): Pair<TypeModel, ListLevel?> = Pair(SongModel(getQueue()), ListLevel.QUEUE)
 }

@@ -11,8 +11,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
+import com.damsky.danny.libremusic.data.models.TypeModel
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.glideLoad
-import com.damsky.danny.libremusic.ui.main.adapters.models.TypeModel
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 
 /**

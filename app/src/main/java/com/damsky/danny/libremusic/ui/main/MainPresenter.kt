@@ -20,10 +20,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Song
+import com.damsky.danny.libremusic.data.models.TypeModel
 import com.damsky.danny.libremusic.service.MediaPlayerCompanion
 import com.damsky.danny.libremusic.service.MediaPlayerService
 import com.damsky.danny.libremusic.ui.main.adapters.RecycleAdapter
-import com.damsky.danny.libremusic.ui.main.adapters.models.*
 import com.mancj.slideup.SlideUp
 import com.mancj.slideup.SlideUpBuilder
 import kotlinx.android.synthetic.main.activity_main.*
@@ -91,67 +91,11 @@ class MainPresenter {
             return time.toString()
         }
 
-        fun MainActivity.getAdapter(model: TypeModel, listLevel: ListLevel? = null): RecycleAdapter {
-            val adapter = RecycleAdapter(model, listLevel)
+        fun MainActivity.getAdapter(pair: Pair<TypeModel, ListLevel?>): RecycleAdapter {
+            val adapter = RecycleAdapter(pair.first, pair.second)
             adapter.setCustomOnClickListener(this)
             return adapter
         }
-
-        fun MainActivity.getArtistAdapter(): RecycleAdapter =
-                getAdapter(ArtistModel(appReference.appDbHelper.getArtists()))
-
-        fun MainActivity.getAlbumAdapter(): RecycleAdapter =
-                getAdapter(AlbumModel(appReference.appDbHelper.getAlbums()))
-
-        fun MainActivity.getSongAdapter(): RecycleAdapter =
-                getAdapter(SongModel(appReference.appDbHelper.getSongs()),
-                        appReference.appDbHelper.getLevel())
-
-        fun MainActivity.getGenreAdapter(): RecycleAdapter =
-                getAdapter(GenreModel(appReference.appDbHelper.getGenres()))
-
-        fun MainActivity.getPlaylistAdapter(): RecycleAdapter =
-                getAdapter(PlaylistModel(appReference.appDbHelper.getPlaylists()))
-
-        fun MainActivity.getArtistAlbumsAdapter(position: Int): RecycleAdapter =
-                getAdapter(AlbumModel(appReference.appDbHelper.getArtistAlbums(position)))
-
-        fun MainActivity.getArtistSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel(appReference.appDbHelper.getArtistSongs(position)),
-                        appReference.appDbHelper.getLevel())
-
-        fun MainActivity.getAlbumSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel(appReference.appDbHelper.getAlbumSongs(position)),
-                        appReference.appDbHelper.getLevel())
-
-        fun MainActivity.getGenreSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel(appReference.appDbHelper.getGenreSongs(position)),
-                        appReference.appDbHelper.getLevel())
-
-        fun MainActivity.getPlaylistSongsAdapter(position: Int): RecycleAdapter =
-                getAdapter(SongModel(appReference.appDbHelper.getPlaylistSongs(position)),
-                        appReference.appDbHelper.getLevel())
-
-        fun MainActivity.getQueueAdapter(): RecycleAdapter =
-                getAdapter(SongModel(appReference.appDbHelper.getQueue()), ListLevel.QUEUE)
-
-        fun MainActivity.getSong(position: Int): Song =
-                appReference.appDbHelper.getSong(position)
-
-        fun MainActivity.getQueueSong(position: Int): Song =
-                appReference.appDbHelper.getQueueSong(position)
-
-        fun MainActivity.getAlbumSong(position: Int): Song =
-                appReference.appDbHelper.getAlbumSong(position)
-
-        fun MainActivity.getArtistSong(position: Int): Song =
-                appReference.appDbHelper.getArtistSong(position)
-
-        fun MainActivity.getGenreSong(position: Int): Song =
-                appReference.appDbHelper.getGenreSong(position)
-
-        fun MainActivity.getPlaylistSong(position: Int): Song =
-                appReference.appDbHelper.getPlaylistSong(position)
 
         private fun ImageView.glideLoad(context: Context, imageString: String, requestOptions: RequestOptions) {
             Glide.with(context.applicationContext).load(imageString)
@@ -269,21 +213,6 @@ class MainPresenter {
                 setRingtone(song)
         }
 
-        fun MainActivity.updateIndexes() {
-            appReference.preferencesHelper.updateIndexes(
-                    appReference.appDbHelper.getPlayableLevel(),
-                    appReference.appDbHelper.getPositions()
-            )
-        }
-
-        fun MainActivity.updateIndex(position: Int) {
-            appReference.preferencesHelper.updateIndex(position)
-        }
-
-        fun MainActivity.addSongsToQueue(list: Array<Song>) {
-            appReference.appDbHelper.addToQueue(list)
-        }
-
         fun MainActivity.playAudio() {
             if (!appReference.serviceBound) {
                 val playerIntent = Intent(applicationContext, MediaPlayerService::class.java)
@@ -300,20 +229,20 @@ class MainPresenter {
                 if (indexes != null) {
                     song = when (indexes.second) {
                         ListLevel.ARTIST_SONGS ->
-                            getArtistSong(appReference.appDbHelper.getAudioIndex())
+                            appReference.appDbHelper.getArtistSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.ALBUM_SONGS ->
-                            getAlbumSong(appReference.appDbHelper.getAudioIndex())
+                            appReference.appDbHelper.getAlbumSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.SONGS ->
-                            getSong(appReference.appDbHelper.getAudioIndex())
+                            appReference.appDbHelper.getSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.GENRE_SONGS ->
-                            getGenreSong(appReference.appDbHelper.getAudioIndex())
+                            appReference.appDbHelper.getGenreSong(appReference.appDbHelper.getAudioIndex())
                         ListLevel.PLAYLIST_SONGS ->
-                            getPlaylistSong(appReference.appDbHelper.getAudioIndex())
+                            appReference.appDbHelper.getPlaylistSong(appReference.appDbHelper.getAudioIndex())
                         else ->
-                            getSong(0)
+                            appReference.appDbHelper.getSong(0)
                     }
                 } else
-                    song = getSong(0)
+                    song = appReference.appDbHelper.getSong(0)
 
                 setupPlayerUi(song)
                 val repeatVal = if (appReference.preferencesHelper.getRepeatPreference())
@@ -418,26 +347,20 @@ class MainPresenter {
                         if (editText.text.isEmpty())
                             display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
                         else {
-                            appReference.appDbHelper.updatePlaylist(
-                                    appReference.appDbHelper.getPlaylistsClean()[index],
-                                    editText.text.toString()
-                            )
-                            myList.adapter = getPlaylistAdapter()
+                            appReference.appDbHelper.updatePlaylist(index, editText.text.toString())
+                            myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistModel())
                         }
                     })
         }
 
         fun MainActivity.removePlaylist(index: Int) {
-            appReference.appDbHelper.deletePlaylist(
-                    appReference.appDbHelper.getPlaylistsClean()[index]
-            )
-            myList.adapter = getPlaylistAdapter()
+            appReference.appDbHelper.deletePlaylist(index)
+            myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistModel())
         }
 
         fun MainActivity.removeFromPlaylist(song: Song) {
-            appReference.appDbHelper.deleteSongFromPlaylist(song,
-                    appReference.appDbHelper.getPlaylistsClean()[appReference.appDbHelper.getSecondIndex()])
-            myList.adapter = getPlaylistSongsAdapter(appReference.appDbHelper.getSecondIndex())
+            appReference.appDbHelper.deleteSongFromPlaylist(song)
+            myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistSongsModel(appReference.appDbHelper.getSecondIndex()))
         }
     }
 }

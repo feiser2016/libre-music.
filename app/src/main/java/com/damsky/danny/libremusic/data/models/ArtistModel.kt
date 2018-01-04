@@ -1,4 +1,4 @@
-package com.damsky.danny.libremusic.ui.main.adapters.models
+package com.damsky.danny.libremusic.data.models
 
 import android.content.res.Resources
 import android.widget.PopupMenu
@@ -14,7 +14,7 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * @param artists An array of artists to use with the ArtistModel.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-04
  */
 
 class ArtistModel(val artists: Array<Artist>) : TypeModel {

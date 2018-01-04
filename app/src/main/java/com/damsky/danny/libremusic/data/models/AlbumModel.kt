@@ -1,43 +1,38 @@
-package com.damsky.danny.libremusic.ui.main.adapters.models
+package com.damsky.danny.libremusic.data.models
 
 import android.content.res.Resources
 import android.widget.PopupMenu
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
-import com.damsky.danny.libremusic.data.db.model.Genre
+import com.damsky.danny.libremusic.data.db.model.Album
 import com.damsky.danny.libremusic.ui.main.MenuAction
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 
 /**
- * A TypeModel designed to take an array of Genre objects.
- * @param genres An array of genres to use with the GenreModel.
+ * A TypeModel designed to take an array of Album objects.
+ * @param albums An array of albums to use with the AlbumModel.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-04
  */
 
-class GenreModel(val genres: Array<Genre>) : TypeModel {
-    private lateinit var current: Genre
+class AlbumModel(val albums: Array<Album>) : TypeModel {
+    private lateinit var current: Album
 
-    override fun getItemImage(): String {
-        current.songs
-                .filter { it.cover != "none" }
-                .forEach { return it.cover }
-        return "none"
-    }
+    override fun getItemImage(): String = current.cover
 
-    override fun getPlaceHolderImage() = R.drawable.genre
+    override fun getPlaceHolderImage() = R.drawable.album
 
-    override fun getItemTitle(): String = current.genre
+    override fun getItemTitle(): String = current.album
 
     override fun getItemInfo(resources: Resources): String {
         val songsCount = current.songs.size
-        return resources.getQuantityString(R.plurals.songs, songsCount, songsCount)
+        return "${current.artist} | ${resources.getQuantityString(R.plurals.songs, songsCount, songsCount)}"
     }
 
-    override fun getItemDuration(): String = ""
+    override fun getItemDuration(): String = if (current.year > 0) "${current.year}" else ""
 
-    override fun getSize(): Int = genres.size
+    override fun getSize(): Int = albums.size
 
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
         popupMenu.inflate(R.menu.menu_artists_albums_genres)
@@ -57,13 +52,13 @@ class GenreModel(val genres: Array<Genre>) : TypeModel {
     }
 
     override fun setPosition(position: Int) {
-        current = genres[position]
+        current = albums[position]
     }
 
-    override fun search(matches: Array<Int>): GenreModel {
-        val list = ArrayList<Genre>(0)
+    override fun search(matches: Array<Int>): AlbumModel {
+        val list = ArrayList<Album>(0)
         if (matches.isNotEmpty())
-            matches.mapTo(list) { genres[it] }
-        return GenreModel(list.toTypedArray())
+            matches.mapTo(list) { albums[it] }
+        return AlbumModel(list.toTypedArray())
     }
 }

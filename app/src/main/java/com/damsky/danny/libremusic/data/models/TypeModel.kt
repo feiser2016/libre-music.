@@ -1,4 +1,4 @@
-package com.damsky.danny.libremusic.ui.main.adapters.models
+package com.damsky.danny.libremusic.data.models
 
 import android.content.res.Resources
 import android.widget.PopupMenu
@@ -9,7 +9,7 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * Interface used to communicate different objects with the RecyclerView
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-04
  */
 interface TypeModel {
     /**

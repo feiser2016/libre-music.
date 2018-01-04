@@ -1,6 +1,6 @@
 package com.damsky.danny.libremusic.utils
 
-import com.damsky.danny.libremusic.ui.main.adapters.models.TypeModel
+import com.damsky.danny.libremusic.data.models.TypeModel
 import java.util.regex.Pattern
 
 /**
@@ -8,7 +8,7 @@ import java.util.regex.Pattern
  * Possible item types: Artist, Album, Song, Genre, Playlist
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-04
  */
 class LibrarySearcher {
     private lateinit var list: TypeModel
@@ -16,7 +16,6 @@ class LibrarySearcher {
     private lateinit var stringList: Array<String>
     private lateinit var matches: Array<Int>
     private lateinit var pattern: Pattern
-    var isSearching = false
 
     fun setDataSource(list: TypeModel) {
         this.list = list
