@@ -213,9 +213,9 @@ class MediaPlayerCompanion {
                     .setContentText(song.artist)
                     .setContentTitle(song.title)
                     .setContentInfo(song.album)
-                    .addAction(R.drawable.prev, "previous", playbackAction(PlaybackAction.ACTION_NEXT))
+                    .addAction(R.drawable.prev, "previous", playbackAction(PlaybackAction.ACTION_PREVIOUS))
                     .addAction(notificationAction, "pause", playPauseAction)
-                    .addAction(R.drawable.next, "next", playbackAction(PlaybackAction.ACTION_PREVIOUS))
+                    .addAction(R.drawable.next, "next", playbackAction(PlaybackAction.ACTION_NEXT))
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
                     .notify(NOTIFICATION_ID, notificationBuilder.build())
         }
