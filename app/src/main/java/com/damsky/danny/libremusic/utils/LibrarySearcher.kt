@@ -8,7 +8,7 @@ import java.util.regex.Pattern
  * Possible item types: Artist, Album, Song, Genre, Playlist
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-01-07
  */
 class LibrarySearcher {
     private lateinit var list: TypeModel
@@ -51,5 +51,9 @@ class LibrarySearcher {
      * @param position Index of item to get position
      * @return          position if search is off, original position if search is on
      */
-    fun getPosition(position: Int) = matches[position]
+    fun getPosition(position: Int) = try {
+        matches[position]
+    } catch (e: Exception) {
+        position
+    }
 }
