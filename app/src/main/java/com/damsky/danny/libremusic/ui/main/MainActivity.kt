@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
@@ -104,11 +103,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         appReference = application as App
         display = Display(this, R.mipmap.ic_launcher)
 
-        val pair: Pair<Boolean, Int> = appReference.preferencesHelper
-                .detectAppTheme(resources.getStringArray(R.array.app_themes_values))
-
-        if (pair.first)
-            setTheme(R.style.AppTheme_BlackNoActionBar)
+        val pair: Pair<Int, Int> = appReference.preferencesHelper.getThemeAndDayNightModeNoActionBar()
+        setTheme(pair.first)
         AppCompatDelegate.setDefaultNightMode(pair.second)
 
         setContentView(R.layout.activity_main)

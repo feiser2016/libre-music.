@@ -30,11 +30,7 @@ class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(if ((application as App).preferencesHelper
-                .detectAppTheme(resources.getStringArray(R.array.app_themes_values)).first)
-            R.style.AppTheme_Black
-        else
-            R.style.AppTheme)
+        setTheme((application as App).preferencesHelper.getTheme())
         setContentView(R.layout.activity_about)
 
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -57,22 +53,26 @@ class AboutActivity : AppCompatActivity() {
         return super.onSupportNavigateUp()
     }
 
-    fun openIntro(view: View) = startActivity(Intent(this, IntroActivity::class.java))
+    fun openIntro(view: View) =
+            startActivity(Intent(this, IntroActivity::class.java))
 
-    fun openSourceCode(view: View) = startActivity(Intent(Intent.ACTION_VIEW, sourceCodeUri))
+    fun openSourceCode(view: View) =
+            startActivity(Intent(Intent.ACTION_VIEW, sourceCodeUri))
 
     fun writeEmail(view: View) = startActivity(Intent.createChooser(
             Intent(Intent.ACTION_SENDTO, emailUri), resources.getString(R.string.send_mail_title)))
 
-    fun openStorePageRating(view: View) = try {
-        startActivity(Intent(Intent.ACTION_VIEW, storeUri))
-    } catch (e: ActivityNotFoundException) {
-        startActivity(Intent(Intent.ACTION_VIEW, storeBackupUri))
-    }
+    fun openStorePageRating(view: View) =
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, storeUri))
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent(Intent.ACTION_VIEW, storeBackupUri))
+            }
 
-    fun openStoreDonationPage(view: View) = try {
-        startActivity(Intent(Intent.ACTION_VIEW, donateUri))
-    } catch (e: Exception) {
-        startActivity(Intent(Intent.ACTION_VIEW, donateBackupUri))
-    }
+    fun openStoreDonationPage(view: View) =
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, donateUri))
+            } catch (e: Exception) {
+                startActivity(Intent(Intent.ACTION_VIEW, donateBackupUri))
+            }
 }

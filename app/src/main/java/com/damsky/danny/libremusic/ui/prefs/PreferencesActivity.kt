@@ -7,9 +7,10 @@ import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
+import com.damsky.danny.dannydamskyutils.Display
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
-import com.damsky.danny.dannydamskyutils.Display
+import com.damsky.danny.libremusic.utils.Constants
 
 /**
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
@@ -20,18 +21,12 @@ import com.damsky.danny.dannydamskyutils.Display
 class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var appReference: App
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appReference = application as App
 
-        setTheme(
-                if (appReference.preferencesHelper
-                        .detectAppTheme(resources.getStringArray(R.array.app_themes_values)).first)
-                    R.style.AppTheme_Black
-                else
-                    R.style.AppTheme
-        )
+        setTheme(appReference.preferencesHelper.getTheme())
 
         fragmentManager.beginTransaction().replace(android.R.id.content, PreferencesFragment()).commit()
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
@@ -46,9 +41,8 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (key == "app_theme_preferences") {
-            AppCompatDelegate.setDefaultNightMode(appReference.preferencesHelper
-                    .detectAppTheme(resources.getStringArray(R.array.app_themes_values)).second)
+        if (key == Constants.PREFERENCE_APP_THEME) {
+            AppCompatDelegate.setDefaultNightMode(appReference.preferencesHelper.getNightMode())
             finish()
         }
     }

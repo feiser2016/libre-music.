@@ -29,4 +29,7 @@ public static java.lang.String TABLENAME;
 # If you do not use RxJava:
 -dontwarn rx.**
 
+-dontwarn org.bitbucket.dannydamsky.dannydamskyutils.*
+
+
 -keep class android.support.v7.widget.SearchView { *; }
