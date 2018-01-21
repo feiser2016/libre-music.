@@ -5,12 +5,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.preference.PreferenceManager
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.app.AppCompatDelegate
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
-import com.damsky.danny.libremusic.utils.Display
+import com.damsky.danny.dannydamskyutils.Display
 
 /**
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
@@ -64,7 +63,7 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
             try {
                 super.startActivity(intent)
             } catch (e: Exception) {
-                Display(this).showSnack(R.string.eq_error, Snackbar.LENGTH_SHORT)
+                Display(this, R.mipmap.ic_launcher).showSnackShort(R.string.eq_error)
             }
     }
 

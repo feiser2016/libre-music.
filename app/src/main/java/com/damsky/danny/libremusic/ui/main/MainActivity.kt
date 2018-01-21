@@ -22,6 +22,7 @@ import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SeekBar
+import com.damsky.danny.dannydamskyutils.Display
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
@@ -47,7 +48,6 @@ import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.shareFiles
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 import com.damsky.danny.libremusic.ui.main.listeners.OnSwipeTouchListener
 import com.damsky.danny.libremusic.ui.prefs.PreferencesActivity
-import com.damsky.danny.libremusic.utils.Display
 import com.damsky.danny.libremusic.utils.LibrarySearcher
 import com.mancj.slideup.SlideUp
 import com.mancj.slideup.SlideUpBuilder
@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appReference = application as App
-        display = Display(this)
+        display = Display(this, R.mipmap.ic_launcher)
 
         val pair: Pair<Boolean, Int> = appReference.preferencesHelper
                 .detectAppTheme(resources.getStringArray(R.array.app_themes_values))
@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             display.showDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
                     {
                         if (editText.text.isEmpty())
-                            display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
+                            display.showSnackShort(R.string.text_empty)
                         else {
                             appReference.appDbHelper.insertPlaylist("${editText.text}")
                             appReference.appDbHelper.setPlaylists()

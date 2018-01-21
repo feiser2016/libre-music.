@@ -131,18 +131,18 @@ class MainPresenter {
                     (0 until playSize).filter { boolList[it] }.forEach {
                         appReference.appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
                     }
-                    display.showSnack(R.string.success, Snackbar.LENGTH_SHORT)
+                    display.showSnackShort(R.string.success)
                 })
             } else {
                 val editText = EditText(this)
                 display.showDialog(R.string.add_to_playlist, R.string.action_add_playlist_hint, editText, {
                     if (editText.text.isEmpty())
-                        display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
+                        display.showSnackShort(R.string.text_empty)
                     else {
                         appReference.appDbHelper.insertPlaylist("${editText.text}")
                         appReference.appDbHelper.setPlaylists()
                         appReference.appDbHelper.insertSongsToPlaylist(editText.text.toString(), songsList)
-                        display.showSnack(R.string.success, Snackbar.LENGTH_SHORT)
+                        display.showSnackShort(R.string.success)
                     }
                 })
             }
@@ -193,7 +193,7 @@ class MainPresenter {
                         RingtoneManager.TYPE_RINGTONE, newUri)
 
                 runOnUiThread {
-                    display.showToast(R.string.ringtone_success, Toast.LENGTH_SHORT)
+                    display.showToastShort(R.string.ringtone_success)
                 }
             }.await()
         }
@@ -206,7 +206,7 @@ class MainPresenter {
         @SuppressLint("InlinedApi")
         fun MainActivity.setAsRingtone(song: Song) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(applicationContext)) {
-                display.showToast(R.string.permission_modify_settings, Toast.LENGTH_LONG)
+                display.showToastLong(R.string.permission_modify_settings)
                 startActivityForResult(Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS,
                         Uri.parse("package:$packageName")), REQUEST_WRITE_SETTINGS)
             } else
@@ -345,7 +345,7 @@ class MainPresenter {
             display.showDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
                     {
                         if (editText.text.isEmpty())
-                            display.showSnack(R.string.text_empty, Snackbar.LENGTH_SHORT)
+                            display.showSnackShort(R.string.text_empty)
                         else {
                             appReference.appDbHelper.updatePlaylist(index, editText.text.toString())
                             myList.adapter = getAdapter(appReference.appDbHelper.getPlaylistModel())

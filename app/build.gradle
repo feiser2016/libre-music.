@@ -58,6 +58,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20"
 
     // Extra Libraries
+    implementation 'org.bitbucket.dannydamsky:dannydamskyutils:1.0.1-SNAPSHOT'
     implementation 'com.github.apl-devs:appintro:v4.2.2'
     implementation "com.github.mancj:SlideUp-Android:2.2.7.1"
     implementation 'org.greenrobot:greendao:3.2.2'
