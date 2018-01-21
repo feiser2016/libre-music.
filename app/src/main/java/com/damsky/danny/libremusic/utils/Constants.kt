@@ -50,5 +50,12 @@ class Constants {
 
         val IS_MARSHMALLOW_OR_ABOVE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
         val IS_OREO_OR_ABOVE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+
+        const val URL_SOURCE_CODE = "https://bitbucket.org/dannydamsky/libre-music/src"
+        const val URL_EMAIL = "mailto:dannydamskypublic@gmail.com"
+        const val URL_STORE = "market://details?id=com.damsky.danny.libremusic"
+        const val URL_STORE_BACKUP = "https://play.google.com/store/apps/details?id=com.damsky.danny.libremusic"
+        const val URL_DONATE = "market://details?id=com.damsky.danny.schoolassistpro"
+        const val URL_DONATE_BACKUP = "https://play.google.com/store/apps/details?id=com.damsky.danny.schoolassistpro"
     }
 }

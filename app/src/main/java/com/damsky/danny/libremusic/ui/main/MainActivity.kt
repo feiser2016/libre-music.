@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener,
         SeekBar.OnSeekBarChangeListener {
 
-
     /******************KOTLIN*EXTENSIONS**********************|
     |*********************************************************|
     |               1. myList: RecyclerView                   |

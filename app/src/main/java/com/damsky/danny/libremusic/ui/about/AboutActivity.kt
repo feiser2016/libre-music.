@@ -9,6 +9,8 @@ import android.view.View
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.ui.intro.IntroActivity
+import com.damsky.danny.libremusic.utils.Constants
+import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 
@@ -20,14 +22,6 @@ import kotlinx.coroutines.experimental.launch
  */
 
 class AboutActivity : AppCompatActivity() {
-
-    private lateinit var sourceCodeUri: Uri
-    private lateinit var emailUri: Uri
-    private lateinit var storeUri: Uri
-    private lateinit var storeBackupUri: Uri
-    private lateinit var donateUri: Uri
-    private lateinit var donateBackupUri: Uri
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme((application as App).preferencesHelper.getTheme())
@@ -36,16 +30,7 @@ class AboutActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        launch {
-            async {
-                sourceCodeUri = Uri.parse("https://bitbucket.org/dannydamsky/libre-music/src")
-                emailUri = Uri.parse("mailto:dannydamskypublic@gmail.com")
-                storeUri = Uri.parse("market://details?id=com.damsky.danny.libremusic")
-                storeBackupUri = Uri.parse("https://play.google.com/store/apps/details?id=com.damsky.danny.libremusic")
-                donateUri = Uri.parse("market://details?id=com.damsky.danny.schoolassistpro")
-                donateBackupUri = Uri.parse("https://play.google.com/store/apps/details?id=com.damsky.danny.schoolassistpro")
-            }.await()
-        }
+        versionButton.text = "${getString(R.string.about_version)} ${getString(R.string.versionName)}"
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -57,22 +42,22 @@ class AboutActivity : AppCompatActivity() {
             startActivity(Intent(this, IntroActivity::class.java))
 
     fun openSourceCode(view: View) =
-            startActivity(Intent(Intent.ACTION_VIEW, sourceCodeUri))
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_SOURCE_CODE)))
 
     fun writeEmail(view: View) = startActivity(Intent.createChooser(
-            Intent(Intent.ACTION_SENDTO, emailUri), resources.getString(R.string.send_mail_title)))
+            Intent(Intent.ACTION_SENDTO, Uri.parse(Constants.URL_EMAIL)), resources.getString(R.string.send_mail_title)))
 
     fun openStorePageRating(view: View) =
             try {
-                startActivity(Intent(Intent.ACTION_VIEW, storeUri))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_STORE)))
             } catch (e: ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW, storeBackupUri))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_STORE_BACKUP)))
             }
 
     fun openStoreDonationPage(view: View) =
             try {
-                startActivity(Intent(Intent.ACTION_VIEW, donateUri))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_DONATE)))
             } catch (e: Exception) {
-                startActivity(Intent(Intent.ACTION_VIEW, donateBackupUri))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_DONATE_BACKUP)))
             }
 }
