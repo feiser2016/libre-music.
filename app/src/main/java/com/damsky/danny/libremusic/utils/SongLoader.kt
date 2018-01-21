@@ -34,7 +34,7 @@ class SongLoader(private val contentResolver: ContentResolver) {
      */
     private fun getColumnIndex(columnName: String): Int {
         if (!mMap.containsKey(columnName))
-            mMap.put(columnName, cursor.getColumnIndex(columnName))
+            mMap[columnName] = cursor.getColumnIndex(columnName)
         return mMap[columnName]!!
     }
 
