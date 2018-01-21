@@ -16,7 +16,7 @@ import kotlinx.coroutines.experimental.launch
  * This activity provides the user with information about the app.
  *
  * @author Danny Damsky
- * @since 2017-11-28
+ * @since 2018-01-21
  */
 
 class AboutActivity : AppCompatActivity() {

@@ -16,7 +16,7 @@ import com.damsky.danny.libremusic.utils.Constants
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
  *
  * @author Danny Damsky
- * @since 2018-01-03
+ * @since 2018-01-21
  */
 class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -53,7 +53,7 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
      * found on the device.
      */
     override fun startActivity(intent: Intent) {
-        if (intent.action == "android.media.action.DISPLAY_AUDIO_EFFECT_CONTROL_PANEL")
+        if (intent.action == Constants.ACTION_OPEN_EQUALIZER)
             try {
                 super.startActivity(intent)
             } catch (e: Exception) {

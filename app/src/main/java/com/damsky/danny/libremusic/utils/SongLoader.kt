@@ -14,7 +14,7 @@ import java.io.File
  * (i.e. allows it to query files on the internal storage)
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-01-21
  */
 
 class SongLoader(private val contentResolver: ContentResolver) {
@@ -54,38 +54,49 @@ class SongLoader(private val contentResolver: ContentResolver) {
 
         val queryResult = albumCursor.moveToFirst()
 
-        var result = "none"
+        var result = Constants.ALBUM_COVER_NONE
         if (queryResult) result = try {
             albumCursor.getString(0)
         } catch (e: Exception) {
-            "none"
+            Constants.ALBUM_COVER_NONE
         }
 
         albumCursor.close()
         return result
     }
 
-    fun isAble(): Boolean = cursor != null && cursor.count > 0
+    fun isAble(): Boolean =
+            cursor != null && cursor.count > 0
 
-    fun hasNext(): Boolean = cursor.moveToNext()
+    fun hasNext(): Boolean =
+            cursor.moveToNext()
 
-    fun getData(): String = getString(MediaStore.Audio.Media.DATA)
+    fun getData(): String =
+            getString(MediaStore.Audio.Media.DATA)
 
-    fun getCover(): String = getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
+    fun getCover(): String =
+            getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
 
-    fun getDuration(): Int = getInt(MediaStore.Audio.Media.DURATION)
+    fun getDuration(): Int =
+            getInt(MediaStore.Audio.Media.DURATION)
 
-    fun getArtist(): String = getString(MediaStore.Audio.Media.ARTIST)
+    fun getArtist(): String =
+            getString(MediaStore.Audio.Media.ARTIST)
 
-    fun getAlbum(): String = getString(MediaStore.Audio.Media.ALBUM)
+    fun getAlbum(): String =
+            getString(MediaStore.Audio.Media.ALBUM)
 
-    fun getYear(): Int = getInt(MediaStore.Audio.Media.YEAR)
+    fun getYear(): Int =
+            getInt(MediaStore.Audio.Media.YEAR)
 
-    fun getGenre() = "<unknown>" // TODO Fix this
+    fun getGenre(): String =
+            Constants.DEFAULT_LIBRARY_ENTRANCE // TODO Fix this
 
-    fun getTitle(): String = getString(MediaStore.Audio.Media.TITLE)
+    fun getTitle(): String =
+            getString(MediaStore.Audio.Media.TITLE)
 
-    fun getTrackNum(): Int = getInt(MediaStore.Audio.Media.TRACK)
+    fun getTrackNum(): Int =
+            getInt(MediaStore.Audio.Media.TRACK)
 
     /**
      * Checks if data parameter is viable for parsing by CUE.

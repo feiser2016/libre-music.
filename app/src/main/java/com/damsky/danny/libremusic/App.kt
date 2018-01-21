@@ -9,8 +9,8 @@ import android.widget.Toast
 import com.damsky.danny.libremusic.data.db.AppDbHelper
 import com.damsky.danny.libremusic.data.db.model.DaoMaster
 import com.damsky.danny.libremusic.data.prefs.AppPreferencesHelper
-import com.damsky.danny.libremusic.service.MediaPlayerCompanion
 import com.damsky.danny.libremusic.service.MediaPlayerService
+import com.damsky.danny.libremusic.utils.Constants
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-01-21
  */
 
 class App : Application() {
@@ -46,7 +46,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appDbHelper = AppDbHelper(DaoMaster(
-                DaoMaster.DevOpenHelper(this, "library-db").writableDb).newSession())
+                DaoMaster.DevOpenHelper(this, Constants.DB_NAME).writableDb).newSession())
 
         preferencesHelper = AppPreferencesHelper(this)
 
@@ -67,9 +67,9 @@ class App : Application() {
                 TimeUnit.MINUTES.toMillis(minutes.toLong())
 
         handler.postDelayed({
-            MediaPlayerCompanion.mediaPlayer?.let {
-                if (MediaPlayerCompanion.mediaPlayer!!.isPlaying)
-                    MediaPlayerCompanion.transportControls.pause()
+            MediaPlayerService.mediaPlayer?.let {
+                if (MediaPlayerService.mediaPlayer!!.isPlaying)
+                    MediaPlayerService.transportControls.pause()
             }
             onSleepTimerDisabled()
         }, delayMillis)

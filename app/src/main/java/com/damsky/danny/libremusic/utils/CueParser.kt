@@ -14,9 +14,21 @@ import java.util.regex.Pattern
  * @param encoding A string containing a charset to be used for encoding when reading the cue file.
  *
  * @author Danny Damsky
- * @since 2018-01-03
+ * @since 2018-01-21
  */
 class CueParser(encoding: String) {
+    companion object {
+        private const val MAX_BYTES_TO_READ = 500_000
+    }
+
+    private val cuesheetPattern = Pattern.compile("cuesheet=")
+    private val performerPattern = Pattern.compile("PERFORMER\\s\"(.*)\"|PERFORMER\\s(.*)")
+    private val genrePattern = Pattern.compile("GENRE\\s\"(.*)\"|GENRE\\s(.*)")
+    private val titlePattern = Pattern.compile("TITLE\\s\"(.*)\"|TITLE\\s(.*)")
+    private val datePattern = Pattern.compile("DATE\\s(\\d+)")
+    private val indexPattern = Pattern.compile("INDEX 01 (\\d\\d:\\d\\d:\\d\\d)")
+    private val timePattern = Pattern.compile("\\d+")
+
     private val charset = Charset.forName(encoding)
 
     private lateinit var cueFile: File
@@ -25,18 +37,6 @@ class CueParser(encoding: String) {
     private var duration = -1
     var isReadable = false
     private lateinit var content: String
-
-    companion object {
-        private const val MAX_BYTES_TO_READ = 500_000
-
-        private val cuesheetPattern = Pattern.compile("cuesheet=")
-        private val performerPattern = Pattern.compile("PERFORMER\\s\"(.*)\"|PERFORMER\\s(.*)")
-        private val genrePattern = Pattern.compile("GENRE\\s\"(.*)\"|GENRE\\s(.*)")
-        private val titlePattern = Pattern.compile("TITLE\\s\"(.*)\"|TITLE\\s(.*)")
-        private val datePattern = Pattern.compile("DATE\\s(\\d+)")
-        private val indexPattern = Pattern.compile("INDEX 01 (\\d\\d:\\d\\d:\\d\\d)")
-        private val timePattern = Pattern.compile("\\d+")
-    }
 
     fun setDataSource(sheetFile: File, songPath: String, coverArtPath: String, songDuration: Int) {
         cueFile = sheetFile
@@ -99,7 +99,7 @@ class CueParser(encoding: String) {
             else
                 matcher.group(1)
         else
-            "<unknown>"
+            Constants.DEFAULT_LIBRARY_ENTRANCE
     }
 
     private fun getArtist(): String = getFirstResult(performerPattern)
