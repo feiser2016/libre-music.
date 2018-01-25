@@ -11,7 +11,6 @@
     <string name="loading">טוען</string>
     <string name="pref_cue">קידוד גיליון CUE</string>
     <string name="pref_cue_message">בכדי שיהיה שינוי צריך לאפס את סיפריית השירים</string>
-    <string name="pref_night_message">מומלץ לפתוח מחדש את האפליקציה לאחר שינוי ערכת נושא</string>
     <string name="action_search">חיפוש</string>
     <string name="first_slide_title">ברוכים הבאים ל Libre Music</string>
     <string name="first_slide_desc">נגן מדיה חינמי שבאמת עובד!</string>
@@ -53,16 +52,6 @@
     <string name="library">ספרייה</string>
     <string name="queue">תור</string>
     <string name="about">אודות</string>
-    <string name="about_version">גרסה</string>
-    <string name="about_intro">מבוא</string>
-    <string name="about_code">קוד מקור</string>
-    <string name="about_author">מחבר</string>
-    <string name="about_info">דני דמסקי</string>
-    <string name="about_location">חדרה, ישראל</string>
-    <string name="about_email">כתוב אימייל</string>
-    <string name="about_support">תמיכה בפיתוח</string>
-    <string name="about_rate">דרג</string>
-    <string name="about_donate">תרומה</string>
     <string name="send_mail_title">שלח אימייל באמצעות…</string>
     <string name="eq">שוין</string>
     <string name="eq_summary">פותח את השוין המובנה במכשירכם (ייתכן שלא יעבוד על מכשירים מסוימים)</string>

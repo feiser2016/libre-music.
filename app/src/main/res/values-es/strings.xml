@@ -10,7 +10,6 @@
     <string name="songs">Canciones</string>
     <string name="reset_library_question">Estas seguro que quisieras resetiar tu libraria de música en el proximo lanzamiento?</string>
     <string name="now_playing">Sonando Ahora</string>
-    <string name="pref_night_message">Resetiar la aplicacion es recomendado después de cambiar el tema de la aplicacion</string>
     <string name="pref_cue_message">Se va aplicar solamente después de reiniciar la aplicacion</string>
     <string name="action_search">Busqueda</string>
     <string name="playlists">Listas De Reproduccion</string>
@@ -53,16 +52,6 @@
     <string name="library">Libreria</string>
     <string name="queue">Cola de canciones</string>
     <string name="about">Information sobre la aplicacion</string>
-    <string name="about_version">Version</string>
-    <string name="about_intro">Introduccion</string>
-    <string name="about_code">Codigo de origen</string>
-    <string name="about_author">Autor</string>
-    <string name="about_info">Danny Damsky</string>
-    <string name="about_location">Hadera, Israel</string>
-    <string name="about_email">Escriba un mail</string>
-    <string name="about_support">Soporta el desarollo</string>
-    <string name="about_rate">Valora</string>
-    <string name="about_donate">Dona</string>
     <string name="send_mail_title">Mande un mail usando…</string>
     <string name="eq">Igualada</string>
     <string name="eq_summary">Abre el ecualizador incorporado en tu dispositivo (podra no andar en unos dispositivos)</string>

@@ -3,6 +3,7 @@ package com.damsky.danny.libremusic.ui.about
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import com.damsky.danny.dannydamskyutils.AboutPage
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
@@ -17,6 +18,11 @@ import com.damsky.danny.libremusic.utils.Constants
  */
 
 class AboutActivity : AboutPage() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setBackButton(true)
+    }
 
     override fun openIntro() {
         startActivity(Intent(this, IntroActivity::class.java))

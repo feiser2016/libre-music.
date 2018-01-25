@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="org.bitbucket.dannydamsky:dannydamskyutils-1.0.5-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/dannydamskyutils-1.0.5-SNAPSHOT.aar/6101b5e979d7d018256d4e35cc587427/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/dannydamskyutils-1.0.5-SNAPSHOT.aar/6101b5e979d7d018256d4e35cc587427/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

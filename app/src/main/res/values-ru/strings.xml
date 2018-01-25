@@ -11,7 +11,6 @@
     <string name="loading">Загрузка</string>
     <string name="pref_cue">Кодировка CUE слоя</string>
     <string name="pref_cue_message">Для того чтобы изменение применились требуется обнулить библиотеку</string>
-    <string name="pref_night_message">Рекомендуется перезагрузить программу после применение новой темы</string>
     <string name="action_search">Поиск</string>
     <string name="first_slide_title">Добро пожаловать в Libre Music</string>
     <string name="first_slide_desc">Бесплатный медиа плеер который действительно работает!</string>
@@ -53,17 +52,7 @@
     <string name="library">Библиотека</string>
     <string name="queue">Очередь</string>
     <string name="about">О программе</string>
-    <string name="about_version">Версия</string>
-    <string name="about_intro">Вступление</string>
-    <string name="about_author">Автор</string>
-    <string name="about_info">Дани Дамский</string>
-    <string name="about_location">Хадера, Израиль</string>
-    <string name="about_email">Написать на электронную почту</string>
-    <string name="about_support">Поддержать разработку</string>
-    <string name="about_rate">Оценить</string>
-    <string name="about_donate">Пожертвовать</string>
     <string name="send_mail_title">Прислать на почту с помощью…</string>
-    <string name="about_code">Исходный код</string>
     <string name="eq">Эквалайзер</string>
     <string name="eq_summary">Открывает встроенный на вашем устройстве эквалайзер (может не работать на некоторых устройствах)</string>
     <string name="action_sleep_timer">Таймер сна</string>

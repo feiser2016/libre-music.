@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     private lateinit var currentView: SlideUp
     private lateinit var nowPlayingView: SlideUp
     private lateinit var navigationUp: SlideUp
-    lateinit var songNavImage: ImageView
+    private lateinit var songNavImage: ImageView
     private lateinit var addPlaylist: MenuItem
     private val searcher = LibrarySearcher()
 
@@ -91,8 +91,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         }
     }
 
-    lateinit var appReference: App
-    lateinit var display: Display
+    private lateinit var appReference: App
+    private lateinit var display: Display
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {

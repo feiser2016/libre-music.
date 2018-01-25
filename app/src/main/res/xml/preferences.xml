@@ -7,7 +7,7 @@
             android:entryValues="@array/app_themes_values"
             android:icon="@drawable/night"
             android:key="app_theme_preferences"
-            android:summary="@string/pref_night_message"
+            android:summary="@string/app_theme_desc"
             android:title="@string/app_theme" />
         <Preference
             android:icon="@drawable/eq"

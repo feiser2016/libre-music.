@@ -9,7 +9,6 @@
     <string name="reset_library">Reset Library</string>
     <string name="reset_library_question">Are you sure that you wish to reset your music library upon next startup?</string>
     <string name="now_playing">Now Playing</string>
-    <string name="pref_night_message">Restarting the app is recommended after applying a new theme</string>
     <string name="pref_cue">CUE Sheet Encoding</string>
     <string name="pref_cue_message">Will take effect only after resetting the music library</string>
     <string name="action_search">Search</string>
@@ -53,16 +52,6 @@
     <string name="library">Library</string>
     <string name="queue">Queue</string>
     <string name="about">About</string>
-    <string name="about_version">Version</string>
-    <string name="about_intro">Introduction</string>
-    <string name="about_code">Source Code</string>
-    <string name="about_author">Author</string>
-    <string name="about_info">Danny Damsky</string>
-    <string name="about_location">Hadera, Israel</string>
-    <string name="about_email">Write an Email</string>
-    <string name="about_support">Support Development</string>
-    <string name="about_rate">Rate</string>
-    <string name="about_donate">Donate</string>
     <string name="send_mail_title">Send mail using…</string>
     <string name="eq">Equalizer</string>
     <string name="eq_summary">Opens your device\'s built-in equalizer (Might not work on some devices)</string>

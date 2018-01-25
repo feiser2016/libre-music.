@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/myList"
-            android:paddingTop="@dimen/appbar_padding_top"
+            android:paddingTop="8dp"
             android:theme="@style/AppTheme.AppBarOverlay"
             app:elevation="8dp">
 
@@ -50,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/appbar"
+            android:background="?android:windowBackground"
             android:clipToPadding="false"
             android:paddingBottom="80dp"
             app:fastScrollEnabled="true"

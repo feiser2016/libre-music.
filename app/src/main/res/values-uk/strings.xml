@@ -10,7 +10,6 @@
     <string name="reset_library">Обнулити Бібліотеку</string>
     <string name="songs">Пісні</string>
     <string name="pref_cue_message">Для того щоб змінення применились потрібно обнулити бібліотеку</string>
-    <string name="pref_night_message">Рекомендується перезавантажити програму після застосування нової теми</string>
     <string name="reset_library_question">Чи хочете обнулити бібліотеку на наступному запуску?</string>
     <string name="action_search">Пошук</string>
     <string name="first_slide_title">Ласкаво просимо в Libre Music</string>
@@ -53,16 +52,6 @@
     <string name="library">Бібліотека</string>
     <string name="queue">Чергу</string>
     <string name="about">Про програму</string>
-    <string name="about_version">Версія</string>
-    <string name="about_intro">Вступ</string>
-    <string name="about_code">Вихідний код</string>
-    <string name="about_author">Автор</string>
-    <string name="about_location">Хадера, Ізраїль</string>
-    <string name="about_info">Данi Дамскiй</string>
-    <string name="about_email">Написати на електронну пошту</string>
-    <string name="about_support">Підтримати розробку</string>
-    <string name="about_rate">Оцінити</string>
-    <string name="about_donate">Пожертвувати</string>
     <string name="send_mail_title">Надіслати на пошту за допомогою…</string>
     <string name="eq">Еквалайзер</string>
     <string name="eq_summary">Відкриває вбудований на вашому пристрої еквалайзер (може не працювати на деяких пристроях)</string>
