@@ -47,7 +47,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.damsky.danny.libremusic.ui.prefs.PreferencesActivity"
-            android:label="@string/action_settings" />
+            android:label="@string/settings" />
         <activity
             android:name="com.damsky.danny.libremusic.ui.about.AboutActivity"
             android:label="@string/about" />

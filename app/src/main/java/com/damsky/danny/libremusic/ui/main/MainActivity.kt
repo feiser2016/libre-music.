@@ -56,7 +56,7 @@ import java.io.File
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-01-25
  */
 class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener,
@@ -231,7 +231,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.addPlaylist) {
             val editText = EditText(this)
-            display.showDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
+            display.showEditTextDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
                     {
                         if (editText.text.isEmpty())
                             display.showSnackShort(R.string.text_empty)
@@ -328,7 +328,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             }
 
             R.id.action_reset -> {
-                display.showDialog(R.string.reset_library,
+                display.showBasicDialog(R.string.reset_library,
                         R.string.reset_library_question,
                         {
                             handler.removeCallbacksAndMessages(null)
@@ -353,7 +353,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     sleepTimer.setTitle(R.string.action_sleep_message)
                     sleepTimer.show()
                 } else
-                    display.showDialog("${getString(R.string.action_sleep_timer)} - ${appReference.sleepTime}",
+                    display.showBasicDialog("${getString(R.string.action_sleep_timer)} - ${appReference.sleepTime}",
                             R.string.action_sleep_disable,
                             { appReference.onSleepTimerDisabled() })
                 drawerLayout.closeDrawers()
@@ -521,7 +521,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             val itemList = Array(playSize, { i -> playList[i].playList })
             val boolList = BooleanArray(playSize, { _ -> false })
 
-            display.showDialog(R.string.add_to_playlist, itemList, boolList, {
+            display.showMultiChoiceDialog(R.string.add_to_playlist, itemList, boolList, {
                 (0 until playSize).filter { boolList[it] }.forEach {
                     appReference.appDbHelper.insertSongsToPlaylist(itemList[it], songsList)
                 }
@@ -529,7 +529,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             })
         } else {
             val editText = EditText(this)
-            display.showDialog(R.string.add_to_playlist, R.string.action_add_playlist_hint, editText, {
+            display.showEditTextDialog(R.string.add_to_playlist, R.string.action_add_playlist_hint, editText, {
                 if (editText.text.isEmpty())
                     display.showSnackShort(R.string.text_empty)
                 else {
@@ -738,7 +738,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
     private fun renamePlaylist(index: Int) {
         val editText = EditText(this)
-        display.showDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
+        display.showEditTextDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
                 {
                     if (editText.text.isEmpty())
                         display.showSnackShort(R.string.text_empty)

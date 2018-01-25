@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/pref_simple">
+    <PreferenceCategory android:title="@string/simple_settings">
         <ListPreference
             android:defaultValue="light_theme"
             android:entries="@array/app_themes"
@@ -8,7 +8,7 @@
             android:icon="@drawable/night"
             android:key="app_theme_preferences"
             android:summary="@string/pref_night_message"
-            android:title="@string/pref_night" />
+            android:title="@string/app_theme" />
         <Preference
             android:icon="@drawable/eq"
             android:summary="@string/eq_summary"
@@ -17,7 +17,7 @@
         </Preference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_advanced">
+    <PreferenceCategory android:title="@string/advanced_settings">
         <ListPreference
             android:defaultValue="Cp1251"
             android:entries="@array/encoding_list"

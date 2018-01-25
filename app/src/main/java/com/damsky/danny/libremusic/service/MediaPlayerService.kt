@@ -32,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom
  * This class is a service which is in charge of all music playback operations.
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-01-25
  */
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
@@ -300,11 +300,11 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
             playPauseAction = playbackAction(PlaybackAction.ACTION_PLAY)
         }
 
-        val largeIcon: Bitmap =
-                if (song.cover != Constants.ALBUM_COVER_NONE)
-                    BitmapFactory.decodeFile(song.cover)
-                else
-                    findBitmapById(R.drawable.song_big)
+        val largeIcon: Bitmap = try {
+            BitmapFactory.decodeFile(song.cover)
+        } catch (e: IllegalStateException) {
+            findBitmapById(R.drawable.song_big)
+        }
 
         createChannel()
         val notificationBuilder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)

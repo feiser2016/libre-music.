@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="app_themes">
-        <item>@string/theme_light</item>
-        <item>@string/theme_night</item>
-        <item>@string/theme_black</item>
+        <item>@string/app_theme_light</item>
+        <item>@string/app_theme_night</item>
+        <item>@string/app_theme_black</item>
     </string-array>
 
     <string-array name="app_themes_values" tools:ignore="MissingTranslation">

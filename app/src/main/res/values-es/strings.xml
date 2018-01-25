@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Libre Music</string>
-    <string name="action_settings">Ajustes</string>
-    <string name="yes">Si</string>
-    <string name="no">No</string>
-    <string name="pref_advanced">⚙ Ajustes Avanzados</string>
-    <string name="pref_simple">⚙ Ajustes Simples</string>
-    <string name="pref_night">Tema de aplicacion</string>
     <string name="albums">⁠⁠⁠Albumes</string>
     <string name="artists">Artistas</string>
     <string name="main_activity">Mi libreria</string>
@@ -19,9 +13,6 @@
     <string name="pref_night_message">Resetiar la aplicacion es recomendado después de cambiar el tema de la aplicacion</string>
     <string name="pref_cue_message">Se va aplicar solamente después de reiniciar la aplicacion</string>
     <string name="action_search">Busqueda</string>
-    <string name="theme_light">Tema de día</string>
-    <string name="theme_night">Tema de noche</string>
-    <string name="theme_black">Tema oscuro</string>
     <string name="playlists">Listas De Reproduccion</string>
     <string name="genres">Generos</string>
     <string name="item_songs">%d Canciones</string>
@@ -45,8 +36,6 @@
     <string name="temp_artistName">Nombre de artista</string>
     <string name="action_add_playlist">Suma lista de reproducir</string>
     <string name="action_add_playlist_hint">Escriba nombre de liste de reproducir</string>
-    <string name="ok">Bueno</string>
-    <string name="cancel">Cancelar</string>
     <string name="success">Operation fue completada exitosamente</string>
     <string name="add_to_playlist">Suma al la lista de reproducir</string>
     <string name="play">Reproduci</string>
