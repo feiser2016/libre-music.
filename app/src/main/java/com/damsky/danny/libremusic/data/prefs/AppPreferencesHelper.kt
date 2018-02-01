@@ -1,6 +1,7 @@
 package com.damsky.danny.libremusic.data.prefs
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatDelegate
 import com.damsky.danny.libremusic.R
@@ -10,37 +11,40 @@ import com.damsky.danny.libremusic.utils.Constants
 /**
  * This class is used to handle preferences operations.
  *
- * @param context Required to gain access to the application's preferences.
+ * @param context Required to gain access to the application's preferences. (Recommended: ApplicationContext)
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-02-01
  */
 
 class AppPreferencesHelper(private val context: Context) {
-    private val preferences = context.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
-
-    private var repeat = preferences.getBoolean(Constants.PREFERENCE_REPEAT, false)
-    private var shuffle = preferences.getBoolean(Constants.PREFERENCE_SHUFFLE, false)
-
-    private val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
+    private var repeat = getSharedPreferences().getBoolean(Constants.PREFERENCE_REPEAT, false)
+    private var shuffle = getSharedPreferences().getBoolean(Constants.PREFERENCE_SHUFFLE, false)
 
     private fun updateBoolean(prefName: String, boolean: Boolean) {
-        val editor = preferences.edit()
+        val editor = getSharedPreferences().edit()
         editor.putBoolean(prefName, boolean)
         editor.apply()
     }
 
-    private fun getSharedPreferences() =
-            PreferenceManager.getDefaultSharedPreferences(context)
+    private fun getSharedPreferences(): SharedPreferences {
+        return context.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
+    }
 
-    fun isFirstRun(boolean: Boolean) =
-            updateBoolean(Constants.PREFERENCE_FIRST_RUN, boolean)
+    private fun getDefaultSharedPreferences(): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+    }
 
-    fun isFirstRun(): Boolean =
-            preferences.getBoolean(Constants.PREFERENCE_FIRST_RUN, true)
+    fun isFirstRun(boolean: Boolean) {
+        updateBoolean(Constants.PREFERENCE_FIRST_RUN, boolean)
+    }
+
+    fun isFirstRun(): Boolean {
+        return getSharedPreferences().getBoolean(Constants.PREFERENCE_FIRST_RUN, true)
+    }
 
     fun updateIndexes(listLevel: ListLevel, positions: IntArray) {
-        val editor = preferences.edit()
+        val editor = getSharedPreferences().edit()
         editor.putInt(Constants.PREFERENCE_LIST_LEVEL, listLevel.index)
         editor.putInt(Constants.PREFERENCE_INDEX_ZERO, positions[0])
         editor.putInt(Constants.PREFERENCE_INDEX_ONE, positions[1])
@@ -49,19 +53,19 @@ class AppPreferencesHelper(private val context: Context) {
     }
 
     fun updateIndex(position: Int) {
-        val editor = preferences.edit()
+        val editor = getSharedPreferences().edit()
         editor.putInt(Constants.PREFERENCE_INDEX_TWO, position)
         editor.apply()
     }
 
     fun getIndexes(): Pair<IntArray, ListLevel>? {
-        val listLevel = ListLevel.values()[preferences.getInt(Constants.PREFERENCE_LIST_LEVEL, 0)]
-        val index = preferences.getInt(Constants.PREFERENCE_INDEX_TWO, -1)
+        val listLevel = ListLevel.values()[getSharedPreferences().getInt(Constants.PREFERENCE_LIST_LEVEL, 0)]
+        val index = getSharedPreferences().getInt(Constants.PREFERENCE_INDEX_TWO, -1)
         if (index == -1)
             return null
 
-        val positions = intArrayOf(preferences.getInt(Constants.PREFERENCE_INDEX_ZERO, -1),
-                preferences.getInt(Constants.PREFERENCE_INDEX_ONE, -1), index)
+        val positions = intArrayOf(getSharedPreferences().getInt(Constants.PREFERENCE_INDEX_ZERO, -1),
+                getSharedPreferences().getInt(Constants.PREFERENCE_INDEX_ONE, -1), index)
 
         return Pair(positions, listLevel)
     }
@@ -71,63 +75,82 @@ class AppPreferencesHelper(private val context: Context) {
         updateBoolean(Constants.PREFERENCE_REPEAT, boolean)
     }
 
-    fun getRepeatPreference(): Boolean = repeat
+    fun getRepeatPreference(): Boolean {
+        return repeat
+    }
 
     fun setShufflePreference(boolean: Boolean) {
         shuffle = boolean
         updateBoolean(Constants.PREFERENCE_SHUFFLE, boolean)
     }
 
-    fun getShufflePreference(): Boolean = shuffle
+    fun getShufflePreference(): Boolean {
+        return shuffle
+    }
 
-    fun getTheme(): Int =
-            if (getSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[2])
-                R.style.AppTheme_Black
-            else
-                R.style.AppTheme
+    fun getTheme(): Int {
+        val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
 
-    fun getThemeNoActionBar(): Int =
-            if (getSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[2])
-                R.style.AppTheme_BlackNoActionBar
-            else
-                R.style.AppTheme_NoActionBar
+        if (getDefaultSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[2])
+            return R.style.AppTheme_Black
 
-    fun getNightMode(): Int =
-            if (getSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[0])
-                AppCompatDelegate.MODE_NIGHT_NO
-            else
-                AppCompatDelegate.MODE_NIGHT_YES
+        return R.style.AppTheme
+    }
 
-    fun getThemeAndDayNightMode(): Pair<Int, Int> =
-            when (getSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0])) {
-                appThemesValues[0] ->
-                    Pair(R.style.AppTheme, AppCompatDelegate.MODE_NIGHT_NO)
+    fun getThemeNoActionBar(): Int {
+        val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
 
-                appThemesValues[1] ->
-                    Pair(R.style.AppTheme, AppCompatDelegate.MODE_NIGHT_YES)
+        if (getDefaultSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[2])
+            return R.style.AppTheme_BlackNoActionBar
 
-                appThemesValues[2] ->
-                    Pair(R.style.AppTheme_Black, AppCompatDelegate.MODE_NIGHT_YES)
+        return R.style.AppTheme_NoActionBar
+    }
 
-                else ->
-                    Pair(-1, -1)
-            }
+    fun getNightMode(): Int {
+        val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
 
-    fun getThemeAndDayNightModeNoActionBar(): Pair<Int, Int> =
-            when (getSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0])) {
-                appThemesValues[0] ->
-                    Pair(R.style.AppTheme_NoActionBar, AppCompatDelegate.MODE_NIGHT_NO)
+        if (getDefaultSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[0])
+            return AppCompatDelegate.MODE_NIGHT_NO
 
-                appThemesValues[1] ->
-                    Pair(R.style.AppTheme_NoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
+        return AppCompatDelegate.MODE_NIGHT_YES
+    }
 
-                appThemesValues[2] ->
-                    Pair(R.style.AppTheme_BlackNoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
+    fun getThemeAndDayNightMode(): Pair<Int, Int> {
+        val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
 
-                else ->
-                    Pair(-1, -1)
-            }
+        when (getDefaultSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0])) {
+            appThemesValues[0] ->
+                return Pair(R.style.AppTheme, AppCompatDelegate.MODE_NIGHT_NO)
 
-    fun getEncoding(): String =
-            getSharedPreferences().getString(Constants.PREFERENCE_ENCODING, Constants.DEFAULT_ENCODING)
+            appThemesValues[1] ->
+                return Pair(R.style.AppTheme, AppCompatDelegate.MODE_NIGHT_YES)
+
+            appThemesValues[2] ->
+                return Pair(R.style.AppTheme_Black, AppCompatDelegate.MODE_NIGHT_YES)
+        }
+
+        return Pair(-1, -1)
+    }
+
+    fun getThemeAndDayNightModeNoActionBar(): Pair<Int, Int> {
+        val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
+
+        when (getDefaultSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0])) {
+            appThemesValues[0] ->
+                return Pair(R.style.AppTheme_NoActionBar, AppCompatDelegate.MODE_NIGHT_NO)
+
+            appThemesValues[1] ->
+                return Pair(R.style.AppTheme_NoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
+
+            appThemesValues[2] ->
+                return Pair(R.style.AppTheme_BlackNoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
+        }
+
+        return Pair(-1, -1)
+    }
+
+    fun getEncoding(): String {
+        return getDefaultSharedPreferences().getString(Constants.PREFERENCE_ENCODING, Constants.DEFAULT_ENCODING)
+    }
+
 }

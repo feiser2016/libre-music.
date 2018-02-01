@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-02-01
  */
 
 class App : Application() {
@@ -45,8 +45,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appDbHelper = AppDbHelper(DaoMaster(
-                DaoMaster.DevOpenHelper(this, Constants.DB_NAME).writableDb).newSession())
+        appDbHelper = AppDbHelper(this)
 
         preferencesHelper = AppPreferencesHelper(this)
 

@@ -32,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom
  * This class is a service which is in charge of all music playback operations.
  *
  * @author Danny Damsky
- * @since 2018-01-25
+ * @since 2018-02-01
  */
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
@@ -63,7 +63,9 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
 
     private lateinit var appReference: App
 
-    override fun onBind(intent: Intent?): IBinder = iBinder
+    override fun onBind(intent: Intent?): IBinder {
+        return iBinder
+    }
 
     override fun onCreate() {
         super.onCreate()

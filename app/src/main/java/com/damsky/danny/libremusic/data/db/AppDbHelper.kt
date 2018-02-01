@@ -1,18 +1,20 @@
 package com.damsky.danny.libremusic.data.db
 
+import android.content.Context
 import com.damsky.danny.libremusic.data.db.model.*
 import com.damsky.danny.libremusic.data.models.*
+import com.damsky.danny.libremusic.utils.Constants
 
 /**
  * This class is used to handle database operations.
  *
- * @param daoSession A session containing a writable DB file.
+ * @param context Required to gain access to the application's database file. (Recommended: ApplicationContext)
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-02-01
  */
 
-class AppDbHelper(private val daoSession: DaoSession) {
+class AppDbHelper(private val context: Context) {
     private lateinit var artistList: Array<Artist>
     private lateinit var albumList: Array<Album>
     private lateinit var songList: Array<Song>
@@ -24,6 +26,9 @@ class AppDbHelper(private val daoSession: DaoSession) {
 
     private lateinit var songQueue: Array<Song>
 
+    private fun getDaoSession(): DaoSession {
+        return DaoMaster(DaoMaster.DevOpenHelper(context, Constants.DB_NAME).writableDb).newSession()
+    }
 
     /**
      * Adds new artist to the database if the artist doesn't already exist.
@@ -31,8 +36,8 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * @param artist String containing an artist's name.
      */
     fun insertArtist(artist: String) {
-        if (daoSession.artistDao.queryBuilder().where(ArtistDao.Properties.Artist.eq(artist)).unique() == null)
-            daoSession.artistDao.insert(Artist(null, artist))
+        if (getDaoSession().artistDao.queryBuilder().where(ArtistDao.Properties.Artist.eq(artist)).unique() == null)
+            getDaoSession().artistDao.insert(Artist(null, artist))
     }
 
     /**
@@ -44,8 +49,8 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * @param cover  A string containing the path to the album art.
      */
     fun insertAlbum(album: String, artist: String, year: Int, cover: String) {
-        if (daoSession.albumDao.queryBuilder().where(AlbumDao.Properties.Album.eq(album), AlbumDao.Properties.Artist.eq(artist)).unique() == null)
-            daoSession.albumDao.insert(Album(null, album, artist, year, cover))
+        if (getDaoSession().albumDao.queryBuilder().where(AlbumDao.Properties.Album.eq(album), AlbumDao.Properties.Artist.eq(artist)).unique() == null)
+            getDaoSession().albumDao.insert(Album(null, album, artist, year, cover))
     }
 
     /**
@@ -64,7 +69,7 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * @param cover     A string containing the path to the album art.
      */
     fun insertSong(data: String, title: String, album: String, artist: String, genre: String, track: Int, year: Int, startTime: Int, endTime: Int, duration: Int, cover: String) {
-        daoSession.songDao.insert(Song(null, data, title, album, artist, genre, track, year, startTime, endTime, duration, cover))
+        getDaoSession().songDao.insert(Song(null, data, title, album, artist, genre, track, year, startTime, endTime, duration, cover))
     }
 
     /**
@@ -73,8 +78,8 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * @param genre A string containing the name of the genre.
      */
     fun insertGenre(genre: String) {
-        if (daoSession.genreDao.queryBuilder().where(GenreDao.Properties.Genre.eq(genre)).unique() == null)
-            daoSession.genreDao.insert(Genre(null, genre))
+        if (getDaoSession().genreDao.queryBuilder().where(GenreDao.Properties.Genre.eq(genre)).unique() == null)
+            getDaoSession().genreDao.insert(Genre(null, genre))
     }
 
     /**
@@ -84,7 +89,7 @@ class AppDbHelper(private val daoSession: DaoSession) {
      */
     fun insertPlaylist(playlist: String) {
         if (lookForPlaylist(playlist) == null)
-            daoSession.playlistDao.insert(Playlist(null, playlist))
+            getDaoSession().playlistDao.insert(Playlist(null, playlist))
     }
 
     /**
@@ -99,27 +104,27 @@ class AppDbHelper(private val daoSession: DaoSession) {
 
     private fun insertSongToPlaylist(playlist: Playlist?, song: Song) {
         if (playlist != null) {
-            if (daoSession.linkDao.queryBuilder().where(LinkDao.Properties.PlayListId.eq(playlist.id),
-                    LinkDao.Properties.SongId.eq(song.id)).unique() == null) {
-                daoSession.linkDao.insert(Link(null, playlist.id, song.id))
+            if (getDaoSession().linkDao.queryBuilder().where(LinkDao.Properties.PlayListId.eq(playlist.id),
+                            LinkDao.Properties.SongId.eq(song.id)).unique() == null) {
+                getDaoSession().linkDao.insert(Link(null, playlist.id, song.id))
                 playlist.resetSongs()
             }
         }
     }
 
     private fun lookForPlaylist(playlist: String): Playlist? =
-            daoSession.playlistDao.queryBuilder().where(PlaylistDao.Properties.PlayList.eq(playlist)).unique()
+            getDaoSession().playlistDao.queryBuilder().where(PlaylistDao.Properties.PlayList.eq(playlist)).unique()
 
     /**
      * Deletes everything from the database.
      */
     fun deleteAll() {
-        daoSession.playlistDao.deleteAll()
-        daoSession.genreDao.deleteAll()
-        daoSession.songDao.deleteAll()
-        daoSession.albumDao.deleteAll()
-        daoSession.artistDao.deleteAll()
-        daoSession.linkDao.deleteAll()
+        getDaoSession().playlistDao.deleteAll()
+        getDaoSession().genreDao.deleteAll()
+        getDaoSession().songDao.deleteAll()
+        getDaoSession().albumDao.deleteAll()
+        getDaoSession().artistDao.deleteAll()
+        getDaoSession().linkDao.deleteAll()
 
         setSongs()
     }
@@ -132,10 +137,10 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * @param playlist The playlist to delete the song from.
      */
     fun deleteSongFromPlaylist(song: Song, playlist: Playlist) {
-        val link = daoSession.linkDao.queryBuilder().where(LinkDao.Properties.SongId.eq(song.id),
+        val link = getDaoSession().linkDao.queryBuilder().where(LinkDao.Properties.SongId.eq(song.id),
                 LinkDao.Properties.PlayListId.eq(playlist.id)).unique()
         if (link != null) {
-            daoSession.linkDao.delete(link)
+            getDaoSession().linkDao.delete(link)
             playlist.resetSongs()
             setPlaylists()
         }
@@ -153,7 +158,7 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * @param index The array index of the playlist to delete
      */
     fun deletePlaylist(index: Int) {
-        daoSession.playlistDao.delete(playList[index])
+        getDaoSession().playlistDao.delete(playList[index])
         setPlaylists()
     }
 
@@ -164,7 +169,7 @@ class AppDbHelper(private val daoSession: DaoSession) {
     fun updatePlaylist(index: Int, newName: String) {
         val playlist = playList[index]
         playlist.playList = newName
-        daoSession.playlistDao.update(playlist)
+        getDaoSession().playlistDao.update(playlist)
         setPlaylists()
     }
 
@@ -173,14 +178,14 @@ class AppDbHelper(private val daoSession: DaoSession) {
      */
 
     fun setArtists() {
-        artistList = daoSession.artistDao
+        artistList = getDaoSession().artistDao
                 .queryBuilder()
                 .orderAsc(ArtistDao.Properties.Artist)
                 .build().list().toTypedArray()
     }
 
     fun setAlbums() {
-        albumList = daoSession.albumDao
+        albumList = getDaoSession().albumDao
                 .queryBuilder()
                 .orderAsc(AlbumDao.Properties.Artist,
                         AlbumDao.Properties.Year,
@@ -192,7 +197,7 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * The queue is set to the songList.
      */
     fun setSongs() {
-        songList = daoSession.songDao
+        songList = getDaoSession().songDao
                 .queryBuilder()
                 .orderAsc(SongDao.Properties.Artist,
                         SongDao.Properties.Year,
@@ -204,14 +209,14 @@ class AppDbHelper(private val daoSession: DaoSession) {
     }
 
     fun setGenres() {
-        genreList = daoSession.genreDao
+        genreList = getDaoSession().genreDao
                 .queryBuilder()
                 .orderAsc(GenreDao.Properties.Genre)
                 .build().list().toTypedArray()
     }
 
     fun setPlaylists() {
-        playList = daoSession.playlistDao
+        playList = getDaoSession().playlistDao
                 .queryBuilder()
                 .orderAsc(PlaylistDao.Properties.PlayList)
                 .build().list().toTypedArray()
@@ -356,11 +361,21 @@ class AppDbHelper(private val daoSession: DaoSession) {
         positions[2] = 0
     }
 
-    fun getLevel() = listLevel
-    fun getPlayableLevel() = playableLevel
-    fun getPositions() = positions
+    fun getLevel(): ListLevel {
+        return listLevel
+    }
 
-    fun songsEmpty() = songList.isEmpty()
+    fun getPlayableLevel(): ListLevel {
+        return playableLevel
+    }
+
+    fun getPositions(): IntArray {
+        return positions
+    }
+
+    fun songsEmpty(): Boolean {
+        return songList.isEmpty()
+    }
 
     fun updateLocations(newPositions: IntArray, newListLevel: ListLevel) {
         positions = newPositions
@@ -375,25 +390,47 @@ class AppDbHelper(private val daoSession: DaoSession) {
      * The following functions are used for adapter setup.
      */
 
-    fun getArtistModel(): Pair<TypeModel, ListLevel?> = Pair(ArtistModel(getArtists()), null)
+    fun getArtistModel(): Pair<TypeModel, ListLevel?> {
+        return Pair(ArtistModel(getArtists()), null)
+    }
 
-    fun getAlbumModel(): Pair<TypeModel, ListLevel?> = Pair(AlbumModel(getAlbums()), null)
+    fun getAlbumModel(): Pair<TypeModel, ListLevel?> {
+        return Pair(AlbumModel(getAlbums()), null)
+    }
 
-    fun getSongModel(): Pair<TypeModel, ListLevel?> = Pair(SongModel(getSongs()), getLevel())
+    fun getSongModel(): Pair<TypeModel, ListLevel?> {
+        return Pair(SongModel(getSongs()), getLevel())
+    }
 
-    fun getGenreModel(): Pair<TypeModel, ListLevel?> = Pair(GenreModel(getGenres()), null)
+    fun getGenreModel(): Pair<TypeModel, ListLevel?> {
+        return Pair(GenreModel(getGenres()), null)
+    }
 
-    fun getPlaylistModel(): Pair<TypeModel, ListLevel?> = Pair(PlaylistModel(getPlaylists()), null)
+    fun getPlaylistModel(): Pair<TypeModel, ListLevel?> {
+        return Pair(PlaylistModel(getPlaylists()), null)
+    }
 
-    fun getArtistAlbumsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(AlbumModel(getArtistAlbums(position)), null)
+    fun getArtistAlbumsModel(position: Int): Pair<TypeModel, ListLevel?> {
+        return Pair(AlbumModel(getArtistAlbums(position)), null)
+    }
 
-    fun getArtistSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getArtistSongs(position)), getLevel())
+    fun getArtistSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
+        return Pair(SongModel(getArtistSongs(position)), getLevel())
+    }
 
-    fun getAlbumSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getAlbumSongs(position)), getLevel())
+    fun getAlbumSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
+        return Pair(SongModel(getAlbumSongs(position)), getLevel())
+    }
 
-    fun getGenreSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getGenreSongs(position)), getLevel())
+    fun getGenreSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
+        return Pair(SongModel(getGenreSongs(position)), getLevel())
+    }
 
-    fun getPlaylistSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getPlaylistSongs(position)), getLevel())
+    fun getPlaylistSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
+        return Pair(SongModel(getPlaylistSongs(position)), getLevel())
+    }
 
-    fun getQueueModel(): Pair<TypeModel, ListLevel?> = Pair(SongModel(getQueue()), ListLevel.QUEUE)
+    fun getQueueModel(): Pair<TypeModel, ListLevel?> {
+        return Pair(SongModel(getQueue()), ListLevel.QUEUE)
+    }
 }
