@@ -86,8 +86,9 @@ class App : Application() {
         Toast.makeText(this, R.string.sleep_timer_disabled, Toast.LENGTH_SHORT).show()
     }
 
-    fun updateIndexes() =
-            preferencesHelper.updateIndexes(appDbHelper.getPlayableLevel(), appDbHelper.getPositions())
+    fun updateIndexes() {
+        preferencesHelper.updateIndexes(appDbHelper.getPlayableLevel(), appDbHelper.getPositions())
+    }
 
     /**
      * @param hoursToAdd   Hours to add to real time
