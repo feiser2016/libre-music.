@@ -22,7 +22,7 @@ import com.github.paolorotolo.appintro.model.SliderPage
  * When the activity finishes it makes sure that the app permissions are set up before closing.
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-02-04
  */
 
 class IntroActivity : AppIntro2() {
@@ -68,11 +68,12 @@ class IntroActivity : AppIntro2() {
     }
 
     @SuppressLint("NewApi")
-    private fun getColour(color: Int): Int =
-            if (Constants.IS_MARSHMALLOW_OR_ABOVE)
-                getColor(color)
-            else
-                resources.getColor(color)
+    private fun getColour(color: Int): Int {
+        return if (Constants.IS_MARSHMALLOW_OR_ABOVE)
+            getColor(color)
+        else
+            resources.getColor(color)
+    }
 
     private fun addSlides() {
         addSlide(firstSlide())
@@ -82,30 +83,40 @@ class IntroActivity : AppIntro2() {
         addSlide(fifthSlide())
     }
 
-    private fun firstSlide(): AppIntroFragment = helpSlide(getColour(R.color.colorPrimary),
-            R.drawable.intro1,
-            resources.getString(R.string.first_slide_title),
-            resources.getString(R.string.first_slide_desc))
+    private fun firstSlide(): AppIntroFragment {
+        return helpSlide(getColour(R.color.colorPrimary),
+                R.drawable.intro1,
+                resources.getString(R.string.first_slide_title),
+                resources.getString(R.string.first_slide_desc))
+    }
 
-    private fun secondSlide(): AppIntroFragment = helpSlide(Color.parseColor("#795548"),
-            R.drawable.intro2,
-            resources.getString(R.string.second_slide_title),
-            resources.getString(R.string.second_slide_desc))
+    private fun secondSlide(): AppIntroFragment {
+        return helpSlide(Color.parseColor("#795548"),
+                R.drawable.intro2,
+                resources.getString(R.string.second_slide_title),
+                resources.getString(R.string.second_slide_desc))
+    }
 
-    private fun thirdSlide(): AppIntroFragment = helpSlide(Color.parseColor("#28292e"),
-            R.drawable.intro3,
-            resources.getString(R.string.third_slide_title),
-            resources.getString(R.string.third_slide_desc))
+    private fun thirdSlide(): AppIntroFragment {
+        return helpSlide(Color.parseColor("#28292e"),
+                R.drawable.intro3,
+                resources.getString(R.string.third_slide_title),
+                resources.getString(R.string.third_slide_desc))
+    }
 
-    private fun fourthSlide(): AppIntroFragment = helpSlide(getColour(android.R.color.holo_blue_dark),
-            R.drawable.intro4,
-            resources.getString(R.string.fourth_slide_title),
-            resources.getString(R.string.fourth_slide_desc))
+    private fun fourthSlide(): AppIntroFragment {
+        return helpSlide(getColour(android.R.color.holo_blue_dark),
+                R.drawable.intro4,
+                resources.getString(R.string.fourth_slide_title),
+                resources.getString(R.string.fourth_slide_desc))
+    }
 
-    private fun fifthSlide(): AppIntroFragment = helpSlide(getColour(android.R.color.holo_red_light),
-            R.drawable.intro5,
-            resources.getString(R.string.fifth_slide_title),
-            resources.getString(R.string.fifth_slide_desc))
+    private fun fifthSlide(): AppIntroFragment {
+        return helpSlide(getColour(android.R.color.holo_red_light),
+                R.drawable.intro5,
+                resources.getString(R.string.fifth_slide_title),
+                resources.getString(R.string.fifth_slide_desc))
+    }
 
     private fun helpSlide(color: Int, imageDrawable: Int, title: String, desc: String): AppIntroFragment {
         slider.bgColor = color

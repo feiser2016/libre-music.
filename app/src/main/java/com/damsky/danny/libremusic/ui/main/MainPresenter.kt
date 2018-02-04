@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
  * Service class containing static util functions.
 
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-02-04
  */
 
 class MainPresenter {
@@ -47,13 +47,16 @@ class MainPresenter {
                     .into(this)
         }
 
-        private fun ImageView.getDefaultRequestOptions(placeholderDrawable: Int)
-                = RequestOptions().fitCenter().placeholder(placeholderDrawable).override(this.height)
+        private fun ImageView.getDefaultRequestOptions(placeholderDrawable: Int): RequestOptions {
+            return RequestOptions().fitCenter().placeholder(placeholderDrawable).override(this.height)
+        }
 
-        fun ImageView.glideLoad(context: MainActivity, imageString: String)
-                = glideLoad(context, imageString, getDefaultRequestOptions(R.drawable.song_big))
+        fun ImageView.glideLoad(context: MainActivity, imageString: String) {
+            glideLoad(context, imageString, getDefaultRequestOptions(R.drawable.song_big))
+        }
 
-        fun ImageView.glideLoad(context: Context, imageString: String, placeholderDrawable: Int)
-                = glideLoad(context, imageString, getDefaultRequestOptions(placeholderDrawable).circleCrop())
+        fun ImageView.glideLoad(context: Context, imageString: String, placeholderDrawable: Int) {
+            glideLoad(context, imageString, getDefaultRequestOptions(placeholderDrawable).circleCrop())
+        }
     }
 }

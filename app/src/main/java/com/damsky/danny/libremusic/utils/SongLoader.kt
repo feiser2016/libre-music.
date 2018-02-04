@@ -1,7 +1,6 @@
 package com.damsky.danny.libremusic.utils
 
 import android.content.ContentResolver
-import android.database.Cursor
 import android.provider.MediaStore
 import android.util.ArrayMap
 import com.damsky.danny.libremusic.data.db.model.Song
@@ -14,7 +13,7 @@ import java.io.File
  * (i.e. allows it to query files on the internal storage)
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-02-04
  */
 
 class SongLoader(private val contentResolver: ContentResolver) {
@@ -38,9 +37,13 @@ class SongLoader(private val contentResolver: ContentResolver) {
         return mMap[columnName]!!
     }
 
-    private fun getInt(string: String) = cursor.getInt(getColumnIndex(string))
+    private fun getInt(string: String): Int {
+        return cursor.getInt(getColumnIndex(string))
+    }
 
-    private fun getString(string: String) = cursor.getString(getColumnIndex(string))
+    private fun getString(string: String): String {
+        return cursor.getString(getColumnIndex(string))
+    }
 
     /**
      * Queries for album art using a cursor.
@@ -65,38 +68,49 @@ class SongLoader(private val contentResolver: ContentResolver) {
         return result
     }
 
-    fun isAble(): Boolean =
-            cursor != null && cursor.count > 0
+    fun isAble(): Boolean {
+        return cursor != null && cursor.count > 0
+    }
 
-    fun hasNext(): Boolean =
-            cursor.moveToNext()
+    fun hasNext(): Boolean {
+        return cursor.moveToNext()
+    }
 
-    fun getData(): String =
-            getString(MediaStore.Audio.Media.DATA)
+    fun getData(): String {
+        return getString(MediaStore.Audio.Media.DATA)
+    }
 
-    fun getCover(): String =
-            getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
+    fun getCover(): String {
+        return getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
+    }
 
-    fun getDuration(): Int =
-            getInt(MediaStore.Audio.Media.DURATION)
+    fun getDuration(): Int {
+        return getInt(MediaStore.Audio.Media.DURATION)
+    }
 
-    fun getArtist(): String =
-            getString(MediaStore.Audio.Media.ARTIST)
+    fun getArtist(): String {
+        return getString(MediaStore.Audio.Media.ARTIST)
+    }
 
-    fun getAlbum(): String =
-            getString(MediaStore.Audio.Media.ALBUM)
+    fun getAlbum(): String {
+        return getString(MediaStore.Audio.Media.ALBUM)
+    }
 
-    fun getYear(): Int =
-            getInt(MediaStore.Audio.Media.YEAR)
+    fun getYear(): Int {
+        return getInt(MediaStore.Audio.Media.YEAR)
+    }
 
-    fun getGenre(): String =
-            Constants.DEFAULT_LIBRARY_ENTRANCE // TODO Fix this
+    fun getGenre(): String {
+        return Constants.DEFAULT_LIBRARY_ENTRANCE // TODO Fix this
+    }
 
-    fun getTitle(): String =
-            getString(MediaStore.Audio.Media.TITLE)
+    fun getTitle(): String {
+        return getString(MediaStore.Audio.Media.TITLE)
+    }
 
-    fun getTrackNum(): Int =
-            getInt(MediaStore.Audio.Media.TRACK)
+    fun getTrackNum(): Int {
+        return getInt(MediaStore.Audio.Media.TRACK)
+    }
 
     /**
      * Checks if data parameter is viable for parsing by CUE.
