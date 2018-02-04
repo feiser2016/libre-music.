@@ -62,12 +62,12 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20"
 
     // Extra Libraries
-    implementation 'org.bitbucket.dannydamsky:dannydamskyutils:1.0.5-SNAPSHOT'
+    implementation 'org.bitbucket.dannydamsky:dannydamskyutils:1.0.6-SNAPSHOT'
     implementation 'com.github.apl-devs:appintro:v4.2.2'
     implementation "com.github.mancj:SlideUp-Android:2.2.8"
     implementation 'org.greenrobot:greendao:3.2.2'
-    implementation 'com.github.bumptech.glide:glide:4.5.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {

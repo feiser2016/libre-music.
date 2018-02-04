@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="com.github.mancj:SlideUp-Android-2.2.8">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/SlideUp-Android-2.2.8.aar/efa059b84efa4b1c46351698f88d36b2/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/SlideUp-Android-2.2.8.aar/efa059b84efa4b1c46351698f88d36b2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/SlideUp-Android-2.2.8.aar/508903cce3aa02ad943a60496aa811be/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/SlideUp-Android-2.2.8.aar/508903cce3aa02ad943a60496aa811be/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
