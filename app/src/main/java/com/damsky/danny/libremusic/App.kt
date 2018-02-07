@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2018-02-01
+ * @since 2018-02-07
  */
 
 class App : Application() {
