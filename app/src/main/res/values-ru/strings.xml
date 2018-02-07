@@ -10,7 +10,7 @@
     <string name="main_activity">Моя библиотека</string>
     <string name="loading">Загрузка</string>
     <string name="pref_cue">Кодировка CUE слоя</string>
-    <string name="pref_cue_message">Для того чтобы изменение применились требуется обнулить библиотеку</string>
+    <string name="pref_cue_message">Для того чтобы изменение применились требуется обнулить библиотеку.</string>
     <string name="action_search">Поиск</string>
     <string name="first_slide_title">Добро пожаловать в Libre Music</string>
     <string name="first_slide_desc">Бесплатный медиа плеер который действительно работает!</string>
@@ -34,8 +34,8 @@
     <string name="item_album">%d Альбом</string>
     <string name="item_albums">%d Альбома</string>
     <string name="action_add_playlist">Добавить плейлист</string>
-    <string name="action_add_playlist_hint">Введите име плейлиста</string>
-    <string name="success">Операция была успешно завершена</string>
+    <string name="action_add_playlist_hint">Введите име плейлиста.</string>
+    <string name="success">Операция была успешно завершена.</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
     <string name="play">Играть</string>
     <string name="add_to_queue">Добавить в очередь</string>
@@ -46,20 +46,20 @@
     <string name="remove_from_playlist">Удалить из плейлиста</string>
     <string name="remove">Удалить</string>
     <string name="rename">Переименовать</string>
-    <string name="text_empty">Текстовое поле не может быть пустым</string>
-    <string name="permission_modify_settings">Необходимо разрешить изменение параметров системы</string>
-    <string name="ringtone_success">Рингтон был изменен успешно</string>
+    <string name="text_empty">Текстовое поле не может быть пустым.</string>
+    <string name="permission_modify_settings">Необходимо разрешить изменение параметров системы.</string>
+    <string name="ringtone_success">Рингтон был изменен успешно.</string>
     <string name="library">Библиотека</string>
     <string name="queue">Очередь</string>
     <string name="about">О программе</string>
     <string name="send_mail_title">Прислать на почту с помощью…</string>
     <string name="eq">Эквалайзер</string>
-    <string name="eq_summary">Открывает встроенный на вашем устройстве эквалайзер (может не работать на некоторых устройствах)</string>
+    <string name="eq_summary">Открывает встроенный на вашем устройстве эквалайзер. (может не работать на некоторых устройствах)</string>
     <string name="action_sleep_timer">Таймер сна</string>
-    <string name="action_sleep_message">Установите продолжительность воспроизведения</string>
+    <string name="action_sleep_message">Установите продолжительность воспроизведения:</string>
     <string name="action_sleep_toast">Музыка остановится в</string>
     <string name="action_sleep_disable">Вы хотите отключить таймер сна?</string>
-    <string name="sleep_timer_disabled">Таймер сна отключен успешно</string>
+    <string name="sleep_timer_disabled">Таймер сна отключен успешно.</string>
     <string name="action_sleep_time_extension">на следующем дне</string>
-    <string name="eq_error">Эквалайзер не был найден</string>
+    <string name="eq_error">Эквалайзер не был найден.</string>
 </resources>

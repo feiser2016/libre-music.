@@ -9,7 +9,7 @@
     <string name="pref_cue">Кодування CUE шару</string>
     <string name="reset_library">Обнулити Бібліотеку</string>
     <string name="songs">Пісні</string>
-    <string name="pref_cue_message">Для того щоб змінення применились потрібно обнулити бібліотеку</string>
+    <string name="pref_cue_message">Для того щоб змінення применились потрібно обнулити бібліотеку.</string>
     <string name="reset_library_question">Чи хочете обнулити бібліотеку на наступному запуску?</string>
     <string name="action_search">Пошук</string>
     <string name="first_slide_title">Ласкаво просимо в Libre Music</string>
@@ -34,8 +34,8 @@
     <string name="item_album">%d Альбом</string>
     <string name="item_albums">%d Альбоми</string>
     <string name="action_add_playlist">Додати плейлист</string>
-    <string name="action_add_playlist_hint">Введіть назву плейлиста</string>
-    <string name="success">Операція була успішно завершена</string>
+    <string name="action_add_playlist_hint">Введіть назву плейлиста.</string>
+    <string name="success">Операція була успішно завершена.</string>
     <string name="add_to_playlist">Додати в плейлист</string>
     <string name="play">Грати</string>
     <string name="add_to_queue">Додати в чергу</string>
@@ -46,20 +46,20 @@
     <string name="remove_from_playlist">Видалити зі плейлисту</string>
     <string name="remove">Видалити</string>
     <string name="rename">Перейменувати</string>
-    <string name="text_empty">Текстове поле не може бути порожнім</string>
-    <string name="permission_modify_settings">Необхідно дозволити зміну параметрів системи</string>
-    <string name="ringtone_success">Рінгтон був змінений успішно</string>
+    <string name="text_empty">Текстове поле не може бути порожнім.</string>
+    <string name="permission_modify_settings">Необхідно дозволити зміну параметрів системи.</string>
+    <string name="ringtone_success">Рінгтон був змінений успішно.</string>
     <string name="library">Бібліотека</string>
     <string name="queue">Чергу</string>
     <string name="about">Про програму</string>
     <string name="send_mail_title">Надіслати на пошту за допомогою…</string>
     <string name="eq">Еквалайзер</string>
-    <string name="eq_summary">Відкриває вбудований на вашому пристрої еквалайзер (може не працювати на деяких пристроях)</string>
+    <string name="eq_summary">Відкриває вбудований на вашому пристрої еквалайзер. (може не працювати на деяких пристроях)</string>
     <string name="action_sleep_toast">Музика зупиниться в</string>
     <string name="action_sleep_timer">Таймер сну</string>
-    <string name="action_sleep_message">Встановіть тривалість відтворення</string>
+    <string name="action_sleep_message">Встановіть тривалість відтворення:</string>
     <string name="action_sleep_disable">Ви хочете відключити таймер сну?</string>
-    <string name="sleep_timer_disabled">Таймер сну відключений успішно</string>
+    <string name="sleep_timer_disabled">Таймер сну відключений успішно.</string>
     <string name="action_sleep_time_extension">на наступний день</string>
-    <string name="eq_error">Еквалайзер не був знайдений</string>
+    <string name="eq_error">Еквалайзер не був знайдений.</string>
 </resources>

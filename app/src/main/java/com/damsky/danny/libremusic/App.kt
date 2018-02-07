@@ -116,6 +116,7 @@ class App : Application() {
         if (hoursToAdd == realHours || hours < realHours)
             timeFormat.append(" ").append(getString(R.string.action_sleep_time_extension))
 
+        timeFormat.append('.')
         return timeFormat.toString()
     }
 }
