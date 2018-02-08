@@ -14,7 +14,7 @@ import com.damsky.danny.libremusic.utils.Constants
  * @param context Required to gain access to the application's preferences. (Recommended: ApplicationContext)
  *
  * @author Danny Damsky
- * @since 2018-02-01
+ * @since 2018-02-08
  */
 
 class AppPreferencesHelper(private val context: Context) {
@@ -101,7 +101,7 @@ class AppPreferencesHelper(private val context: Context) {
         val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
 
         if (getDefaultSharedPreferences().getString(Constants.PREFERENCE_APP_THEME, appThemesValues[0]) == appThemesValues[2])
-            return R.style.AppTheme_BlackNoActionBar
+            return R.style.AppTheme_Black_NoActionBar
 
         return R.style.AppTheme_NoActionBar
     }
@@ -143,7 +143,7 @@ class AppPreferencesHelper(private val context: Context) {
                 return Pair(R.style.AppTheme_NoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
 
             appThemesValues[2] ->
-                return Pair(R.style.AppTheme_BlackNoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
+                return Pair(R.style.AppTheme_Black_NoActionBar, AppCompatDelegate.MODE_NIGHT_YES)
         }
 
         return Pair(-1, -1)
