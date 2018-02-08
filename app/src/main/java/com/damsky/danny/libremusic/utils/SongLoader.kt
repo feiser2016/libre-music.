@@ -13,7 +13,7 @@ import java.io.File
  * (i.e. allows it to query files on the internal storage)
  *
  * @author Danny Damsky
- * @since 2018-02-04
+ * @since 2018-02-07
  */
 
 class SongLoader(private val contentResolver: ContentResolver) {
@@ -123,16 +123,15 @@ class SongLoader(private val contentResolver: ContentResolver) {
      * @return          Array of songs if the file is parsable else null.
      */
     fun getParsedCue(cueParser: CueParser, duration: Int, data: String, cover: String): Array<Song>? {
-        if (duration > MIN_DURATION_FOR_CUE_PARSING) {
+        if (duration >= MIN_DURATION_FOR_CUE_PARSING) {
             val fileData = File(data)
             val listFiles = fileData.parentFile.listFiles()
-            val extension = fileData.extension
             var cueFile: File? = null
             if (listFiles != null)
                 for (file in listFiles) {
-                    if (file.absolutePath != data && file.name.endsWith(extension))
+                    if (file.absolutePath != data && file.extension == fileData.extension)
                         return null
-                    if (file.name.endsWith(".cue"))
+                    if (file.extension == "cue")
                         cueFile = file
                 }
 
