@@ -100,6 +100,7 @@ class AppDbHelper(private val context: Context) {
         val playList = lookForPlaylist(playlist)
         for (i in songs)
             insertSongToPlaylist(playList, i)
+        setPlaylists()
     }
 
     private fun insertSongToPlaylist(playlist: Playlist?, song: Song) {

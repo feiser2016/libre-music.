@@ -23,7 +23,7 @@
         android:layout_height="0dp"
         android:layout_weight="7"
         android:adjustViewBounds="true"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:elevation="1dp"
         android:scaleType="fitCenter"
         android:src="@drawable/song_big" />

@@ -14,18 +14,18 @@
     </style>
 
     <style name="AppTheme.Black" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#212121</item>
+        <item name="colorPrimary">@color/colorPrimaryBlackTheme</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBlackTheme</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">#101010</item>
+        <item name="android:statusBarColor">@color/statusBarBlackTheme</item>
         <item name="android:windowBackground">@android:color/black</item>
     </style>
 
     <style name="AppTheme.BlackNoActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryDark">#212121</item>
+        <item name="colorPrimary">@color/colorPrimaryBlackTheme</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryBlackTheme</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">#101010</item>
+        <item name="android:statusBarColor">@color/statusBarBlackTheme</item>
         <item name="android:windowBackground">@android:color/black</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -41,4 +41,7 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <style name="TextStyle">
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

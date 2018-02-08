@@ -22,7 +22,7 @@ import kotlinx.coroutines.experimental.runBlocking
  * This activity is in charge of making sure the DB and preferences are set-up before continuing.
  *
  * @author Danny Damsky
- * @since 2018-01-21
+ * @since 2018-02-08
  */
 class SplashActivity : AppCompatActivity() {
 
@@ -59,7 +59,9 @@ class SplashActivity : AppCompatActivity() {
      */
     private fun scanSongs() = launch {
         async {
-            progressBar.visibility = View.VISIBLE
+            runOnUiThread {
+                progressBar.visibility = View.VISIBLE
+            }
             runBlocking {
                 asyncLoading()
             }

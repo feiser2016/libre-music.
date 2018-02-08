@@ -3,4 +3,6 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00695c</color>
     <color name="colorAccent">#afb42b</color>
+    <color name="colorPrimaryBlackTheme">#212121</color>
+    <color name="statusBarBlackTheme">#101010</color>
 </resources>

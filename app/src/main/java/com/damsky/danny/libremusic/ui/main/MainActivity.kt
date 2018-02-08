@@ -56,7 +56,7 @@ import java.io.File
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2018-01-25
+ * @since 2018-02-08
  */
 class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener,
@@ -153,11 +153,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     if (navigationUp.isVisible) {
                         val selected = this@MainActivity.navigation.selectedItemId
                         this@MainActivity.navigation.selectedItemId = when (selected) {
-                            R.id.navigation_artists -> R.id.navigation_playlists
-                            R.id.navigation_songs -> R.id.navigation_albums
-                            R.id.navigation_genres -> R.id.navigation_songs
-                            R.id.navigation_playlists -> R.id.navigation_genres
-                            else -> R.id.navigation_artists
+                            R.id.navigation_artists ->
+                                R.id.navigation_playlists
+
+                            R.id.navigation_songs ->
+                                R.id.navigation_albums
+
+                            R.id.navigation_genres ->
+                                R.id.navigation_songs
+
+                            R.id.navigation_playlists ->
+                                R.id.navigation_genres
+
+                            else ->
+                                R.id.navigation_artists
                         }
                     }
                 }
@@ -166,11 +175,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     if (navigationUp.isVisible) {
                         val selected = this@MainActivity.navigation.selectedItemId
                         this@MainActivity.navigation.selectedItemId = when (selected) {
-                            R.id.navigation_artists -> R.id.navigation_albums
-                            R.id.navigation_albums -> R.id.navigation_songs
-                            R.id.navigation_songs -> R.id.navigation_genres
-                            R.id.navigation_genres -> R.id.navigation_playlists
-                            else -> R.id.navigation_artists
+                            R.id.navigation_artists ->
+                                R.id.navigation_albums
+
+                            R.id.navigation_albums ->
+                                R.id.navigation_songs
+
+                            R.id.navigation_songs ->
+                                R.id.navigation_genres
+
+                            R.id.navigation_genres ->
+                                R.id.navigation_playlists
+
+                            else ->
+                                R.id.navigation_artists
                         }
                     }
                 }
@@ -406,14 +424,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
     override fun onContextMenuClick(songsList: Array<Song>, action: MenuAction, index: Int) {
         when (action) {
-            MenuAction.ACTION_PLAY -> playNewList(songsList)
-            MenuAction.ACTION_ADD_TO_QUEUE -> appReference.appDbHelper.addToQueue(songsList)
-            MenuAction.ACTION_ADD_TO_PLAYLIST -> setSongsToPlaylist(songsList)
-            MenuAction.ACTION_SHARE -> shareFiles(songsList)
-            MenuAction.ACTION_SET_AS_RINGTONE -> setAsRingtone(songsList[0])
-            MenuAction.ACTION_RENAME_PLAYLIST -> renamePlaylist(index)
-            MenuAction.ACTION_REMOVE_PLAYLIST -> removePlaylist(index)
-            MenuAction.ACTION_REMOVE_FROM_PLAYLIST -> removeFromPlaylist(songsList[0])
+            MenuAction.ACTION_PLAY ->
+                playNewList(songsList)
+
+            MenuAction.ACTION_ADD_TO_QUEUE ->
+                appReference.appDbHelper.addToQueue(songsList)
+
+            MenuAction.ACTION_ADD_TO_PLAYLIST ->
+                setSongsToPlaylist(songsList)
+
+            MenuAction.ACTION_SHARE ->
+                shareFiles(songsList)
+
+            MenuAction.ACTION_SET_AS_RINGTONE ->
+                setAsRingtone(songsList[0])
+
+            MenuAction.ACTION_RENAME_PLAYLIST ->
+                renamePlaylist(index)
+
+            MenuAction.ACTION_REMOVE_PLAYLIST ->
+                removePlaylist(index)
+
+            MenuAction.ACTION_REMOVE_FROM_PLAYLIST ->
+                removeFromPlaylist(songsList[0])
         }
     }
 
@@ -423,14 +456,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
             when (navigation.selectedItemId) {
                 R.id.navigation_artists ->
                     searcher.setDataSource(ArtistModel(appReference.appDbHelper.getArtists()))
+
                 R.id.navigation_albums ->
                     searcher.setDataSource(AlbumModel(appReference.appDbHelper.getAlbums()))
+
                 R.id.navigation_songs -> {
                     searcher.setDataSource(SongModel(appReference.appDbHelper.getSongs()))
                     listLevel = ListLevel.SONGS
                 }
+
                 R.id.navigation_genres ->
                     searcher.setDataSource(GenreModel(appReference.appDbHelper.getGenres()))
+
                 R.id.navigation_playlists ->
                     searcher.setDataSource(PlaylistModel(appReference.appDbHelper.getPlaylists()))
             }
@@ -624,14 +661,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                 song = when (indexes.second) {
                     ListLevel.ARTIST_SONGS ->
                         appReference.appDbHelper.getArtistSong(appReference.appDbHelper.getAudioIndex())
+
                     ListLevel.ALBUM_SONGS ->
                         appReference.appDbHelper.getAlbumSong(appReference.appDbHelper.getAudioIndex())
+
                     ListLevel.SONGS ->
                         appReference.appDbHelper.getSong(appReference.appDbHelper.getAudioIndex())
+
                     ListLevel.GENRE_SONGS ->
                         appReference.appDbHelper.getGenreSong(appReference.appDbHelper.getAudioIndex())
+
                     ListLevel.PLAYLIST_SONGS ->
                         appReference.appDbHelper.getPlaylistSong(appReference.appDbHelper.getAudioIndex())
+
                     else ->
                         appReference.appDbHelper.getSong(0)
                 }
@@ -708,10 +750,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                 playAudio()
                 setImages(R.drawable.pause)
             }
+
             MediaPlayerService.mediaPlayer!!.isPlaying -> {
                 MediaPlayerService.transportControls.pause()
                 setImages(R.drawable.play)
             }
+
             else -> {
                 MediaPlayerService.transportControls.play()
                 setImages(R.drawable.pause)

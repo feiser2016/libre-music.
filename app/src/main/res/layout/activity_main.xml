@@ -78,12 +78,12 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigationDrawer"
-        android:layout_width="240dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:paddingTop="24dp"
         app:headerLayout="@layout/header_navigation_main"
-        app:menu="@menu/menu_main_navigation" />
+        app:menu="@menu/menu_main_navigation"
+        app:theme="@style/TextStyle" />
 
 
 </android.support.v4.widget.DrawerLayout>

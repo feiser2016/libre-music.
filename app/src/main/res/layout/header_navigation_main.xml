@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/songImageNav"
-    android:layout_width="240dp"
-    android:layout_height="240dp"
-    android:focusable="true"
-    android:gravity="bottom"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:background="?attr/colorPrimary"
+    android:paddingTop="24dp"
+    android:scaleType="fitCenter"
     android:src="@drawable/song_big" />
