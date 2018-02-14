@@ -198,8 +198,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         handler.removeCallbacksAndMessages(null)
     }
 
