@@ -13,26 +13,39 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * @param albums An array of albums to use with the AlbumModel.
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-02-25
  */
 
-class AlbumModel(val albums: Array<Album>) : TypeModel {
+class AlbumModel(private val albums: Array<Album>) : TypeModel {
+
     private lateinit var current: Album
 
-    override fun getItemImage(): String = current.cover
+    override fun getItemImage(): String {
+        return current.cover
+    }
 
-    override fun getPlaceHolderImage() = R.drawable.album
+    override fun getPlaceHolderImage(): Int {
+        return R.drawable.album
+    }
 
-    override fun getItemTitle(): String = current.album
+    override fun getItemTitle(): String {
+        return current.album
+    }
 
     override fun getItemInfo(resources: Resources): String {
         val songsCount = current.songs.size
         return "${current.artist} | ${resources.getQuantityString(R.plurals.songs, songsCount, songsCount)}"
     }
 
-    override fun getItemDuration(): String = if (current.year > 0) "${current.year}" else ""
+    override fun getItemDuration(): String {
+        return if (current.year > 0)
+            "${current.year}"
+        else ""
+    }
 
-    override fun getSize(): Int = albums.size
+    override fun getSize(): Int {
+        return albums.size
+    }
 
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
         popupMenu.inflate(R.menu.menu_artists_albums_genres)

@@ -8,33 +8,39 @@ import com.damsky.danny.libremusic.data.db.model.Artist
 import com.damsky.danny.libremusic.data.db.model.Song
 import com.damsky.danny.libremusic.ui.main.MenuAction
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
+import com.damsky.danny.libremusic.utils.Constants
 
 /**
  * A TypeModel designed to take an array of Artist objects.
  * @param artists An array of artists to use with the ArtistModel.
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-02-25
  */
 
-class ArtistModel(val artists: Array<Artist>) : TypeModel {
+class ArtistModel(private val artists: Array<Artist>) : TypeModel {
+
     private lateinit var current: Artist
     private var songsCount = 0
 
     override fun getItemImage(): String {
         val albums = current.albums
-        var iterate = "none"
+        var iterate = Constants.ALBUM_COVER_NONE
         for (i in albums) {
-            if (iterate == "none" && i.cover != "none")
+            if (iterate == Constants.ALBUM_COVER_NONE && i.cover != Constants.ALBUM_COVER_NONE)
                 iterate = i.cover
             songsCount += i.songs.size
         }
         return iterate
     }
 
-    override fun getPlaceHolderImage() = R.drawable.artist
+    override fun getPlaceHolderImage(): Int {
+        return R.drawable.artist
+    }
 
-    override fun getItemTitle(): String = current.artist
+    override fun getItemTitle(): String {
+        return current.artist
+    }
 
     override fun getItemInfo(resources: Resources): String {
         val albums = current.albums
@@ -43,7 +49,9 @@ class ArtistModel(val artists: Array<Artist>) : TypeModel {
 
     override fun getItemDuration(): String = ""
 
-    override fun getSize() = artists.size
+    override fun getSize(): Int {
+        return artists.size
+    }
 
     override fun getItemMenu(popupMenu: PopupMenu,
                              onClickListener: CustomOnClickListener,

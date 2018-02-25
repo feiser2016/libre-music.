@@ -7,29 +7,35 @@ import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Playlist
 import com.damsky.danny.libremusic.ui.main.MenuAction
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
+import com.damsky.danny.libremusic.utils.Constants
 
 /**
  * A TypeModel designed to take an array of Playlist objects.
  * @param playlists An array of playlists to use with the PlaylistModel.
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-02-25
  */
 
-class PlaylistModel(val playlists: Array<Playlist>) : TypeModel {
+class PlaylistModel(private val playlists: Array<Playlist>) : TypeModel {
+
     private lateinit var current: Playlist
     private var position = 0
 
     override fun getItemImage(): String {
         current.songs
-                .filter { it.cover != "none" }
+                .filter { it.cover != Constants.ALBUM_COVER_NONE }
                 .forEach { return it.cover }
-        return "none"
+        return Constants.ALBUM_COVER_NONE
     }
 
-    override fun getPlaceHolderImage() = R.drawable.playlist
+    override fun getPlaceHolderImage(): Int {
+        return R.drawable.playlist
+    }
 
-    override fun getItemTitle(): String = current.playList
+    override fun getItemTitle(): String {
+        return current.playList
+    }
 
     override fun getItemInfo(resources: Resources): String {
         val songsCount = current.songs.size
@@ -38,7 +44,9 @@ class PlaylistModel(val playlists: Array<Playlist>) : TypeModel {
 
     override fun getItemDuration(): String = ""
 
-    override fun getSize(): Int = playlists.size
+    override fun getSize(): Int {
+        return playlists.size
+    }
 
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
         popupMenu.inflate(R.menu.menu_playlists)

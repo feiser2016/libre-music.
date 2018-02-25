@@ -7,28 +7,34 @@ import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Genre
 import com.damsky.danny.libremusic.ui.main.MenuAction
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
+import com.damsky.danny.libremusic.utils.Constants
 
 /**
  * A TypeModel designed to take an array of Genre objects.
  * @param genres An array of genres to use with the GenreModel.
  *
  * @author Danny Damsky
- * @since 2018-01-04
+ * @since 2018-02-25
  */
 
-class GenreModel(val genres: Array<Genre>) : TypeModel {
+class GenreModel(private val genres: Array<Genre>) : TypeModel {
+
     private lateinit var current: Genre
 
     override fun getItemImage(): String {
         current.songs
-                .filter { it.cover != "none" }
+                .filter { it.cover != Constants.ALBUM_COVER_NONE }
                 .forEach { return it.cover }
-        return "none"
+        return Constants.ALBUM_COVER_NONE
     }
 
-    override fun getPlaceHolderImage() = R.drawable.genre
+    override fun getPlaceHolderImage(): Int {
+        return R.drawable.genre
+    }
 
-    override fun getItemTitle(): String = current.genre
+    override fun getItemTitle(): String {
+        return current.genre
+    }
 
     override fun getItemInfo(resources: Resources): String {
         val songsCount = current.songs.size
@@ -37,8 +43,9 @@ class GenreModel(val genres: Array<Genre>) : TypeModel {
 
     override fun getItemDuration(): String = ""
 
-    override fun getSize(): Int = genres.size
-
+    override fun getSize(): Int {
+        return genres.size
+    }
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
         popupMenu.inflate(R.menu.menu_artists_albums_genres)
 

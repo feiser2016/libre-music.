@@ -541,9 +541,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     }
 
     fun getAdapter(pair: Pair<TypeModel, ListLevel?>): RecycleAdapter {
-        val adapter = RecycleAdapter(pair.first, pair.second)
-        adapter.setCustomOnClickListener(this)
-        return adapter
+        return RecycleAdapter(this, pair.first, pair.second)
     }
 
     /**
