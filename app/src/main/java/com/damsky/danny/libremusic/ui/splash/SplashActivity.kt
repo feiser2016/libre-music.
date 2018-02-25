@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.damsky.danny.libremusic.App
 import com.damsky.danny.libremusic.R
+import com.damsky.danny.libremusic.data.db.model.DaoSession
 import com.damsky.danny.libremusic.ui.intro.IntroActivity
 import com.damsky.danny.libremusic.ui.main.MainActivity
 import com.damsky.danny.libremusic.utils.Constants
@@ -22,7 +23,7 @@ import kotlinx.coroutines.experimental.runBlocking
  * This activity is in charge of making sure the DB and preferences are set-up before continuing.
  *
  * @author Danny Damsky
- * @since 2018-02-08
+ * @since 2018-02-25
  */
 class SplashActivity : AppCompatActivity() {
 
@@ -75,21 +76,26 @@ class SplashActivity : AppCompatActivity() {
      * Sets up the database after loading it if it was initially empty.
      */
     private fun asyncLoading() {
+        val daoSession = appReference.appDbHelper.getDaoSession()
+
         if (appReference.appDbHelper.songsEmpty()) {
-            loadAudio(CueParser(appReference.preferencesHelper.getEncoding()))
-            appReference.appDbHelper.setSongs()
+            val cueParser = CueParser(appReference.preferencesHelper.getEncoding())
+            loadAudio(cueParser, daoSession)
+            appReference.appDbHelper.setSongs(daoSession)
         }
-        appReference.appDbHelper.setAlbums()
-        appReference.appDbHelper.setArtists()
-        appReference.appDbHelper.setGenres()
-        appReference.appDbHelper.setPlaylists()
+
+        appReference.appDbHelper.setAlbums(daoSession)
+        appReference.appDbHelper.setArtists(daoSession)
+        appReference.appDbHelper.setGenres(daoSession)
+        appReference.appDbHelper.setPlaylists(daoSession)
     }
 
     /**
      * Queries for songs using a SongLoader object.
-     * @param cueParser CueParser object that is passed to the SongLoader
+     * @param cueParser CueParser object that is passed to the SongLoader.
+     * @param daoSession Database session caching object.
      */
-    private fun loadAudio(cueParser: CueParser) {
+    private fun loadAudio(cueParser: CueParser, daoSession: DaoSession) {
         val songLoader = SongLoader(contentResolver)
 
         if (songLoader.isAble()) {
@@ -112,26 +118,27 @@ class SplashActivity : AppCompatActivity() {
 
                     appReference.appDbHelper.insertSong(data, songLoader.getTitle(),
                             album, artist, genre, songLoader.getTrackNum(), year,
-                            0, duration, duration, cover)
+                            0, duration, duration, cover, daoSession)
 
-                    appReference.appDbHelper.insertAlbum(album, artist, year, cover)
+                    appReference.appDbHelper.insertAlbum(album, artist, year, cover, daoSession)
 
-                    appReference.appDbHelper.insertArtist(artist)
+                    appReference.appDbHelper.insertArtist(artist, daoSession)
 
-                    appReference.appDbHelper.insertGenre(genre)
+                    appReference.appDbHelper.insertGenre(genre, daoSession)
                 } else {
                     for (i in cueSheet) {
                         appReference.appDbHelper.insertSong(i.data, i.title, i.album,
                                 i.artist, i.genre, i.track, i.year, i.startTime, i.endTime,
-                                i.duration, i.cover)
+                                i.duration, i.cover, daoSession)
 
-                        appReference.appDbHelper.insertGenre(i.genre)
+                        appReference.appDbHelper.insertGenre(i.genre, daoSession)
                     }
                     val song = cueSheet[0]
 
-                    appReference.appDbHelper.insertAlbum(song.album, song.artist, song.year, cover)
+                    appReference.appDbHelper.insertAlbum(song.album, song.artist, song.year, cover,
+                            daoSession)
 
-                    appReference.appDbHelper.insertArtist(song.artist)
+                    appReference.appDbHelper.insertArtist(song.artist, daoSession)
                 }
             }
         }

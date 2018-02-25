@@ -79,10 +79,12 @@ class CueParser(encoding: String) {
 
         var bytesRead = bis.read(contents)
         val builder = StringBuilder()
+
         while (bytesRead != -1 && builder.length < MAX_BYTES_TO_READ) {
             builder.append(kotlin.text.String(contents, 0, bytesRead, charset))
             bytesRead = bis.read(contents)
         }
+
         bis.close()
         return builder.toString()
     }
@@ -113,19 +115,23 @@ class CueParser(encoding: String) {
     private fun getTitles(): ArrayList<String> {
         val matcher = titlePattern.matcher(content)
         val returnThis = ArrayList<String>(0)
+
         while (matcher.find()) {
             if (matcher.group(1) == null)
                 returnThis.add(matcher.group(2))
             else
                 returnThis.add(matcher.group(1))
         }
+
         return returnThis
     }
 
     private fun getDate(): Int {
         val getDate = datePattern.matcher(content)
+
         if (getDate.find())
             return getDate.group(1).toInt()
+
         return 0
     }
 

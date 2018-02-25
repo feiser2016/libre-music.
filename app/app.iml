@@ -128,7 +128,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaPrecompile" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/lint" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/merged-not-compiled-resources" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/prebuild" />
@@ -163,8 +162,9 @@
     <orderEntry type="library" scope="TEST" name="javax.inject:javax.inject:1@jar" level="project" />
     <orderEntry type="library" scope="TEST" name="com.squareup:javawriter:2.1.1@jar" level="project" />
     <orderEntry type="library" name="com.android.support:recyclerview-v7-27.0.2" level="project" />
+    <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.3@jar" level="project" />
+    <orderEntry type="library" name="com.github.apl-devs:appintro-v4.2.3" level="project" />
     <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.21@jar" level="project" />
-    <orderEntry type="library" name="com.github.apl-devs:appintro-v4.2.2" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-solver:1.0.2@jar" level="project" />
     <orderEntry type="library" name="com.android.support.constraint:constraint-layout-1.0.2" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:glide-4.6.1" level="project" />
@@ -187,7 +187,6 @@
     <orderEntry type="library" scope="TEST" name="org.hamcrest:hamcrest-integration:1.3@jar" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:annotations:4.6.1@jar" level="project" />
     <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib:1.2.21@jar" level="project" />
-    <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-coroutines-core:0.20@jar" level="project" />
     <orderEntry type="library" name="com.github.bumptech.glide:gifdecoder-4.6.1" level="project" />
     <orderEntry type="library" scope="TEST" name="net.sf.kxml:kxml2:2.3.0@jar" level="project" />
     <orderEntry type="library" name="org.jetbrains:annotations:13.0@jar" level="project" />

@@ -56,7 +56,7 @@ import java.io.File
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2018-02-08
+ * @since 2018-02-25
  */
 class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener,
