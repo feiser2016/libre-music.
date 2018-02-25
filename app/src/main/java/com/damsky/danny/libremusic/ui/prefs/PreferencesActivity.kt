@@ -23,10 +23,11 @@ class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPrefe
     private lateinit var appReference: App
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         appReference = application as App
 
         setTheme(appReference.preferencesHelper.getTheme())
+
+        super.onCreate(savedInstanceState)
 
         fragmentManager.beginTransaction().replace(android.R.id.content, PreferencesFragment()).commit()
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)

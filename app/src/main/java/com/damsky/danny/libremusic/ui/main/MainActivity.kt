@@ -96,14 +96,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         appReference = application as App
-        display = Display(this, R.mipmap.ic_launcher)
 
         val pair: Pair<Int, Int> = appReference.preferencesHelper.getThemeAndDayNightModeNoActionBar()
         setTheme(pair.first)
         AppCompatDelegate.setDefaultNightMode(pair.second)
 
+        display = Display(this, R.mipmap.ic_launcher)
+
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
