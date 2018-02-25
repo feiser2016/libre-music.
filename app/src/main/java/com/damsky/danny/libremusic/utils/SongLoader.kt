@@ -22,9 +22,11 @@ class SongLoader(private val contentResolver: ContentResolver) {
     }
 
     private val cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
-            "${MediaStore.Audio.Media.IS_MUSIC}!= 0", null, null)
+            "${MediaStore.Audio.Media.IS_MUSIC}=1", null, null)
 
     private val mMap = ArrayMap<String, Int>()
+
+    private val genreLoader = GenreLoader(contentResolver)
 
     /**
      * Function for caching the columns of the cursor (Improves performance)
@@ -101,7 +103,7 @@ class SongLoader(private val contentResolver: ContentResolver) {
     }
 
     fun getGenre(): String {
-        return Constants.DEFAULT_LIBRARY_ENTRANCE // TODO Fix this
+        return genreLoader.getGenre(getString(MediaStore.Audio.Media._ID))
     }
 
     fun getTitle(): String {
@@ -148,7 +150,50 @@ class SongLoader(private val contentResolver: ContentResolver) {
 
     fun close() {
         mMap.clear()
+        genreLoader.close()
         cursor.close()
     }
 
+    private class GenreLoader(contentResolver: ContentResolver) {
+
+        private val mapGenreIdToGenreName = HashMap<String, String>()
+        private val mapSongIdToGenreId = HashMap<String, String>()
+
+        init {
+            var cursor = contentResolver.query(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
+                    arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME), null, null, null)
+
+            val idColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+
+            while (cursor.moveToNext())
+                mapGenreIdToGenreName[cursor.getString(0)] = cursor.getString(1)
+
+            cursor.close()
+
+            for (genreId in mapGenreIdToGenreName.keys) {
+                cursor = contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external", genreId.toLong()),
+                        arrayOf(MediaStore.Audio.Media._ID), null, null, null)
+
+                while (cursor.moveToNext())
+                    mapSongIdToGenreId[cursor.getString(idColumnIndex)] = genreId
+
+                cursor.close()
+            }
+        }
+
+        fun getGenre(songId: String): String {
+            val currentGenreId = mapSongIdToGenreId[songId]
+            val currentGenreName = mapGenreIdToGenreName[currentGenreId]
+
+            if (currentGenreName != null)
+                return currentGenreName
+
+            return Constants.DEFAULT_LIBRARY_ENTRANCE
+        }
+
+        fun close() {
+            mapGenreIdToGenreName.clear()
+            mapSongIdToGenreId.clear()
+        }
+    }
 }

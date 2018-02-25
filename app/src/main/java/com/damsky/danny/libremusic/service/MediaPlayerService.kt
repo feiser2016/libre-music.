@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.drawable.LayerDrawable
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -305,7 +304,7 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
         val largeIcon: Bitmap = try {
             BitmapFactory.decodeFile(song.cover)
         } catch (e: IllegalStateException) {
-            findBitmapById(R.drawable.song_big)
+            findBitmapById(R.drawable.song_square)
         }
 
         createChannel()
@@ -360,12 +359,12 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     }
 
     private fun findBitmapById(resourceId: Int): Bitmap {
-        val layerDrawable = getDrawable(resourceId) as LayerDrawable
-        val bitmap = Bitmap.createBitmap(layerDrawable.intrinsicWidth,
-                layerDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val drawable = getDrawable(resourceId)
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        layerDrawable.setBounds(0, 0, canvas.width, canvas.height)
-        layerDrawable.draw(canvas)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
         return bitmap
     }
 

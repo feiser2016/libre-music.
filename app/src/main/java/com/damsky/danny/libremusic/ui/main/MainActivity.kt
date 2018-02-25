@@ -199,8 +199,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     }
 
     override fun onPause() {
-        super.onPause()
         handler.removeCallbacksAndMessages(null)
+        super.onPause()
     }
 
     override fun onRestart() {
@@ -213,8 +213,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
     override fun onClick(view: View) {
         when (view) {
-            slideView -> nowPlayingView.show()
-            fab -> playOrPause()
+            slideView ->
+                nowPlayingView.show()
+
+            fab ->
+                playOrPause()
         }
     }
 
