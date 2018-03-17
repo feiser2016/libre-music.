@@ -23,7 +23,6 @@ import kotlinx.coroutines.experimental.runBlocking
  * This activity is in charge of making sure the DB and preferences are set-up before continuing.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 class SplashActivity : AppCompatActivity() {
 
@@ -60,12 +59,10 @@ class SplashActivity : AppCompatActivity() {
      */
     private fun scanSongs() = launch {
         async {
-            runOnUiThread {
-                progressBar.visibility = View.VISIBLE
-            }
-            runBlocking {
-                asyncLoading()
-            }
+            runOnUiThread { progressBar.visibility = View.VISIBLE }
+
+            runBlocking { asyncLoading() }
+
             startActivityForResult(
                     Intent(this@SplashActivity, MainActivity::class.java),
                     Constants.REQUEST_START_MAIN)
@@ -95,35 +92,31 @@ class SplashActivity : AppCompatActivity() {
      * @param cueParser CueParser object that is passed to the SongLoader.
      * @param daoSession Database session caching object.
      */
-    private fun loadAudio(cueParser: CueParser, daoSession: DaoSession) {
-        val songLoader = SongLoader(contentResolver)
-
-        if (songLoader.isAble()) {
-            while (songLoader.hasNext()) {
-                val data = songLoader.getData()
+    private fun loadAudio(cueParser: CueParser, daoSession: DaoSession) = SongLoader(contentResolver).use {
+        if (it.isAble()) {
+            while (it.hasNext()) {
+                val data = it.getData()
                 runOnUiThread {
                     loadingText.text = StringBuilder()
                             .append(resources.getString(R.string.loading))
                             .append(": ").append(data).toString()
                 }
 
-                val cover = songLoader.getCover()
-                val duration = songLoader.getDuration()
-                val cueSheet = songLoader.getParsedCue(cueParser, duration, data, cover)
+                val cover = it.getCover()
+                val duration = it.getDuration()
+                val cueSheet = it.getParsedCue(cueParser, duration, data, cover)
                 if (cueSheet == null) {
-                    val artist = songLoader.getArtist()
-                    val album = songLoader.getAlbum()
-                    val year = songLoader.getYear()
-                    val genre = songLoader.getGenre()
+                    val artist = it.getArtist()
+                    val album = it.getAlbum()
+                    val year = it.getYear()
+                    val genre = it.getGenre()
 
-                    appReference.appDbHelper.insertSong(data, songLoader.getTitle(),
-                            album, artist, genre, songLoader.getTrackNum(), year,
+                    appReference.appDbHelper.insertSong(data, it.getTitle(),
+                            album, artist, genre, it.getTrackNum(), year,
                             0, duration, duration, cover, daoSession)
 
                     appReference.appDbHelper.insertAlbum(album, artist, year, cover, daoSession)
-
                     appReference.appDbHelper.insertArtist(artist, daoSession)
-
                     appReference.appDbHelper.insertGenre(genre, daoSession)
                 } else {
                     for (i in cueSheet) {
@@ -142,7 +135,5 @@ class SplashActivity : AppCompatActivity() {
                 }
             }
         }
-
-        songLoader.close()
     }
 }

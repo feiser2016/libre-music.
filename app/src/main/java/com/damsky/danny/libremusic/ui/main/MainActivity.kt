@@ -56,7 +56,6 @@ import java.io.File
  * This activity contains the music library and the music player UI.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener,
@@ -83,7 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     private lateinit var addPlaylist: MenuItem
     private val searcher = LibrarySearcher()
 
-    val handler = Handler()
+    private val handler = Handler()
     private val run: Runnable = object : Runnable {
         override fun run() {
             setupPlayerUi(appReference.appDbHelper.getSong())
@@ -154,20 +153,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     if (navigationUp.isVisible) {
                         val selected = this@MainActivity.navigation.selectedItemId
                         this@MainActivity.navigation.selectedItemId = when (selected) {
-                            R.id.navigation_artists ->
-                                R.id.navigation_playlists
-
-                            R.id.navigation_songs ->
-                                R.id.navigation_albums
-
-                            R.id.navigation_genres ->
-                                R.id.navigation_songs
-
-                            R.id.navigation_playlists ->
-                                R.id.navigation_genres
-
-                            else ->
-                                R.id.navigation_artists
+                            R.id.navigation_artists -> R.id.navigation_playlists
+                            R.id.navigation_songs -> R.id.navigation_albums
+                            R.id.navigation_genres -> R.id.navigation_songs
+                            R.id.navigation_playlists -> R.id.navigation_genres
+                            else -> R.id.navigation_artists
                         }
                     }
                 }
@@ -176,20 +166,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     if (navigationUp.isVisible) {
                         val selected = this@MainActivity.navigation.selectedItemId
                         this@MainActivity.navigation.selectedItemId = when (selected) {
-                            R.id.navigation_artists ->
-                                R.id.navigation_albums
-
-                            R.id.navigation_albums ->
-                                R.id.navigation_songs
-
-                            R.id.navigation_songs ->
-                                R.id.navigation_genres
-
-                            R.id.navigation_genres ->
-                                R.id.navigation_playlists
-
-                            else ->
-                                R.id.navigation_artists
+                            R.id.navigation_artists -> R.id.navigation_albums
+                            R.id.navigation_albums -> R.id.navigation_songs
+                            R.id.navigation_songs -> R.id.navigation_genres
+                            R.id.navigation_genres -> R.id.navigation_playlists
+                            else -> R.id.navigation_artists
                         }
                     }
                 }
@@ -214,11 +195,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
     override fun onClick(view: View) {
         when (view) {
-            slideView ->
-                nowPlayingView.show()
-
-            fab ->
-                playOrPause()
+            slideView -> nowPlayingView.show()
+            fab -> playOrPause()
         }
     }
 
@@ -253,8 +231,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.addPlaylist) {
             val editText = EditText(this)
-            display.showEditTextDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
-                    {
+            display.showEditTextDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText, {
                         if (editText.text.isEmpty())
                             display.showSnackShort(R.string.text_empty)
                         else {
@@ -269,22 +246,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
     override fun onBackPressed() {
         when {
-            drawerLayout.isDrawerOpen(GravityCompat.START) ->
-                drawerLayout.closeDrawer(GravityCompat.START)
+            drawerLayout.isDrawerOpen(GravityCompat.START) -> drawerLayout.closeDrawer(GravityCompat.START)
 
-            nowPlayingView.isVisible ->
-                nowPlayingView.hide()
+            nowPlayingView.isVisible -> nowPlayingView.hide()
 
             else -> when (appReference.appDbHelper.getLevel()) {
                 ListLevel.ARTISTS,
                 ListLevel.ALBUMS,
                 ListLevel.SONGS,
                 ListLevel.GENRES,
-                ListLevel.PLAYLISTS ->
-                    customFinish()
+                ListLevel.PLAYLISTS -> customFinish()
 
-                ListLevel.QUEUE ->
-                    drawerLayout.openDrawer(Gravity.START)
+                ListLevel.QUEUE -> drawerLayout.openDrawer(Gravity.START)
 
                 ListLevel.ARTIST_ALBUMS ->
                     myList.adapter = getAdapter(appReference.appDbHelper.getArtistModel())
@@ -351,8 +324,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
 
             R.id.action_reset -> {
                 display.showBasicDialog(R.string.reset_library,
-                        R.string.reset_library_question,
-                        {
+                        R.string.reset_library_question, {
                             handler.removeCallbacksAndMessages(null)
                             val returnIntent = intent
                             setResult(Activity.RESULT_OK, returnIntent)
@@ -376,8 +348,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
                     sleepTimer.show()
                 } else
                     display.showBasicDialog("${getString(R.string.action_sleep_timer)} - ${appReference.sleepTime}",
-                            R.string.action_sleep_disable,
-                            { appReference.onSleepTimerDisabled() })
+                            R.string.action_sleep_disable, {
+                        appReference.onSleepTimerDisabled()
+                    })
                 drawerLayout.closeDrawers()
             }
         }
@@ -426,31 +399,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         }
     }
 
-    override fun onContextMenuClick(songsList: Array<Song>, action: MenuAction, index: Int) {
+    override fun onContextMenuClick(songsList: ArrayList<Song>, action: MenuAction, index: Int) {
         when (action) {
-            MenuAction.ACTION_PLAY ->
-                playNewList(songsList)
-
-            MenuAction.ACTION_ADD_TO_QUEUE ->
-                appReference.appDbHelper.addToQueue(songsList)
-
-            MenuAction.ACTION_ADD_TO_PLAYLIST ->
-                setSongsToPlaylist(songsList)
-
-            MenuAction.ACTION_SHARE ->
-                shareFiles(songsList)
-
-            MenuAction.ACTION_SET_AS_RINGTONE ->
-                setAsRingtone(songsList[0])
-
-            MenuAction.ACTION_RENAME_PLAYLIST ->
-                renamePlaylist(index)
-
-            MenuAction.ACTION_REMOVE_PLAYLIST ->
-                removePlaylist(index)
-
-            MenuAction.ACTION_REMOVE_FROM_PLAYLIST ->
-                removeFromPlaylist(songsList[0])
+            MenuAction.ACTION_PLAY -> playNewList(songsList)
+            MenuAction.ACTION_ADD_TO_QUEUE -> appReference.appDbHelper.addToQueue(songsList)
+            MenuAction.ACTION_ADD_TO_PLAYLIST -> setSongsToPlaylist(songsList)
+            MenuAction.ACTION_SHARE -> shareFiles(songsList)
+            MenuAction.ACTION_SET_AS_RINGTONE -> setAsRingtone(songsList[0])
+            MenuAction.ACTION_RENAME_PLAYLIST -> renamePlaylist(index)
+            MenuAction.ACTION_REMOVE_PLAYLIST -> removePlaylist(index)
+            MenuAction.ACTION_REMOVE_FROM_PLAYLIST -> removeFromPlaylist(songsList[0])
         }
     }
 
@@ -553,7 +511,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
      * @else
      * @return          An AlertDialog with an editText asking the user to create a new playlist to add the songs to.
      */
-    private fun setSongsToPlaylist(songsList: Array<Song>) {
+    private fun setSongsToPlaylist(songsList: ArrayList<Song>) {
         val playList = appReference.appDbHelper.getPlaylistsClean()
         if (playList.isNotEmpty()) {
             val playSize = playList.size
@@ -581,7 +539,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         }
     }
 
-    private fun shareFiles(songsList: Array<Song>) {
+    private fun shareFiles(songsList: ArrayList<Song>) {
         if (songsList.size > 1) {
             val filesToSend = ArrayList<Uri>(songsList.size)
             songsList.mapTo(filesToSend) { Uri.parse(it.data) }
@@ -777,15 +735,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         }
     }
 
-    private fun playNewList(audioList: Array<Song>) {
+    private fun playNewList(audioList: ArrayList<Song>) {
         appReference.appDbHelper.setQueue(audioList)
         playAudio()
     }
 
     private fun renamePlaylist(index: Int) {
         val editText = EditText(this)
-        display.showEditTextDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText,
-                {
+        display.showEditTextDialog(R.string.action_add_playlist, R.string.action_add_playlist_hint, editText, {
                     if (editText.text.isEmpty())
                         display.showSnackShort(R.string.text_empty)
                     else {

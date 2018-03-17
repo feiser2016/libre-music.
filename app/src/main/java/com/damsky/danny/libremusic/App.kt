@@ -7,10 +7,8 @@ import android.os.Handler
 import android.os.IBinder
 import android.widget.Toast
 import com.damsky.danny.libremusic.data.db.AppDbHelper
-import com.damsky.danny.libremusic.data.db.model.DaoMaster
 import com.damsky.danny.libremusic.data.prefs.AppPreferencesHelper
 import com.damsky.danny.libremusic.service.MediaPlayerService
-import com.damsky.danny.libremusic.utils.Constants
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -19,7 +17,6 @@ import java.util.concurrent.TimeUnit
  * In addition, the MediaPlayerService is bound to it.
  *
  * @author Danny Damsky
- * @since 2018-02-08
  */
 
 class App : Application() {

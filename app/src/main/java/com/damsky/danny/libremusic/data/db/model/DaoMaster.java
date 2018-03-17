@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
 import org.greenrobot.greendao.AbstractDaoMaster;
-import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseOpenHelper;
+import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 
@@ -19,24 +19,38 @@ import org.greenrobot.greendao.identityscope.IdentityScopeType;
 public class DaoMaster extends AbstractDaoMaster {
     public static final int SCHEMA_VERSION = 1;
 
+    public DaoMaster(SQLiteDatabase db) {
+        this(new StandardDatabase(db));
+    }
+
+    public DaoMaster(Database db) {
+        super(db, SCHEMA_VERSION);
+        registerDaoClass(GenreDao.class);
+        registerDaoClass(ArtistDao.class);
+        registerDaoClass(PlaylistDao.class);
+        registerDaoClass(SongDao.class);
+        registerDaoClass(AlbumDao.class);
+        registerDaoClass(LinkDao.class);
+    }
+
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        ArtistDao.createTable(db, ifNotExists);
-        SongDao.createTable(db, ifNotExists);
-        LinkDao.createTable(db, ifNotExists);
-        PlaylistDao.createTable(db, ifNotExists);
         GenreDao.createTable(db, ifNotExists);
+        ArtistDao.createTable(db, ifNotExists);
+        PlaylistDao.createTable(db, ifNotExists);
+        SongDao.createTable(db, ifNotExists);
         AlbumDao.createTable(db, ifNotExists);
+        LinkDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        ArtistDao.dropTable(db, ifExists);
-        SongDao.dropTable(db, ifExists);
-        LinkDao.dropTable(db, ifExists);
-        PlaylistDao.dropTable(db, ifExists);
         GenreDao.dropTable(db, ifExists);
+        ArtistDao.dropTable(db, ifExists);
+        PlaylistDao.dropTable(db, ifExists);
+        SongDao.dropTable(db, ifExists);
         AlbumDao.dropTable(db, ifExists);
+        LinkDao.dropTable(db, ifExists);
     }
 
     /**
@@ -47,20 +61,6 @@ public class DaoMaster extends AbstractDaoMaster {
         Database db = new DevOpenHelper(context, name).getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         return daoMaster.newSession();
-    }
-
-    public DaoMaster(SQLiteDatabase db) {
-        this(new StandardDatabase(db));
-    }
-
-    public DaoMaster(Database db) {
-        super(db, SCHEMA_VERSION);
-        registerDaoClass(ArtistDao.class);
-        registerDaoClass(SongDao.class);
-        registerDaoClass(LinkDao.class);
-        registerDaoClass(PlaylistDao.class);
-        registerDaoClass(GenreDao.class);
-        registerDaoClass(AlbumDao.class);
     }
 
     public DaoSession newSession() {

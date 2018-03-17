@@ -8,23 +8,22 @@ import java.util.regex.Pattern
  * Possible item types: Artist, Album, Song, Genre, Playlist
  *
  * @author Danny Damsky
- * @since 2018-02-01
  */
 class LibrarySearcher {
     private lateinit var list: TypeModel
     private var searchString = ""
     private lateinit var stringList: Array<String>
-    private lateinit var matches: Array<Int>
+    private lateinit var matches: ArrayList<Int>
     private lateinit var pattern: Pattern
 
     fun setDataSource(list: TypeModel) {
         this.list = list
     }
 
-    private fun getMatches(): Array<Int> {
-        val list = ArrayList<Int>(0)
+    private fun getMatches(): ArrayList<Int> {
+        val list = ArrayList<Int>(stringList.size)
         (0 until stringList.size).filterTo(list) { pattern.matcher(stringList[it].toLowerCase()).find() }
-        return list.toTypedArray()
+        return list
     }
 
     fun search(): TypeModel {
@@ -51,11 +50,9 @@ class LibrarySearcher {
      * @param position Index of item to get position
      * @return          position if search is off, original position if search is on
      */
-    fun getPosition(position: Int): Int {
-        return try {
-            matches[position]
-        } catch (e: Exception) {
-            position
-        }
+    fun getPosition(position: Int): Int = try {
+        matches[position]
+    } catch (e: Exception) {
+        position
     }
 }

@@ -16,7 +16,6 @@ import com.damsky.danny.libremusic.utils.Constants
  * Activity for setting preferences such as App Theme and CUE sheet encoding.
  *
  * @author Danny Damsky
- * @since 2018-01-21
  */
 class PreferencesActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 

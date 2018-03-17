@@ -5,6 +5,7 @@ import android.widget.PopupMenu
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Playlist
+import com.damsky.danny.libremusic.data.db.model.Song
 import com.damsky.danny.libremusic.ui.main.MenuAction
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 import com.damsky.danny.libremusic.utils.Constants
@@ -14,10 +15,9 @@ import com.damsky.danny.libremusic.utils.Constants
  * @param playlists An array of playlists to use with the PlaylistModel.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
-class PlaylistModel(private val playlists: Array<Playlist>) : TypeModel {
+class PlaylistModel(private val playlists: ArrayList<Playlist>) : TypeModel {
 
     private lateinit var current: Playlist
     private var position = 0
@@ -29,13 +29,9 @@ class PlaylistModel(private val playlists: Array<Playlist>) : TypeModel {
         return Constants.ALBUM_COVER_NONE
     }
 
-    override fun getPlaceHolderImage(): Int {
-        return R.drawable.playlist
-    }
+    override fun getPlaceHolderImage(): Int = R.drawable.playlist
 
-    override fun getItemTitle(): String {
-        return current.playList
-    }
+    override fun getItemTitle(): String = current.playList
 
     override fun getItemInfo(resources: Resources): String {
         val songsCount = current.songs.size
@@ -44,9 +40,7 @@ class PlaylistModel(private val playlists: Array<Playlist>) : TypeModel {
 
     override fun getItemDuration(): String = ""
 
-    override fun getSize(): Int {
-        return playlists.size
-    }
+    override fun getSize(): Int = playlists.size
 
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
         popupMenu.inflate(R.menu.menu_playlists)
@@ -59,7 +53,7 @@ class PlaylistModel(private val playlists: Array<Playlist>) : TypeModel {
                 R.id.shareSongs -> MenuAction.ACTION_SHARE
                 else -> MenuAction.ACTION_PLAY // R.id.playSongs
             }
-            onClickListener.onContextMenuClick(current.songs.toTypedArray(), action, position)
+            onClickListener.onContextMenuClick(current.songs as ArrayList<Song>, action, position)
             true
         }
 
@@ -71,10 +65,10 @@ class PlaylistModel(private val playlists: Array<Playlist>) : TypeModel {
         current = playlists[position]
     }
 
-    override fun search(matches: Array<Int>): PlaylistModel {
+    override fun search(matches: ArrayList<Int>): PlaylistModel {
         val list = ArrayList<Playlist>(0)
         if (matches.isNotEmpty())
             matches.mapTo(list) { playlists[it] }
-        return PlaylistModel(list.toTypedArray())
+        return PlaylistModel(list)
     }
 }

@@ -6,7 +6,6 @@ import android.os.Build
  * A class to keep all the constant values that are used throughout the applications.
  *
  * @author Danny Damsky
- * @since 2018-01-21
  */
 class Constants {
     companion object {

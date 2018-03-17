@@ -14,39 +14,26 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * @param songs An array of songs to use with the SongModel.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
-class SongModel(private val songs: Array<Song>) : TypeModel {
+class SongModel(private val songs: ArrayList<Song>) : TypeModel {
 
     private lateinit var current: Song
 
-    override fun getItemImage(): String {
-        return current.cover
-    }
+    override fun getItemImage(): String = current.cover
 
-    override fun getPlaceHolderImage(): Int {
-        return R.drawable.song
-    }
+    override fun getPlaceHolderImage(): Int = R.drawable.song
 
-    override fun getItemTitle(): String {
-        return current.title
-    }
+    override fun getItemTitle(): String = current.title
 
-    override fun getItemInfo(resources: Resources): String {
-        return "${current.artist} - ${current.album}"
-    }
+    override fun getItemInfo(resources: Resources): String = "${current.artist} - ${current.album}"
 
-    override fun getItemDuration(): String {
-        return current.duration.getTime()
-    }
+    override fun getItemDuration(): String = current.duration.getTime()
 
-    override fun getSize(): Int {
-        return songs.size
-    }
+    override fun getSize(): Int = songs.size
 
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
-        val list = arrayOf(current)
+        val list = arrayListOf(current)
 
         popupMenu.inflate(when (listLevel) {
             ListLevel.PLAYLIST_SONGS -> R.menu.menu_playlist_songs
@@ -74,10 +61,10 @@ class SongModel(private val songs: Array<Song>) : TypeModel {
         current = songs[position]
     }
 
-    override fun search(matches: Array<Int>): SongModel {
+    override fun search(matches: ArrayList<Int>): SongModel {
         val list = ArrayList<Song>(0)
         if (matches.isNotEmpty())
             matches.mapTo(list) { songs[it] }
-        return SongModel(list.toTypedArray())
+        return SongModel(list)
     }
 }

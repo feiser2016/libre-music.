@@ -31,7 +31,6 @@ import java.util.concurrent.ThreadLocalRandom
  * This class is a service which is in charge of all music playback operations.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
@@ -150,8 +149,8 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
         removeNotification()
+        super.onTaskRemoved(rootIntent)
     }
 
     @Throws(RemoteException::class)

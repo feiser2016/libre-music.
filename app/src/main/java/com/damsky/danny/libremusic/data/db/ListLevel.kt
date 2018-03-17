@@ -4,7 +4,6 @@ package com.damsky.danny.libremusic.data.db
  * This enum class is used to handle associations between RecyclerView and its adapter.
  *
  * @author Danny Damsky
- * @since 2017-11-28
  */
 
 enum class ListLevel(val index: Int) {

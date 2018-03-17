@@ -15,10 +15,9 @@ import com.damsky.danny.libremusic.utils.Constants
  * @param artists An array of artists to use with the ArtistModel.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
-class ArtistModel(private val artists: Array<Artist>) : TypeModel {
+class ArtistModel(private val artists: ArrayList<Artist>) : TypeModel {
 
     private lateinit var current: Artist
     private var songsCount = 0
@@ -34,13 +33,9 @@ class ArtistModel(private val artists: Array<Artist>) : TypeModel {
         return iterate
     }
 
-    override fun getPlaceHolderImage(): Int {
-        return R.drawable.artist
-    }
+    override fun getPlaceHolderImage(): Int = R.drawable.artist
 
-    override fun getItemTitle(): String {
-        return current.artist
-    }
+    override fun getItemTitle(): String = current.artist
 
     override fun getItemInfo(resources: Resources): String {
         val albums = current.albums
@@ -49,9 +44,7 @@ class ArtistModel(private val artists: Array<Artist>) : TypeModel {
 
     override fun getItemDuration(): String = ""
 
-    override fun getSize(): Int {
-        return artists.size
-    }
+    override fun getSize(): Int = artists.size
 
     override fun getItemMenu(popupMenu: PopupMenu,
                              onClickListener: CustomOnClickListener,
@@ -69,7 +62,7 @@ class ArtistModel(private val artists: Array<Artist>) : TypeModel {
                 R.id.shareSongs -> MenuAction.ACTION_SHARE
                 else -> MenuAction.ACTION_PLAY // R.id.playSongs
             }
-            onClickListener.onContextMenuClick(list.toTypedArray(), action)
+            onClickListener.onContextMenuClick(list as ArrayList<Song>, action)
             true
         }
 
@@ -82,10 +75,10 @@ class ArtistModel(private val artists: Array<Artist>) : TypeModel {
     }
 
 
-    override fun search(matches: Array<Int>): ArtistModel {
+    override fun search(matches: ArrayList<Int>): ArtistModel {
         val list = ArrayList<Artist>(0)
         if (matches.isNotEmpty())
             matches.mapTo(list) { artists[it] }
-        return ArtistModel(list.toTypedArray())
+        return ArtistModel(list)
     }
 }

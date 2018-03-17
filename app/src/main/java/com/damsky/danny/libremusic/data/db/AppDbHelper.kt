@@ -17,24 +17,22 @@ import com.damsky.danny.libremusic.utils.Constants
  * It is NOT RECOMMENDED to use a database other than the one provided by the getDaoSession() function!
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
 class AppDbHelper(private val context: Context) {
-    private lateinit var artistList: Array<Artist>
-    private lateinit var albumList: Array<Album>
-    private lateinit var songList: Array<Song>
-    private lateinit var genreList: Array<Genre>
-    private lateinit var playList: Array<Playlist>
+    private lateinit var artistList: ArrayList<Artist>
+    private lateinit var albumList: ArrayList<Album>
+    private lateinit var songList: ArrayList<Song>
+    private lateinit var genreList: ArrayList<Genre>
+    private lateinit var playList: ArrayList<Playlist>
     private var listLevel = ListLevel.ARTISTS
     private var playableLevel = ListLevel.SONGS
     private var positions = intArrayOf(-1, -1, -1)
 
-    private lateinit var songQueue: Array<Song>
+    private lateinit var songQueue: ArrayList<Song>
 
-    fun getDaoSession(): DaoSession {
-        return DaoMaster(DaoMaster.DevOpenHelper(context, Constants.DB_NAME).writableDb).newSession()
-    }
+    fun getDaoSession(): DaoSession =
+            DaoMaster(DaoMaster.DevOpenHelper(context, Constants.DB_NAME).writableDb).newSession()
 
     /**
      * Adds new artist to the database if the artist doesn't already exist.
@@ -121,7 +119,9 @@ class AppDbHelper(private val context: Context) {
      * @param playlist A string containing the name of the playlist.
      */
     fun insertPlaylist(playlist: String, daoSession: DaoSession = getDaoSession()) {
-        val queryObject = lookForPlaylist(playlist, daoSession)
+        val queryObject = daoSession.playlistDao.queryBuilder()
+                .where(PlaylistDao.Properties.PlayList.eq(playlist))
+                .unique()
 
         if (queryObject == null) {
             val newPlaylist = Playlist(null, playlist)
@@ -133,32 +133,31 @@ class AppDbHelper(private val context: Context) {
      * @param playlist The name of the playlist to add songs to.
      * @param songs    An array of songs to add to the playlist.
      */
-    fun insertSongsToPlaylist(playlist: String, songs: Array<Song>, daoSession: DaoSession = getDaoSession()) {
-        val playList = lookForPlaylist(playlist, daoSession)
-        for (i in songs)
-            insertSongToPlaylist(playList, i, daoSession)
-        setPlaylists()
-    }
+    fun insertSongsToPlaylist(playlist: String, songs: ArrayList<Song>, daoSession: DaoSession = getDaoSession()) {
+        var playList: Playlist? = null
 
-    private fun insertSongToPlaylist(playlist: Playlist?, song: Song, daoSession: DaoSession = getDaoSession()) {
-        if (playlist != null) {
-            val queryObject = daoSession.linkDao.queryBuilder()
-                    .where(LinkDao.Properties.PlayListId.eq(playlist.id),
-                            LinkDao.Properties.SongId.eq(song.id))
-                    .unique()
-
-            if (queryObject == null) {
-                val newLink = Link(null, playlist.id, song.id)
-                daoSession.linkDao.insert(newLink)
-                playlist.resetSongs()
+        for (i in this.playList)
+            if (i.playList == playlist) {
+                playList = i
+                break
             }
-        }
+
+        if (playList != null)
+            for (i in songs)
+                insertSongToPlaylist(playList, i, daoSession)
     }
 
-    private fun lookForPlaylist(playlist: String, daoSession: DaoSession = getDaoSession()): Playlist? {
-        return daoSession.playlistDao.queryBuilder()
-                .where(PlaylistDao.Properties.PlayList.eq(playlist))
+    private fun insertSongToPlaylist(playlist: Playlist, song: Song, daoSession: DaoSession = getDaoSession()) {
+        val queryObject = daoSession.linkDao.queryBuilder()
+                .where(LinkDao.Properties.PlayListId.eq(playlist.id),
+                        LinkDao.Properties.SongId.eq(song.id))
                 .unique()
+
+        if (queryObject == null) {
+            val newLink = Link(null, playlist.id, song.id)
+            daoSession.linkDao.insert(newLink)
+            playlist.resetSongs()
+        }
     }
 
     /**
@@ -191,7 +190,6 @@ class AppDbHelper(private val context: Context) {
         if (queryObject != null) {
             daoSession.linkDao.delete(queryObject)
             playlist.resetSongs()
-            setPlaylists(daoSession)
         }
     }
 
@@ -208,7 +206,7 @@ class AppDbHelper(private val context: Context) {
      */
     fun deletePlaylist(index: Int, daoSession: DaoSession = getDaoSession()) {
         daoSession.playlistDao.delete(playList[index])
-        setPlaylists(daoSession)
+        playList.removeAt(index)
     }
 
     /**
@@ -219,7 +217,6 @@ class AppDbHelper(private val context: Context) {
         val playlist = playList[index]
         playlist.playList = newName
         daoSession.playlistDao.update(playlist)
-        setPlaylists(daoSession)
     }
 
     /**
@@ -230,7 +227,7 @@ class AppDbHelper(private val context: Context) {
         artistList = daoSession.artistDao
                 .queryBuilder()
                 .orderAsc(ArtistDao.Properties.Artist)
-                .build().list().toTypedArray()
+                .build().list() as ArrayList<Artist>
     }
 
     fun setAlbums(daoSession: DaoSession = getDaoSession()) {
@@ -239,7 +236,7 @@ class AppDbHelper(private val context: Context) {
                 .orderAsc(AlbumDao.Properties.Artist,
                         AlbumDao.Properties.Year,
                         AlbumDao.Properties.Album)
-                .build().list().toTypedArray()
+                .build().list() as ArrayList<Album>
     }
 
     /**
@@ -252,7 +249,7 @@ class AppDbHelper(private val context: Context) {
                         SongDao.Properties.Year,
                         SongDao.Properties.Track,
                         SongDao.Properties.Album)
-                .build().list().toTypedArray()
+                .build().list() as ArrayList<Song>
 
         songQueue = songList
     }
@@ -261,98 +258,96 @@ class AppDbHelper(private val context: Context) {
         genreList = daoSession.genreDao
                 .queryBuilder()
                 .orderAsc(GenreDao.Properties.Genre)
-                .build().list().toTypedArray()
+                .build().list() as ArrayList<Genre>
     }
 
     fun setPlaylists(daoSession: DaoSession = getDaoSession()) {
         playList = daoSession.playlistDao
                 .queryBuilder()
                 .orderAsc(PlaylistDao.Properties.PlayList)
-                .build().list().toTypedArray()
+                .build().list() as ArrayList<Playlist>
     }
 
     /**
      * The following functions set the proper ListLevel and return the requested array.
      */
 
-    fun getArtists(): Array<Artist> {
+    fun getArtists(): ArrayList<Artist> {
         listLevel = ListLevel.ARTISTS
         return artistList
     }
 
-    fun getAlbums(): Array<Album> {
+    fun getAlbums(): ArrayList<Album> {
         listLevel = ListLevel.ALBUMS
         return albumList
     }
 
-    fun getSongs(): Array<Song> {
+    fun getSongs(): ArrayList<Song> {
         listLevel = ListLevel.SONGS
         return songList
     }
 
-    fun getQueue(): Array<Song> {
+    fun getQueue(): ArrayList<Song> {
         return songQueue
     }
 
-    fun getGenres(): Array<Genre> {
+    fun getGenres(): ArrayList<Genre> {
         listLevel = ListLevel.GENRES
         return genreList
     }
 
-    fun getPlaylists(): Array<Playlist> {
+    fun getPlaylists(): ArrayList<Playlist> {
         listLevel = ListLevel.PLAYLISTS
         return playList
     }
 
-    fun getPlaylistsClean(): Array<Playlist> {
+    fun getPlaylistsClean(): ArrayList<Playlist> {
         return playList
     }
 
-    fun getArtistAlbums(position: Int): Array<Album> {
+    fun getArtistAlbums(position: Int): ArrayList<Album> {
         positions[0] = position
         listLevel = ListLevel.ARTIST_ALBUMS
-        return artistList[position].albums.toTypedArray()
+        return artistList[position].albums as ArrayList<Album>
     }
 
-    fun getArtistSongs(position: Int): Array<Song> {
+    fun getArtistSongs(position: Int): ArrayList<Song> {
         positions[1] = position
         listLevel = ListLevel.ARTIST_SONGS
-        return artistList[positions[0]].albums[position].songs.toTypedArray()
+        return artistList[positions[0]].albums[position].songs as ArrayList<Song>
     }
 
-    fun getAlbumSongs(position: Int): Array<Song> {
+    fun getAlbumSongs(position: Int): ArrayList<Song> {
         positions[1] = position
         listLevel = ListLevel.ALBUM_SONGS
-        return albumList[position].songs.toTypedArray()
+        return albumList[position].songs as ArrayList<Song>
     }
 
-    fun getGenreSongs(position: Int): Array<Song> {
+    fun getGenreSongs(position: Int): ArrayList<Song> {
         positions[1] = position
         listLevel = ListLevel.GENRE_SONGS
-        return genreList[position].songs.toTypedArray()
+        return genreList[position].songs as ArrayList<Song>
     }
 
-    fun getPlaylistSongs(position: Int): Array<Song> {
+    fun getPlaylistSongs(position: Int): ArrayList<Song> {
         positions[1] = position
         listLevel = ListLevel.PLAYLIST_SONGS
-        return playList[position].songs.toTypedArray()
+        return playList[position].songs as ArrayList<Song>
     }
 
-    fun getSong(): Song {
-        return songQueue[positions[2]]
-    }
+    fun getSong(): Song = songQueue[positions[2]]
 
     fun getArtistSong(position: Int): Song {
         playableLevel = ListLevel.ARTIST_SONGS
         positions[2] = position
-        songQueue = artistList[positions[0]].albums[positions[1]].songs.toTypedArray()
+        songQueue = artistList[positions[0]].albums[positions[1]].songs as ArrayList<Song>
         return songQueue[position]
     }
 
     fun getAlbumSong(position: Int): Song {
         playableLevel = ListLevel.ALBUM_SONGS
         positions[2] = position
-        songQueue = albumList[positions[1]].songs.toTypedArray()
+        songQueue = albumList[positions[1]].songs as ArrayList<Song>
         return songQueue[position]
     }
 
@@ -366,14 +361,14 @@ class AppDbHelper(private val context: Context) {
     fun getGenreSong(position: Int): Song {
         playableLevel = ListLevel.GENRE_SONGS
         positions[2] = position
-        songQueue = genreList[positions[1]].songs.toTypedArray()
+        songQueue = genreList[positions[1]].songs as ArrayList<Song>
         return songQueue[position]
     }
 
     fun getPlaylistSong(position: Int): Song {
         playableLevel = ListLevel.PLAYLIST_SONGS
         positions[2] = position
-        songQueue = playList[positions[1]].songs.toTypedArray()
+        songQueue = playList[positions[1]].songs as ArrayList<Song>
         return songQueue[position]
     }
 
@@ -382,17 +377,11 @@ class AppDbHelper(private val context: Context) {
         return songQueue[position]
     }
 
-    fun getArtistIndex(): Int {
-        return positions[0]
-    }
+    fun getArtistIndex(): Int = positions[0]
 
-    fun getSecondIndex(): Int {
-        return positions[1]
-    }
+    fun getSecondIndex(): Int = positions[1]
 
-    fun getAudioIndex(): Int {
-        return positions[2]
-    }
+    fun getAudioIndex(): Int = positions[2]
 
     fun incrementAudioIndex() {
         if (positions[2] == songQueue.size - 1)
@@ -412,33 +401,22 @@ class AppDbHelper(private val context: Context) {
         positions[2] = position
     }
 
-    fun addToQueue(list: Array<Song>) {
-        val arr = ArrayList<Song>(list.size + songQueue.size)
-        arr.addAll(songQueue)
-        arr.addAll(list)
-        songQueue = arr.toTypedArray()
+    fun addToQueue(list: ArrayList<Song>) {
+        songQueue.addAll(list)
     }
 
-    fun setQueue(list: Array<Song>) {
+    fun setQueue(list: ArrayList<Song>) {
         songQueue = list
         positions[2] = 0
     }
 
-    fun getLevel(): ListLevel {
-        return listLevel
-    }
+    fun getLevel(): ListLevel = listLevel
 
-    fun getPlayableLevel(): ListLevel {
-        return playableLevel
-    }
+    fun getPlayableLevel(): ListLevel = playableLevel
 
-    fun getPositions(): IntArray {
-        return positions
-    }
+    fun getPositions(): IntArray = positions
 
-    fun songsEmpty(): Boolean {
-        return songList.isEmpty()
-    }
+    fun songsEmpty(): Boolean = songList.isEmpty()
 
     fun updateLocations(newPositions: IntArray, newListLevel: ListLevel) {
         positions = newPositions
@@ -453,47 +431,26 @@ class AppDbHelper(private val context: Context) {
      * The following functions are used for adapter setup.
      */
 
-    fun getArtistModel(): Pair<TypeModel, ListLevel?> {
-        return Pair(ArtistModel(getArtists()), null)
-    }
+    fun getArtistModel(): Pair<TypeModel, ListLevel?> = Pair(ArtistModel(getArtists()), null)
 
-    fun getAlbumModel(): Pair<TypeModel, ListLevel?> {
-        return Pair(AlbumModel(getAlbums()), null)
-    }
+    fun getAlbumModel(): Pair<TypeModel, ListLevel?> = Pair(AlbumModel(getAlbums()), null)
 
-    fun getSongModel(): Pair<TypeModel, ListLevel?> {
-        return Pair(SongModel(getSongs()), getLevel())
-    }
+    fun getSongModel(): Pair<TypeModel, ListLevel?> = Pair(SongModel(getSongs()), getLevel())
 
-    fun getGenreModel(): Pair<TypeModel, ListLevel?> {
-        return Pair(GenreModel(getGenres()), null)
-    }
+    fun getGenreModel(): Pair<TypeModel, ListLevel?> = Pair(GenreModel(getGenres()), null)
 
-    fun getPlaylistModel(): Pair<TypeModel, ListLevel?> {
-        return Pair(PlaylistModel(getPlaylists()), null)
-    }
+    fun getPlaylistModel(): Pair<TypeModel, ListLevel?> = Pair(PlaylistModel(getPlaylists()), null)
 
-    fun getArtistAlbumsModel(position: Int): Pair<TypeModel, ListLevel?> {
-        return Pair(AlbumModel(getArtistAlbums(position)), null)
-    }
+    fun getArtistAlbumsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(AlbumModel(getArtistAlbums(position)), null)
 
-    fun getArtistSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
-        return Pair(SongModel(getArtistSongs(position)), getLevel())
-    }
+    fun getArtistSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getArtistSongs(position)), getLevel())
 
-    fun getAlbumSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
-        return Pair(SongModel(getAlbumSongs(position)), getLevel())
-    }
+    fun getAlbumSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getAlbumSongs(position)), getLevel())
 
-    fun getGenreSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
-        return Pair(SongModel(getGenreSongs(position)), getLevel())
-    }
+    fun getGenreSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getGenreSongs(position)), getLevel())
 
-    fun getPlaylistSongsModel(position: Int): Pair<TypeModel, ListLevel?> {
-        return Pair(SongModel(getPlaylistSongs(position)), getLevel())
-    }
+    fun getPlaylistSongsModel(position: Int): Pair<TypeModel, ListLevel?> = Pair(SongModel(getPlaylistSongs(position)), getLevel())
 
-    fun getQueueModel(): Pair<TypeModel, ListLevel?> {
-        return Pair(SongModel(getQueue()), ListLevel.QUEUE)
-    }
+    fun getQueueModel(): Pair<TypeModel, ListLevel?> = Pair(SongModel(getQueue()), ListLevel.QUEUE)
+
 }

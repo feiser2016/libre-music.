@@ -6,11 +6,11 @@
         android:icon="@drawable/add"
         android:title="@string/action_add_playlist"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="always|withText" />
     <item
         android:id="@+id/itemSearch"
         android:icon="@drawable/search"
         android:title="@string/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="collapseActionView|always" />
+        app:showAsAction="collapseActionView|always|withText" />
 </menu>

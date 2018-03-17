@@ -9,7 +9,6 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * Interface used to communicate different objects with the RecyclerView
  *
  * @author Danny Damsky
- * @since 2018-01-04
  */
 interface TypeModel {
     /**
@@ -62,6 +61,6 @@ interface TypeModel {
      *
      * @return A TypeModel with a list that matches the indexes given.
      */
-    fun search(matches: Array<Int>): TypeModel
+    fun search(matches: ArrayList<Int>): TypeModel
 
 }

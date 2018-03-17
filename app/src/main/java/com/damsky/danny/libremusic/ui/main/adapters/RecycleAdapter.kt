@@ -20,30 +20,25 @@ import kotlinx.android.synthetic.main.activity_main_cardview.view.*
  * @param listLevel The level of the list passed (important for certain lists, null by default).
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
 class RecycleAdapter(private val onClickListener: CustomOnClickListener,
                      private val contents: TypeModel, private val listLevel: ListLevel? = null) :
         RecyclerView.Adapter<RecycleAdapter.ItemViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.activity_main_cardview, parent, false))
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
+            ItemViewHolder(LayoutInflater
+                    .from(parent.context)
+                    .inflate(R.layout.activity_main_cardview, parent, false))
 
-    override fun getItemCount(): Int {
-        return contents.getSize()
-    }
+    override fun getItemCount(): Int = contents.getSize()
 
     /**
      * @param holder   ItemViewHolder type containing all internal variables to be set.
      * @param position The position of the pressed item in the list
      */
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(contents, position, listLevel, onClickListener)
-    }
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) =
+            holder.bind(contents, position, listLevel, onClickListener)
 
     /**
      * In charge of finding all views of the RecyclerView and setting them to internal variables.

@@ -4,7 +4,6 @@ package com.damsky.danny.libremusic.service
  * This enum class is used to handle playback actions performed by the MediaPlayerService class.
  *
  * @author Danny Damsky
- * @since 2017-11-28
  */
 
 enum class PlaybackAction(val id: String, val index: Int) {

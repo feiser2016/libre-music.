@@ -5,6 +5,7 @@ import android.widget.PopupMenu
 import com.damsky.danny.libremusic.R
 import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.db.model.Album
+import com.damsky.danny.libremusic.data.db.model.Song
 import com.damsky.danny.libremusic.ui.main.MenuAction
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
 
@@ -13,39 +14,29 @@ import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
  * @param albums An array of albums to use with the AlbumModel.
  *
  * @author Danny Damsky
- * @since 2018-02-25
  */
 
-class AlbumModel(private val albums: Array<Album>) : TypeModel {
+class AlbumModel(private val albums: ArrayList<Album>) : TypeModel {
 
     private lateinit var current: Album
 
-    override fun getItemImage(): String {
-        return current.cover
-    }
+    override fun getItemImage(): String = current.cover
 
-    override fun getPlaceHolderImage(): Int {
-        return R.drawable.album
-    }
+    override fun getPlaceHolderImage(): Int = R.drawable.album
 
-    override fun getItemTitle(): String {
-        return current.album
-    }
+    override fun getItemTitle(): String = current.album
 
     override fun getItemInfo(resources: Resources): String {
         val songsCount = current.songs.size
         return "${current.artist} | ${resources.getQuantityString(R.plurals.songs, songsCount, songsCount)}"
     }
 
-    override fun getItemDuration(): String {
-        return if (current.year > 0)
-            "${current.year}"
-        else ""
-    }
+    override fun getItemDuration(): String =
+            if (current.year > 0)
+                "${current.year}"
+            else ""
 
-    override fun getSize(): Int {
-        return albums.size
-    }
+    override fun getSize(): Int = albums.size
 
     override fun getItemMenu(popupMenu: PopupMenu, onClickListener: CustomOnClickListener, listLevel: ListLevel?): PopupMenu {
         popupMenu.inflate(R.menu.menu_artists_albums_genres)
@@ -57,7 +48,7 @@ class AlbumModel(private val albums: Array<Album>) : TypeModel {
                 R.id.shareSongs -> MenuAction.ACTION_SHARE
                 else -> MenuAction.ACTION_PLAY // R.id.playSongs
             }
-            onClickListener.onContextMenuClick(current.songs.toTypedArray(), action)
+            onClickListener.onContextMenuClick(current.songs as ArrayList<Song>, action)
             true
         }
 
@@ -68,10 +59,10 @@ class AlbumModel(private val albums: Array<Album>) : TypeModel {
         current = albums[position]
     }
 
-    override fun search(matches: Array<Int>): AlbumModel {
+    override fun search(matches: ArrayList<Int>): AlbumModel {
         val list = ArrayList<Album>(0)
         if (matches.isNotEmpty())
             matches.mapTo(list) { albums[it] }
-        return AlbumModel(list.toTypedArray())
+        return AlbumModel(list)
     }
 }

@@ -13,12 +13,11 @@ import java.io.File
  * (i.e. allows it to query files on the internal storage)
  *
  * @author Danny Damsky
- * @since 2018-02-07
  */
 
-class SongLoader(private val contentResolver: ContentResolver) {
+class SongLoader(private val contentResolver: ContentResolver) : AutoCloseable {
     companion object {
-        private const val MIN_DURATION_FOR_CUE_PARSING = 600_000
+        const val MIN_DURATION_FOR_CUE_PARSING = 600_000
     }
 
     private val cursor = contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
@@ -39,13 +38,9 @@ class SongLoader(private val contentResolver: ContentResolver) {
         return mMap[columnName]!!
     }
 
-    private fun getInt(string: String): Int {
-        return cursor.getInt(getColumnIndex(string))
-    }
+    private fun getInt(string: String): Int = cursor.getInt(getColumnIndex(string))
 
-    private fun getString(string: String): String {
-        return cursor.getString(getColumnIndex(string))
-    }
+    private fun getString(string: String): String = cursor.getString(getColumnIndex(string))
 
     /**
      * Queries for album art using a cursor.
@@ -53,66 +48,43 @@ class SongLoader(private val contentResolver: ContentResolver) {
      * @return        A string containing the path of the album art (Or "none" if not found).
      */
     private fun getCoverArtPath(albumId: Long): String {
-        val albumCursor = contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+        contentResolver.query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 arrayOf(MediaStore.Audio.Albums.ALBUM_ART), "${MediaStore.Audio.Albums._ID} = ?",
-                arrayOf("$albumId"), null)
+                arrayOf("$albumId"), null).use {
 
-        val queryResult = albumCursor.moveToFirst()
+            val queryResult = it.moveToFirst()
 
-        var result = Constants.ALBUM_COVER_NONE
-        if (queryResult) result = try {
-            albumCursor.getString(0)
-        } catch (e: Exception) {
-            Constants.ALBUM_COVER_NONE
+            var result = Constants.ALBUM_COVER_NONE
+            if (queryResult) result = try {
+                it.getString(0)
+            } catch (e: Exception) {
+                Constants.ALBUM_COVER_NONE
+            }
+            return result
         }
-
-        albumCursor.close()
-        return result
     }
 
-    fun isAble(): Boolean {
-        return cursor != null && cursor.count > 0
-    }
+    fun isAble(): Boolean = cursor != null && cursor.count > 0
 
-    fun hasNext(): Boolean {
-        return cursor.moveToNext()
-    }
+    fun hasNext(): Boolean = cursor.moveToNext()
 
-    fun getData(): String {
-        return getString(MediaStore.Audio.Media.DATA)
-    }
+    fun getData(): String = getString(MediaStore.Audio.Media.DATA)
 
-    fun getCover(): String {
-        return getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
-    }
+    fun getCover(): String = getCoverArtPath(cursor.getLong(getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)))
 
-    fun getDuration(): Int {
-        return getInt(MediaStore.Audio.Media.DURATION)
-    }
+    fun getDuration(): Int = getInt(MediaStore.Audio.Media.DURATION)
 
-    fun getArtist(): String {
-        return getString(MediaStore.Audio.Media.ARTIST)
-    }
+    fun getArtist(): String = getString(MediaStore.Audio.Media.ARTIST)
 
-    fun getAlbum(): String {
-        return getString(MediaStore.Audio.Media.ALBUM)
-    }
+    fun getAlbum(): String = getString(MediaStore.Audio.Media.ALBUM)
 
-    fun getYear(): Int {
-        return getInt(MediaStore.Audio.Media.YEAR)
-    }
+    fun getYear(): Int = getInt(MediaStore.Audio.Media.YEAR)
 
-    fun getGenre(): String {
-        return genreLoader.getGenre(getString(MediaStore.Audio.Media._ID))
-    }
+    fun getGenre(): String = genreLoader.getGenre(getString(MediaStore.Audio.Media._ID))
 
-    fun getTitle(): String {
-        return getString(MediaStore.Audio.Media.TITLE)
-    }
+    fun getTitle(): String = getString(MediaStore.Audio.Media.TITLE)
 
-    fun getTrackNum(): Int {
-        return getInt(MediaStore.Audio.Media.TRACK)
-    }
+    fun getTrackNum(): Int = getInt(MediaStore.Audio.Media.TRACK)
 
     /**
      * Checks if data parameter is viable for parsing by CUE.
@@ -148,37 +120,35 @@ class SongLoader(private val contentResolver: ContentResolver) {
         return null
     }
 
-    fun close() {
+    override fun close() {
         mMap.clear()
         genreLoader.close()
         cursor.close()
     }
 
-    private class GenreLoader(contentResolver: ContentResolver) {
+    private class GenreLoader(contentResolver: ContentResolver) : AutoCloseable {
 
-        private val mapGenreIdToGenreName = HashMap<String, String>()
-        private val mapSongIdToGenreId = HashMap<String, String>()
+        private val mapGenreIdToGenreName = ArrayMap<String, String>()
+        private val mapSongIdToGenreId = ArrayMap<String, String>()
 
         init {
-            var cursor = contentResolver.query(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
-                    arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME), null, null, null)
+            var idColumnIndex = 0
+            contentResolver.query(MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
+                    arrayOf(MediaStore.Audio.Genres._ID, MediaStore.Audio.Genres.NAME), null, null, null).use {
 
-            val idColumnIndex = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+                idColumnIndex = it.getColumnIndex(MediaStore.Audio.Media._ID)
 
-            while (cursor.moveToNext())
-                mapGenreIdToGenreName[cursor.getString(0)] = cursor.getString(1)
-
-            cursor.close()
-
-            for (genreId in mapGenreIdToGenreName.keys) {
-                cursor = contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external", genreId.toLong()),
-                        arrayOf(MediaStore.Audio.Media._ID), null, null, null)
-
-                while (cursor.moveToNext())
-                    mapSongIdToGenreId[cursor.getString(idColumnIndex)] = genreId
-
-                cursor.close()
+                while (it.moveToNext())
+                    mapGenreIdToGenreName[it.getString(0)] = it.getString(1)
             }
+
+            for (genreId in mapGenreIdToGenreName.keys)
+                contentResolver.query(MediaStore.Audio.Genres.Members.getContentUri("external", genreId.toLong()),
+                        arrayOf(MediaStore.Audio.Media._ID), null, null, null).use {
+
+                    while (it.moveToNext())
+                        mapSongIdToGenreId[it.getString(idColumnIndex)] = genreId
+                }
         }
 
         fun getGenre(songId: String): String {
@@ -191,7 +161,8 @@ class SongLoader(private val contentResolver: ContentResolver) {
             return Constants.DEFAULT_LIBRARY_ENTRANCE
         }
 
-        fun close() {
+
+        override fun close() {
             mapGenreIdToGenreName.clear()
             mapSongIdToGenreId.clear()
         }

@@ -7,7 +7,6 @@ import com.damsky.danny.libremusic.ui.main.MenuAction
  * This interface is used to communicate between RecyclerView and MainActivity
  *
  * @author Danny Damsky
- * @since 2017-11-28
  */
 
 interface CustomOnClickListener {
@@ -26,5 +25,5 @@ interface CustomOnClickListener {
      * @param action    Tells which action should be performed (according to menu item pressed).
      * @param index     The index of a specific item whose menu item was pressed (default is -1)
      */
-    fun onContextMenuClick(songsList: Array<Song>, action: MenuAction, index: Int = -1)
+    fun onContextMenuClick(songsList: ArrayList<Song>, action: MenuAction, index: Int = -1)
 }

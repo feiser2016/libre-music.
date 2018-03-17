@@ -1,5 +1,6 @@
 package com.damsky.danny.libremusic.ui.about
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -14,11 +15,11 @@ import com.damsky.danny.libremusic.utils.Constants
  * This activity provides the user with information about the app.
  *
  * @author Danny Damsky
- * @since 2018-01-25
  */
 
 class AboutActivity : AboutPage() {
 
+    @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBackButton(true)
@@ -48,69 +49,37 @@ class AboutActivity : AboutPage() {
         }
     }
 
-    override fun setActivityTheme(): Int {
-        return (application as App).preferencesHelper.getTheme()
-    }
+    override fun setActivityTheme(): Int = (application as App).preferencesHelper.getTheme()
 
-    override fun setAppIcon(): Int {
-        return R.mipmap.ic_launcher
-    }
+    override fun setAppIcon(): Int = R.mipmap.ic_launcher
 
-    override fun setAppName(): String {
-        return getString(R.string.app_name)
-    }
+    override fun setAppName(): String = getString(R.string.app_name)
 
-    override fun setAuthorLocation(): String {
-        return getString(R.string.hadera_israel)
-    }
+    override fun setAuthorLocation(): String = getString(R.string.hadera_israel)
 
-    override fun setAuthorLocationIcon(): Int {
-        return R.drawable.about_location
-    }
+    override fun setAuthorLocationIcon(): Int = R.drawable.about_location
 
-    override fun setAuthorName(): String {
-        return getString(R.string.danny_damsky)
-    }
+    override fun setAuthorName(): String = getString(R.string.danny_damsky)
 
-    override fun setAuthorNameIcon(): Int {
-        return R.drawable.about_info
-    }
+    override fun setAuthorNameIcon(): Int = R.drawable.about_info
 
-    override fun setAuthorTitleIcon(): Int {
-        return R.drawable.about_author
-    }
+    override fun setAuthorTitleIcon(): Int = R.drawable.about_author
 
-    override fun setDonateIcon(): Int {
-        return R.drawable.about_donate
-    }
+    override fun setDonateIcon(): Int = R.drawable.about_donate
 
-    override fun setEmailIcon(): Int {
-        return R.drawable.about_email
-    }
+    override fun setEmailIcon(): Int = R.drawable.about_email
 
-    override fun setIntroIcon(): Int {
-        return R.drawable.about_intro
-    }
+    override fun setIntroIcon(): Int = R.drawable.about_intro
 
-    override fun setRateIcon(): Int {
-        return R.drawable.about_rate
-    }
+    override fun setRateIcon(): Int = R.drawable.about_rate
 
-    override fun setSourceCodeIcon(): Int {
-        return R.drawable.about_code
-    }
+    override fun setSourceCodeIcon(): Int = R.drawable.about_code
 
-    override fun setSupportIcon(): Int {
-        return R.drawable.about_support
-    }
+    override fun setSupportIcon(): Int = R.drawable.about_support
 
-    override fun setVersion(): String {
-        return getString(R.string.versionName)
-    }
+    override fun setVersion(): String = getString(R.string.versionName)
 
-    override fun setVersionIcon(): Int {
-        return R.drawable.about_info
-    }
+    override fun setVersionIcon(): Int = R.drawable.about_info
 
     override fun writeEmail() {
         startActivity(Intent.createChooser(Intent(Intent.ACTION_SENDTO,

@@ -14,20 +14,19 @@ import java.util.regex.Pattern
  * @param encoding A string containing a charset to be used for encoding when reading the cue file.
  *
  * @author Danny Damsky
- * @since 2018-02-08
  */
 class CueParser(encoding: String) {
-    companion object {
-        private const val MAX_BYTES_TO_READ = 500_000
-    }
 
-    private val cuesheetPattern = Pattern.compile("cuesheet=")
-    private val performerPattern = Pattern.compile("PERFORMER\\s\"(.*)\"|PERFORMER\\s(.*)")
-    private val genrePattern = Pattern.compile("GENRE\\s\"(.*)\"|GENRE\\s(.*)")
-    private val titlePattern = Pattern.compile("TITLE\\s\"(.*)\"|TITLE\\s(.*)")
-    private val datePattern = Pattern.compile("DATE\\s(\\d+)")
-    private val indexPattern = Pattern.compile("INDEX 01 (\\d\\d:\\d\\d:\\d\\d)")
-    private val timePattern = Pattern.compile("\\d+")
+    companion object {
+        const val MAX_BYTES_TO_READ = 500_000
+        private val CUESHEET_PATTERN = Pattern.compile("cuesheet=")
+        private val PERFORMER_PATTERN = Pattern.compile("PERFORMER\\s\"(.*)\"|PERFORMER\\s(.*)")
+        private val GENRE_PATTERN = Pattern.compile("GENRE\\s\"(.*)\"|GENRE\\s(.*)")
+        private val TITLE_PATTERN = Pattern.compile("TITLE\\s\"(.*)\"|TITLE\\s(.*)")
+        private val DATE_PATTERN = Pattern.compile("DATE\\s(\\d+)")
+        private val INDEX_PATTERN = Pattern.compile("INDEX 01 (\\d\\d:\\d\\d:\\d\\d)")
+        private val TIME_PATTERN = Pattern.compile("\\d+")
+    }
 
     private val charset = Charset.forName(encoding)
 
@@ -47,7 +46,7 @@ class CueParser(encoding: String) {
         content = readFile()
 
         isReadable = if (cueFile.absolutePath == songFile)
-            cuesheetPattern.matcher(content).find()
+            CUESHEET_PATTERN.matcher(content).find()
         else
             true
     }
@@ -57,7 +56,7 @@ class CueParser(encoding: String) {
      * @return           The time converted to milliseconds.
      */
     private fun convertToMs(timeFormat: String): Int {
-        val matcher = timePattern.matcher(timeFormat)
+        val matcher = TIME_PATTERN.matcher(timeFormat)
 
         matcher.find()
         val minutes = matcher.group().toLong()
@@ -74,18 +73,17 @@ class CueParser(encoding: String) {
     }
 
     private fun readFile(): String {
-        val bis = BufferedInputStream(FileInputStream(cueFile))
-        val contents = ByteArray(1_024)
-
-        var bytesRead = bis.read(contents)
         val builder = StringBuilder()
 
-        while (bytesRead != -1 && builder.length < MAX_BYTES_TO_READ) {
-            builder.append(kotlin.text.String(contents, 0, bytesRead, charset))
-            bytesRead = bis.read(contents)
+        BufferedInputStream(FileInputStream(cueFile)).use {
+            val contents = ByteArray(1_024)
+            var bytesRead = it.read(contents)
+            while (bytesRead != -1 && builder.length < MAX_BYTES_TO_READ) {
+                builder.append(kotlin.text.String(contents, 0, bytesRead, charset))
+                bytesRead = it.read(contents)
+            }
         }
 
-        bis.close()
         return builder.toString()
     }
 
@@ -104,16 +102,12 @@ class CueParser(encoding: String) {
             Constants.DEFAULT_LIBRARY_ENTRANCE
     }
 
-    private fun getArtist(): String {
-        return getFirstResult(performerPattern)
-    }
+    private fun getArtist(): String = getFirstResult(PERFORMER_PATTERN)
 
-    private fun getGenre(): String {
-        return getFirstResult(genrePattern)
-    }
+    private fun getGenre(): String = getFirstResult(GENRE_PATTERN)
 
     private fun getTitles(): ArrayList<String> {
-        val matcher = titlePattern.matcher(content)
+        val matcher = TITLE_PATTERN.matcher(content)
         val returnThis = ArrayList<String>(0)
 
         while (matcher.find()) {
@@ -127,7 +121,7 @@ class CueParser(encoding: String) {
     }
 
     private fun getDate(): Int {
-        val getDate = datePattern.matcher(content)
+        val getDate = DATE_PATTERN.matcher(content)
 
         if (getDate.find())
             return getDate.group(1).toInt()
@@ -136,7 +130,7 @@ class CueParser(encoding: String) {
     }
 
     private fun getIndexOne(): ArrayList<Int> {
-        val matcher = indexPattern.matcher(content)
+        val matcher = INDEX_PATTERN.matcher(content)
         val list = ArrayList<Int>(1)
 
         list.add(0)

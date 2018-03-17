@@ -4,7 +4,6 @@ package com.damsky.danny.libremusic.ui.main
  * This enum class is used to handle associations with RecyclerView Popup menus.
  *
  * @author Danny Damsky
- * @since 2017-11-28
  */
 enum class MenuAction {
     ACTION_PLAY,

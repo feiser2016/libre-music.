@@ -14,12 +14,17 @@ import com.damsky.danny.libremusic.utils.Constants
  * @param context Required to gain access to the application's preferences. (Recommended: ApplicationContext)
  *
  * @author Danny Damsky
- * @since 2018-02-08
  */
 
 class AppPreferencesHelper(private val context: Context) {
-    private var repeat = getSharedPreferences().getBoolean(Constants.PREFERENCE_REPEAT, false)
-    private var shuffle = getSharedPreferences().getBoolean(Constants.PREFERENCE_SHUFFLE, false)
+    private var repeat: Boolean
+    private var shuffle: Boolean
+
+    init {
+        val preferences = getSharedPreferences()
+        repeat = preferences.getBoolean(Constants.PREFERENCE_REPEAT, false)
+        shuffle = preferences.getBoolean(Constants.PREFERENCE_SHUFFLE, false)
+    }
 
     private fun updateBoolean(prefName: String, boolean: Boolean) {
         val editor = getSharedPreferences().edit()
@@ -27,21 +32,17 @@ class AppPreferencesHelper(private val context: Context) {
         editor.apply()
     }
 
-    private fun getSharedPreferences(): SharedPreferences {
-        return context.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
-    }
+    private fun getSharedPreferences(): SharedPreferences =
+            context.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-    private fun getDefaultSharedPreferences(): SharedPreferences {
-        return PreferenceManager.getDefaultSharedPreferences(context)
-    }
+    private fun getDefaultSharedPreferences(): SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context)
 
     fun isFirstRun(boolean: Boolean) {
         updateBoolean(Constants.PREFERENCE_FIRST_RUN, boolean)
     }
 
-    fun isFirstRun(): Boolean {
-        return getSharedPreferences().getBoolean(Constants.PREFERENCE_FIRST_RUN, true)
-    }
+    fun isFirstRun(): Boolean = getSharedPreferences().getBoolean(Constants.PREFERENCE_FIRST_RUN, true)
 
     fun updateIndexes(listLevel: ListLevel, positions: IntArray) {
         val editor = getSharedPreferences().edit()
@@ -75,18 +76,14 @@ class AppPreferencesHelper(private val context: Context) {
         updateBoolean(Constants.PREFERENCE_REPEAT, boolean)
     }
 
-    fun getRepeatPreference(): Boolean {
-        return repeat
-    }
+    fun getRepeatPreference(): Boolean = repeat
 
     fun setShufflePreference(boolean: Boolean) {
         shuffle = boolean
         updateBoolean(Constants.PREFERENCE_SHUFFLE, boolean)
     }
 
-    fun getShufflePreference(): Boolean {
-        return shuffle
-    }
+    fun getShufflePreference(): Boolean = shuffle
 
     fun getTheme(): Int {
         val appThemesValues = context.resources.getStringArray(R.array.app_themes_values)
@@ -149,8 +146,6 @@ class AppPreferencesHelper(private val context: Context) {
         return Pair(-1, -1)
     }
 
-    fun getEncoding(): String {
-        return getDefaultSharedPreferences().getString(Constants.PREFERENCE_ENCODING, Constants.DEFAULT_ENCODING)
-    }
-
+    fun getEncoding(): String =
+            getDefaultSharedPreferences().getString(Constants.PREFERENCE_ENCODING, Constants.DEFAULT_ENCODING)
 }
