@@ -10,7 +10,7 @@ import com.damsky.danny.libremusic.data.db.ListLevel
 import com.damsky.danny.libremusic.data.models.TypeModel
 import com.damsky.danny.libremusic.ui.main.MainPresenter.Companion.glideLoad
 import com.damsky.danny.libremusic.ui.main.listeners.CustomOnClickListener
-import kotlinx.android.synthetic.main.activity_main_cardview.view.*
+import kotlinx.android.synthetic.main.activity_main_recyclerview.view.*
 
 /**
  * A RecyclerView adapter that is used with the MainActivity.
@@ -29,7 +29,7 @@ class RecycleAdapter(private val onClickListener: CustomOnClickListener,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder =
             ItemViewHolder(LayoutInflater
                     .from(parent.context)
-                    .inflate(R.layout.activity_main_cardview, parent, false))
+                    .inflate(R.layout.activity_main_recyclerview, parent, false))
 
     override fun getItemCount(): Int = contents.getSize()
 
@@ -52,19 +52,19 @@ class RecycleAdapter(private val onClickListener: CustomOnClickListener,
 
             contents.setPosition(position)
 
-            itemImage.glideLoad(cards.context, contents.getItemImage(), contents.getPlaceHolderImage())
+            itemImage.glideLoad(layout.context, contents.getItemImage(), contents.getPlaceHolderImage())
 
             itemTitle.text = contents.getItemTitle()
-            itemInfo.text = contents.getItemInfo(cards.context.resources)
+            itemInfo.text = contents.getItemInfo(layout.context.resources)
             itemDuration.text = contents.getItemDuration()
 
-            cards.setOnClickListener {
+            layout.setOnClickListener {
                 onClickListener.onRecyclerClick(position)
             }
 
             itemMenu.setOnClickListener({
                 contents.setPosition(position)
-                contents.getItemMenu(PopupMenu(cards.context, itemMenu),
+                contents.getItemMenu(PopupMenu(layout.context, itemMenu),
                         onClickListener, listLevel).show()
             })
         }
