@@ -20,9 +20,30 @@ import java.util.List;
 public class SongDao extends AbstractDao<Song, Long> {
 
     public static final String TABLENAME = "SONGS";
+
+    /**
+     * Properties of entity Song.<br/>
+     * Can be used for QueryBuilder and for referencing column names.
+     */
+    public static class Properties {
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Data = new Property(1, String.class, "data", false, "DATA");
+        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
+        public final static Property Album = new Property(3, String.class, "album", false, "ALBUM");
+        public final static Property Artist = new Property(4, String.class, "artist", false, "ARTIST");
+        public final static Property Genre = new Property(5, String.class, "genre", false, "GENRE");
+        public final static Property Track = new Property(6, int.class, "track", false, "TRACK");
+        public final static Property Year = new Property(7, int.class, "year", false, "YEAR");
+        public final static Property StartTime = new Property(8, int.class, "startTime", false, "START_TIME");
+        public final static Property EndTime = new Property(9, int.class, "endTime", false, "END_TIME");
+        public final static Property Duration = new Property(10, int.class, "duration", false, "DURATION");
+        public final static Property Cover = new Property(11, String.class, "cover", false, "COVER");
+    }
+
     private Query<Song> genre_SongsQuery;
     private Query<Song> playlist_SongsQuery;
     private Query<Song> album_SongsQuery;
+
     public SongDao(DaoConfig config) {
         super(config);
     }
@@ -100,7 +121,7 @@ public class SongDao extends AbstractDao<Song, Long> {
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
-    }
+    }    
 
     @Override
     public Song readEntity(Cursor cursor, int offset) {
@@ -207,25 +228,6 @@ public class SongDao extends AbstractDao<Song, Long> {
         Query<Song> query = album_SongsQuery.forCurrentThread();
         query.setParameter(0, album);
         return query.list();
-    }
-
-    /**
-     * Properties of entity Song.<br/>
-     * Can be used for QueryBuilder and for referencing column names.
-     */
-    public static class Properties {
-        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Data = new Property(1, String.class, "data", false, "DATA");
-        public final static Property Title = new Property(2, String.class, "title", false, "TITLE");
-        public final static Property Album = new Property(3, String.class, "album", false, "ALBUM");
-        public final static Property Artist = new Property(4, String.class, "artist", false, "ARTIST");
-        public final static Property Genre = new Property(5, String.class, "genre", false, "GENRE");
-        public final static Property Track = new Property(6, int.class, "track", false, "TRACK");
-        public final static Property Year = new Property(7, int.class, "year", false, "YEAR");
-        public final static Property StartTime = new Property(8, int.class, "startTime", false, "START_TIME");
-        public final static Property EndTime = new Property(9, int.class, "endTime", false, "END_TIME");
-        public final static Property Duration = new Property(10, int.class, "duration", false, "DURATION");
-        public final static Property Cover = new Property(11, String.class, "cover", false, "COVER");
     }
 
 }

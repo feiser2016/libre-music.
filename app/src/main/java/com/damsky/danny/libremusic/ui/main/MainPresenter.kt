@@ -2,7 +2,6 @@ package com.damsky.danny.libremusic.ui.main
 
 import android.content.Context
 import android.widget.ImageView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.damsky.danny.libremusic.R
 import java.util.concurrent.TimeUnit
@@ -41,7 +40,7 @@ class MainPresenter {
         }
 
         private fun ImageView.glideLoad(context: Context, imageString: String, requestOptions: RequestOptions) {
-            Glide.with(context.applicationContext).load(imageString)
+            GlideApp.with(context.applicationContext).load(imageString)
                     .apply(requestOptions)
                     .into(this)
         }
