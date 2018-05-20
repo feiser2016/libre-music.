@@ -76,7 +76,7 @@ class CueParser(encoding: String) {
         val builder = StringBuilder()
 
         BufferedInputStream(FileInputStream(cueFile)).use {
-            val contents = ByteArray(1_024)
+            val contents = ByteArray(4_096)
             var bytesRead = it.read(contents)
             while (bytesRead != -1 && builder.length < MAX_BYTES_TO_READ) {
                 builder.append(kotlin.text.String(contents, 0, bytesRead, charset))

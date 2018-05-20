@@ -62,7 +62,7 @@ class ArtistModel(private val artists: ArrayList<Artist>) : TypeModel {
                 R.id.shareSongs -> MenuAction.ACTION_SHARE
                 else -> MenuAction.ACTION_PLAY // R.id.playSongs
             }
-            onClickListener.onContextMenuClick(list as ArrayList<Song>, action)
+            onClickListener.onContextMenuClick(list, action)
             true
         }
 

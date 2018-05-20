@@ -17,35 +17,29 @@ import java.util.Map;
  */
 public class DaoSession extends AbstractDaoSession {
 
-    private final DaoConfig genreDaoConfig;
-    private final DaoConfig artistDaoConfig;
     private final DaoConfig playlistDaoConfig;
-    private final DaoConfig songDaoConfig;
+    private final DaoConfig artistDaoConfig;
     private final DaoConfig albumDaoConfig;
     private final DaoConfig linkDaoConfig;
+    private final DaoConfig genreDaoConfig;
+    private final DaoConfig songDaoConfig;
 
-    private final GenreDao genreDao;
-    private final ArtistDao artistDao;
     private final PlaylistDao playlistDao;
-    private final SongDao songDao;
+    private final ArtistDao artistDao;
     private final AlbumDao albumDao;
     private final LinkDao linkDao;
+    private final GenreDao genreDao;
+    private final SongDao songDao;
 
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
 
-        genreDaoConfig = daoConfigMap.get(GenreDao.class).clone();
-        genreDaoConfig.initIdentityScope(type);
-
-        artistDaoConfig = daoConfigMap.get(ArtistDao.class).clone();
-        artistDaoConfig.initIdentityScope(type);
-
         playlistDaoConfig = daoConfigMap.get(PlaylistDao.class).clone();
         playlistDaoConfig.initIdentityScope(type);
 
-        songDaoConfig = daoConfigMap.get(SongDao.class).clone();
-        songDaoConfig.initIdentityScope(type);
+        artistDaoConfig = daoConfigMap.get(ArtistDao.class).clone();
+        artistDaoConfig.initIdentityScope(type);
 
         albumDaoConfig = daoConfigMap.get(AlbumDao.class).clone();
         albumDaoConfig.initIdentityScope(type);
@@ -53,44 +47,42 @@ public class DaoSession extends AbstractDaoSession {
         linkDaoConfig = daoConfigMap.get(LinkDao.class).clone();
         linkDaoConfig.initIdentityScope(type);
 
-        genreDao = new GenreDao(genreDaoConfig, this);
-        artistDao = new ArtistDao(artistDaoConfig, this);
+        genreDaoConfig = daoConfigMap.get(GenreDao.class).clone();
+        genreDaoConfig.initIdentityScope(type);
+
+        songDaoConfig = daoConfigMap.get(SongDao.class).clone();
+        songDaoConfig.initIdentityScope(type);
+
         playlistDao = new PlaylistDao(playlistDaoConfig, this);
-        songDao = new SongDao(songDaoConfig, this);
+        artistDao = new ArtistDao(artistDaoConfig, this);
         albumDao = new AlbumDao(albumDaoConfig, this);
         linkDao = new LinkDao(linkDaoConfig, this);
+        genreDao = new GenreDao(genreDaoConfig, this);
+        songDao = new SongDao(songDaoConfig, this);
 
-        registerDao(Genre.class, genreDao);
-        registerDao(Artist.class, artistDao);
         registerDao(Playlist.class, playlistDao);
-        registerDao(Song.class, songDao);
+        registerDao(Artist.class, artistDao);
         registerDao(Album.class, albumDao);
         registerDao(Link.class, linkDao);
+        registerDao(Genre.class, genreDao);
+        registerDao(Song.class, songDao);
     }
 
     public void clear() {
-        genreDaoConfig.clearIdentityScope();
-        artistDaoConfig.clearIdentityScope();
         playlistDaoConfig.clearIdentityScope();
-        songDaoConfig.clearIdentityScope();
+        artistDaoConfig.clearIdentityScope();
         albumDaoConfig.clearIdentityScope();
         linkDaoConfig.clearIdentityScope();
-    }
-
-    public GenreDao getGenreDao() {
-        return genreDao;
-    }
-
-    public ArtistDao getArtistDao() {
-        return artistDao;
+        genreDaoConfig.clearIdentityScope();
+        songDaoConfig.clearIdentityScope();
     }
 
     public PlaylistDao getPlaylistDao() {
         return playlistDao;
     }
 
-    public SongDao getSongDao() {
-        return songDao;
+    public ArtistDao getArtistDao() {
+        return artistDao;
     }
 
     public AlbumDao getAlbumDao() {
@@ -99,6 +91,14 @@ public class DaoSession extends AbstractDaoSession {
 
     public LinkDao getLinkDao() {
         return linkDao;
+    }
+
+    public GenreDao getGenreDao() {
+        return genreDao;
+    }
+
+    public SongDao getSongDao() {
+        return songDao;
     }
 
 }
