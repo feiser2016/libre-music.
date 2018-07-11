@@ -7,8 +7,10 @@ Libre Music is written in Kotlin (Aside from DB folder), uses GreenDAO 3 ORM for
 Glide for picture loading.
 
 Other libraries used include:
-AppIntro (https://github.com/apl-devs/AppIntro)
-SlideUp (https://github.com/mancj/SlideUp-Android)
+
+
+*  [AppIntro](https://github.com/apl-devs/AppIntro)
+*  [SlideUp](https://github.com/mancj/SlideUp-Android)
 
 This repository is for those who want an easy, free solution for a media player that can read cue sheets as well as
 files with embedded cue sheets and is also fast and practical to use.
@@ -28,7 +30,11 @@ wanna help in other ways (Like translating the app to other languages)
 
 ### Who do I talk to? ###
 
-Danny Damsky, e-mail: dannydamskypublic@gmail.com
+My name: Dnny Damsky 
+
+E-mail: dannydamsky99@gmail.com
+
+LinkedIn: https://www.linkedin.com/in/danny-damsky/
 
 ### LICENSE ###
 
