@@ -1,3 +1,5 @@
+[![Get it on Google Play](https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=com.damsky.danny.libremusic)
+
 ### What is this repository for? ###
 
 Libre Music is a FOSS media player application for Android with support for reading CUE sheets.
@@ -30,7 +32,7 @@ wanna help in other ways (Like translating the app to other languages)
 
 ### Who do I talk to? ###
 
-My name: Dnny Damsky 
+My name: Danny Damsky 
 
 E-mail: dannydamsky99@gmail.com
 
