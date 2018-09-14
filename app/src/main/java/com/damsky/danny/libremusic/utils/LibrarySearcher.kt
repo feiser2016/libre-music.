@@ -38,10 +38,10 @@ class LibrarySearcher {
     fun update(search: String) {
         val searchToLower = search.toLowerCase()
         if (!searchToLower.contains("^$searchString") || searchString.isBlank())
-            stringList = Array(list.getSize(), { i ->
+            stringList = Array(list.getSize()) { i ->
                 list.setPosition(i)
                 list.getItemTitle()
-            })
+            }
         searchString = searchToLower
         pattern = Pattern.compile(searchString)
     }

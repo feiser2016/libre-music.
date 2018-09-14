@@ -155,12 +155,12 @@ class CueParser(encoding: String) {
         val indexes = getIndexOne()
         val year = getDate()
 
-        return Array(titles.size, { i ->
+        return Array(titles.size) { i ->
             val plusOne = i + 1
             val endTime = indexes[plusOne]
             val startTime = indexes[i]
             Song(null, songFile, titles[i], album, artist, genre, plusOne, year, startTime,
                     endTime, endTime - startTime, cover)
-        })
+        }
     }
 }

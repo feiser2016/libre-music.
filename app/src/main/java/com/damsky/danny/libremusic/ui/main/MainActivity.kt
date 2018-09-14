@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, CustomOnClickLis
         myList.layoutManager = LinearLayoutManager(this)
         myList.itemAnimator = DefaultItemAnimator()
 
-        superToolbar.setNavigationOnClickListener({ nowPlayingView.hide() })
+        superToolbar.setNavigationOnClickListener { nowPlayingView.hide() }
         navigationDrawer.setNavigationItemSelectedListener(this)
 
         if (!appReference.appDbHelper.songsEmpty()) {

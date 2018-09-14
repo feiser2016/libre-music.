@@ -62,11 +62,11 @@ class RecycleAdapter(private val onClickListener: CustomOnClickListener,
                 onClickListener.onRecyclerClick(position)
             }
 
-            itemMenu.setOnClickListener({
+            itemMenu.setOnClickListener {
                 contents.setPosition(position)
                 contents.getItemMenu(PopupMenu(layout.context, itemMenu),
                         onClickListener, listLevel).show()
-            })
+            }
         }
 
     }
